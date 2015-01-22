@@ -3,7 +3,7 @@ use MailChimp\Sync\Plugin;
 
 defined( 'ABSPATH' ) or exit;
 ?>
-<div class="wrap" id="wp-helpscout">
+<div class="wrap" id="mailchimp-sync">
 
 	<h1 style="line-height: 48px;">MailChimp Sync</h1>
 

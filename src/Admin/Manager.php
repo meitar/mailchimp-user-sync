@@ -68,7 +68,7 @@ class Manager {
 
 	/**
 	 * Outputs the settings page
-	 * 
+	 *
 	 * @todo Add field mapping
 	 */
 	public function show_settings_page() {

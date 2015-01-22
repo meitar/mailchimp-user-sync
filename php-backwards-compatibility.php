@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Deactivates WP HelpScout
+ * Deactivates the plugin
  *
  * @return bool
  */
@@ -33,7 +33,7 @@ function mailchimp_sync_deactivate_self() {
 }
 
 /**
- * Outputs a notice telling the user that WP HelpScout deactivated itself
+ * Outputs a notice telling the user that the plugin deactivated itself
  */
 function mailchimp_sync_php_requirement_notice() {
 
@@ -42,7 +42,7 @@ function mailchimp_sync_php_requirement_notice() {
 
 	?>
 	<div class="updated">
-		<p><?php _e( 'WP HelpScout did not activate because it requires your server to run PHP 5.3 or higher.', 'mailchimp-sync' ); ?></p>
+		<p><?php _e( 'MailChimp Sync did not activate because it requires your server to run PHP 5.3 or higher.', 'mailchimp-sync' ); ?></p>
 	</div>
 	<?php
 }
