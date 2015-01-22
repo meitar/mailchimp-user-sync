@@ -1,0 +1,22 @@
+{
+  "name": "dannyvankooten/wp-mailchimp-sync",
+  "type": "wordpress-plugin",
+  "description": "Synchronze your WP Users with a MailChimp list.",
+  "keywords": ["wordpress", "mailchimp"],
+  "homepage": "https://wordpress.org/plugins/mailchimp-sync/",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Danny van Kooten",
+      "email": "hi@dannyvankooten.com",
+      "homepage": "https://dannyvankooten.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0",
+    "composer/installers" : "~1.0"
+  },
+  "autoload": {
+    "psr-4": {"MailChimp\\Sync\\": "src/"}
+  }
+}
