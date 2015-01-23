@@ -61,7 +61,7 @@ final class Plugin {
 		require __DIR__ . '/vendor/autoload.php';
 
 		// Load plugin files on a later hook
-		add_action( 'plugins_loaded', array( $this, 'load' ), 90 );
+		add_action( 'plugins_loaded', array( $this, 'load' ), 30 );
 
 		$this->options = $this->load_options();
 	}
@@ -71,10 +71,17 @@ final class Plugin {
 	 */
 	public function load() {
 
+		// check if MailChimp for WordPress is running (lite or pro)
+		if( ! defined( 'MC4WP_VERSION' ) && ! defined( 'MC4WP_LITE_VERSION' ) ) {
+			return;
+		}
+
+		// if a list was selected, initialize the ListSynchronizer class
 		if( $this->options['list'] != '' ) {
 			new ListSynchronizer( $this->options['list'] );
 		}
 
+		// Load area-specific code
 		if( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 
 		} else {
