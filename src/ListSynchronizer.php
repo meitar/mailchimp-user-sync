@@ -19,10 +19,13 @@ class ListSynchronizer {
 	 */
 	private $settings = array(
 		'double_optin' => 0,
-		'send_welcome' => 1,
-		'update_existing' => 0,
+		'send_welcome' => 0,
+		'update_existing' => 1,
 		'replace_interests' => 0,
-		'email_type' => 'html'
+		'email_type' => 'html',
+		'send_goodbye' => 0,
+		'send_notification' => 0,
+		'delete_member' => 0
 	);
 
 	/**
@@ -45,7 +48,7 @@ class ListSynchronizer {
 		// hook into the various user related actions
 		add_action( 'user_register', array( $this, 'subscribe_user' ) );
 		add_action( 'profile_update', array( $this, 'update_subscriber' ) );
-		add_action( 'deleted_user', array( $this, 'unsubscribe_user' ) );
+		add_action( 'delete_user', array( $this, 'unsubscribe_user' ) );
 	}
 
 	/**
@@ -89,11 +92,25 @@ class ListSynchronizer {
 	 * @return bool
 	 */
 	public function unsubscribe_user( $user_id ) {
-		$user = get_user_by( 'id', $user_id );
 
-		// unsubscribe user email from the selected list
-		$api = mc4wp_get_api();
-		$api->unsubscribe( $this->list_id, $user->user_email );
+		// get subscriber uid from user meta
+		$subscriber_uid = get_user_meta( $user_id, $this->meta_key, true );
+
+		if( '' !== $subscriber_uid ) {
+
+			// unsubscribe user email from the selected list
+			$api = mc4wp_get_api();
+			$success = $api->unsubscribe( $this->list_id, array( 'leid' => $subscriber_uid ), $this->settings['send_goodbye'], $this->settings['send_notification'], $this->settings['delete_member'] );
+
+			if( $success ) {
+				// delete user meta
+				delete_user_meta( $user_id, $this->meta_key );
+				return true;
+			}
+
+		}
+
+		return false;
 	}
 
 	/**
@@ -104,6 +121,25 @@ class ListSynchronizer {
 	 */
 	public function update_subscriber( $user_id ) {
 
+		// get subscriber uid from user meta
+		$subscriber_uid = get_user_meta( $user_id, $this->meta_key, true );
+
+		// if subscriber uid is empty, add to list
+		if( $subscriber_uid === '' ) {
+			return $this->subscribe_user( $user_id );
+		}
+
+		$user = get_user_by( 'id', $user_id );
+
+		$merge_vars = array(
+			'new-email' => $user->user_email
+		);
+
+		// todo: map other fields
+
+		// update subscriber in mailchimp
+		$api = mc4wp_get_api();
+		return $api->update_subscriber( $this->list_id, array( 'leid' => $subscriber_uid ), $merge_vars, $this->settings['email_type'], $this->settings['replace_interests'] );
 	}
 
 
