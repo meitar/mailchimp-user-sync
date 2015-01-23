@@ -78,12 +78,15 @@ final class Plugin {
 
 		// if a list was selected, initialize the ListSynchronizer class
 		if( $this->options['list'] != '' ) {
-			new ListSynchronizer( $this->options['list'] );
+			$listSyncer = new ListSynchronizer( $this->options['list'], $this->options );
+			$listSyncer->add_hooks();
 		}
 
 		// Load area-specific code
-		if( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if( ! is_admin() ) {
 
+		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			new AJAX\Wizard( $this->options );
 		} else {
 			new Admin\Manager( $this->options );
 		}
@@ -98,8 +101,8 @@ final class Plugin {
 
 		$defaults = array(
 			'list' => '',
-			'double_optin' => 1,
-			'send_welcome' => 1
+			'double_optin' => 0,
+			'send_welcome' => 0
 		);
 
 		$options = array_merge( $defaults, $options );

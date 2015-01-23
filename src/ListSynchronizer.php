@@ -44,7 +44,12 @@ class ListSynchronizer {
 		if( $settings ) {
 			$this->settings = array_merge( $this->settings, $settings );
 		}
+	}
 
+	/**
+	 * Add hooks to call the subscribe, update & unsubscribe methods automatically
+	 */
+	public function add_hooks() {
 		// hook into the various user related actions
 		add_action( 'user_register', array( $this, 'subscribe_user' ) );
 		add_action( 'profile_update', array( $this, 'update_subscriber' ) );
@@ -78,7 +83,7 @@ class ListSynchronizer {
 			$subscriber_uid = $api->get_last_response()->leid;
 
 			// store meta field with subscriber uid
-			add_user_meta( $user_id, $this->meta_key, $subscriber_uid );
+			update_user_meta( $user_id, $this->meta_key, $subscriber_uid );
 			return true;
 		}
 

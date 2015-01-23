@@ -43,6 +43,8 @@ class Manager {
 
 		// run upgrade routine
 		$this->upgrade_routine();
+
+		add_filter( 'admin_enqueue_scripts', array( $this, 'load_assets' ) );
 	}
 
 	/**
@@ -63,16 +65,34 @@ class Manager {
 		return true;
 	}
 
+	/**
+	 * Listen for stuff..
+	 */
 	private function listen() {
 
 	}
-
 
 	/**
 	 * Register menu pages
 	 */
 	public function menu() {
 		add_submenu_page( 'mailchimp-for-wp', __( 'MailChimp Sync', 'mailchimp-sync' ), __( 'Sync', 'mailchimp-sync' ), self::SETTINGS_CAP, 'mailchimp-for-wp-sync', array( $this, 'show_settings_page' ) );
+	}
+
+	/**
+	 * Load assets if we're on the settings page of this plugin
+	 *
+	 * @return bool
+	 */
+	public function load_assets() {
+		if( ! isset( $_GET['page'] ) || $_GET['page'] !== 'mailchimp-for-wp-sync' ) {
+			return false;
+		}
+
+		wp_enqueue_style( 'mailchimp-sync-admin', $this->asset_url( '/css/admin.css' ) );
+		wp_enqueue_script( 'mailchimp-sync-syncer', $this->asset_url( '/js/syncer.js' ), array( 'jquery' ), Plugin::VERSION, true );
+
+		return true;
 	}
 
 	/**
@@ -91,8 +111,6 @@ class Manager {
 
 		require Plugin::DIR . '/views/settings-page.php';
 	}
-
-
 
 	/**
 	 * @param $url

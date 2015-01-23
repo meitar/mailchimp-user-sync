@@ -68,11 +68,13 @@ defined( 'ABSPATH' ) or exit;
 
 
 	<?php if( '' !== $this->options['list'] ) { ?>
-		<h2><?php _e( 'Synchronization', 'mailchimp-for-wp' ); ?></h2>
+		<h2><?php _e( 'Status', 'mailchimp-for-wp' ); ?></h2>
+
+		<p><?php _e( 'Right now, the plugin is listening to changes in your users and will automatically keep your userbase synced with the selected MailChimp list.', 'mailchimp-sync' ); ?></p>
 
 		<table class="form-table">
 			<tr valign="top">
-				<th scope="row">
+				<th scope="row" style="min-width: 250px;">
 					<?php _e( 'Status', 'mailchimp-sync' ); ?>
 				</th>
 				<td>
@@ -84,7 +86,30 @@ defined( 'ABSPATH' ) or exit;
 					} ?>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row">
+					<?php _e( 'Subscribed Users / Total Users', 'mailchimp-sync' ); ?>
+				</th>
+				<td>
+					<?php echo $statusIndicator->subscriber_count . '/' . $statusIndicator->user_count; ?>
+				</td>
+			</tr>
+
 		</table>
+
+		<div id="manual-sync">
+			<p><?php _e( 'You can force synchronisation on all existing users by clicking the "Synchronise All" button.', 'mailchimp-sync' ); ?></p>
+
+			<p>
+				<input id="start-manual-sync" type="submit" class="button" value="<?php _e( "Sync All", 'mailchimp-sync' ); ?>" />
+			</p>
+
+			<div id="sync-progress" class="progress-bar">
+				<div class="progress-bar-value" style="width: <?php echo esc_attr( $statusIndicator->progress . '%' ); ?>;"></div>
+				<div class="progress-text"><?php echo esc_attr( $statusIndicator->progress . '%' ); ?></div>
+			</div>
+		</div>
+
 
 	<?php } ?>
 
