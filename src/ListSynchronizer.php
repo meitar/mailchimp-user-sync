@@ -1,0 +1,110 @@
+<?php
+
+namespace MailChimp\Sync;
+
+class ListSynchronizer {
+
+
+	/**
+	 * @var string The List ID to sync with
+	 */
+	private $list_id;
+	/**
+	 * @var string
+	 */
+	private $meta_key = 'mailchimp_sync';
+
+	/**
+	 * @var array
+	 */
+	private $settings = array(
+		'double_optin' => 0,
+		'send_welcome' => 1,
+		'update_existing' => 0,
+		'replace_interests' => 0,
+		'email_type' => 'html'
+	);
+
+	/**
+	 * Constructor
+	 * @param string $list_id
+	 * @param array $settings
+	 */
+	public function __construct( $list_id, array $settings = null ) {
+
+		$this->list_id = $list_id;
+
+		// generate meta key name
+		$this->meta_key = $this->meta_key . '_' . $this->list_id;
+
+		// if settings were passed, merge those with the defaults
+		if( $settings ) {
+			$this->settings = array_merge( $this->settings, $settings );
+		}
+
+		// hook into the various user related actions
+		add_action( 'user_register', array( $this, 'subscribe_user' ) );
+		add_action( 'profile_update', array( $this, 'update_subscriber' ) );
+		add_action( 'deleted_user', array( $this, 'unsubscribe_user' ) );
+	}
+
+	/**
+	 * Subscribes a user to the selected MailChimp list, stores a meta field with the subscriber uid
+	 *
+	 * @param int $user_id
+	 * @return bool
+	 */
+	public function subscribe_user( $user_id ) {
+
+		$user =  get_user_by( 'id', $user_id );
+
+		// todo: map other fields
+
+		// subscribe the user
+		$api = mc4wp_get_api();
+		$success = $api->subscribe( $this->list_id, $user->user_email, array(), $this->settings['email_type'], $this->settings['double_optin'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
+
+		// todo: remove this
+		if( $api->has_error() ) {
+			die( $api->get_error_message() );
+		}
+
+		if( $success ) {
+
+			// get subscriber uid
+			$subscriber_uid = $api->get_last_response()->leid;
+
+			// store meta field with subscriber uid
+			add_user_meta( $user_id, $this->meta_key, $subscriber_uid );
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Delete the subscriber uid from the MailChimp list
+	 *
+	 * @param int $user_id
+	 * @return bool
+	 */
+	public function unsubscribe_user( $user_id ) {
+		$user = get_user_by( 'id', $user_id );
+
+		// unsubscribe user email from the selected list
+		$api = mc4wp_get_api();
+		$api->unsubscribe( $this->list_id, $user->user_email );
+	}
+
+	/**
+	 * Update the subscriber uid with the new user data
+	 *
+	 * @param int $user_id
+	 * @return bool
+	 */
+	public function update_subscriber( $user_id ) {
+
+	}
+
+
+}

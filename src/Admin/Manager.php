@@ -9,9 +9,18 @@ class Manager {
 	const SETTINGS_CAP = 'manage_options';
 
 	/**
-	 * Constructor
+	 * @var array $options
 	 */
-	public function __construct() {
+	private $options;
+
+	/**
+	 * Constructor
+	 * @param array $options
+	 */
+	public function __construct( array $options ) {
+
+		$this->options = $options;
+
 		add_action( 'admin_init', array( $this, 'init' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ) );
 	}
@@ -63,7 +72,7 @@ class Manager {
 	 * Register menu pages
 	 */
 	public function menu() {
-		add_submenu_page( 'mailchimp-for-wp', __( 'MailChimp Sync', 'mailchimp-sync' ), __( 'Sync', 'mailchimp-sync' ), self::SETTINGS_CAP, 'mailchimp-sync', array( $this, 'show_settings_page' ) );
+		add_submenu_page( 'mailchimp-for-wp', __( 'MailChimp Sync', 'mailchimp-sync' ), __( 'Sync', 'mailchimp-sync' ), self::SETTINGS_CAP, 'mailchimp-for-wp-sync', array( $this, 'show_settings_page' ) );
 	}
 
 	/**
@@ -72,13 +81,12 @@ class Manager {
 	 * @todo Add field mapping
 	 */
 	public function show_settings_page() {
-		$options = Plugin::get_options();
 
 		$mailchimp = new \MC4WP_MailChimp();
 		$lists = $mailchimp->get_lists();
 
-		if( $options['list'] !== '' ) {
-			$statusIndicator = new StatusIndicator( $options['list'] );
+		if( $this->options['list'] !== '' ) {
+			$statusIndicator = new StatusIndicator( $this->options['list'] );
 		}
 
 		require Plugin::DIR . '/views/settings-page.php';
