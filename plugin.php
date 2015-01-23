@@ -31,16 +31,39 @@ final class Plugin {
 	 */
 	const OPTION_NAME = 'mailchimp_sync';
 
+	/**
+	 * @var array
+	 */
+	private $options = array();
+
+	/**
+	 * @var
+	 */
+	private static $instance;
+
+	/**
+	 * @return Plugin
+	 */
+	public static function instance() {
+
+		if( ! self::$instance ) {
+			self::$instance = new Plugin;
+		}
+
+		return self::$instance;
+	}
 
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	private function __construct() {
 
 		require __DIR__ . '/vendor/autoload.php';
 
 		// Load plugin files on a later hook
 		add_action( 'plugins_loaded', array( $this, 'load' ), 90 );
+
+		$this->options = $this->load_options();
 	}
 
 	/**
@@ -48,53 +71,42 @@ final class Plugin {
 	 */
 	public function load() {
 
+		if( $this->options['list'] != '' ) {
+			new ListSynchronizer( $this->options['list'] );
+		}
+
 		if( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 
 		} else {
-			new Admin\Manager();
+			new Admin\Manager( $this->options );
 		}
-	}
-
-	/**
-	 * Get an option by its key
-	 *
-	 * @param $key
-	 *
-	 * @return mixed
-	 */
-	public static function get_option( $key ) {
-
-		$options = self::get_options();
-
-		if( array_key_exists( $key, $options ) ) {
-			return $options[ $key ];
-		}
-
-		return null;
 	}
 
 	/**
 	 * @return array
 	 */
-	public static function get_options() {
-		static $options;
+	private function load_options() {
 
-		if( is_null( $options ) ) {
+		$options = (array) get_option( self::OPTION_NAME, array() );
 
-			$options = (array) get_option( self::OPTION_NAME, array() );
+		$defaults = array(
+			'list' => '',
+			'double_optin' => 1,
+			'send_welcome' => 1
+		);
 
-			$defaults = array(
-				'list' => '',
-				'double_optin' => 1,
-				'send_welcome' => 1
-			);
-
-			$options = array_merge( $defaults, $options );
-		}
+		$options = array_merge( $defaults, $options );
 
 		return $options;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function get_options() {
+		return $this->options;
+	}
+
 }
 
-$GLOBALS['MailChimp_Sync'] = new Plugin;
+$GLOBALS['MailChimp_Sync'] = Plugin::instance();
