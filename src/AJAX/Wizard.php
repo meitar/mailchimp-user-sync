@@ -13,13 +13,21 @@ class Wizard {
 	private $options;
 
 	/**
+	 * @var array
+	 */
+	private $allowed_actions = array(
+		'get_users',
+		'subscribe_users'
+	);
+
+	/**
 	 * Constructor
 	 * @param array $options
 	 */
 	public function __construct( array $options ) {
 		$this->options = $options;
 
-		add_action( 'wp_ajax_mailchimp_sync', array( $this, 'route' ) );
+		add_action( 'wp_ajax_mcs_wizard', array( $this, 'route' ) );
 	}
 
 	/**
@@ -29,13 +37,14 @@ class Wizard {
 
 		// make sure user is allowed to make the AJAX call
 		if( ! current_user_can( 'manage_options' )
-		    || ! isset( $_REQUEST['sync_action'] ) ) {
+		    || ! isset( $_REQUEST['mcs_action'] ) ) {
 			die( '-1' );
 		}
 
 		// check if method exists and is allowed
-		if( in_array( $_REQUEST['sync_action'], array( 'get_users', 'subscribe_users' ) ) ) {
-			return $this->{$_REQUEST['sync_action']}();
+		if( in_array( $_REQUEST['mcs_action'], $this->allowed_actions ) ) {
+			$this->{$_REQUEST['mcs_action']}();
+			exit;
 		}
 
 		die( '-1' );
@@ -48,9 +57,10 @@ class Wizard {
 		global $wpdb;
 
 		// query users in database
-		$result = $wpdb->get_results( "SELECT ID FROM {$wpdb->users}", OBJECT_K );
-		$data = array_keys( $result );
-		$this->respond( $data );
+		$result = $wpdb->get_results( "SELECT ID, user_login AS username, user_email AS email FROM {$wpdb->users}", OBJECT );
+
+		// send response
+		$this->respond( $result );
 	}
 
 	/**
@@ -58,32 +68,34 @@ class Wizard {
 	 * Returns the updates progress
 	 */
 	private function subscribe_users() {
+
+		// instantiate list syncer for selected list
 		$syncer = new ListSynchronizer( $this->options['list'], $this->options );
 
-		// loop through user ID's
-		$user_ids = (array) $_REQUEST['user_ids'];
+		// make sure `user_ids` is an array
+		$user_ids = $_GET['user_ids'];
+		if( ! is_array( $user_ids ) ) {
+			$user_ids = sanitize_text_field( $user_ids );
+			$user_ids = explode( ',', $user_ids );
+		}
 
+		// loop through user ID's
 		foreach( $user_ids as $user_id ) {
 			$syncer->update_subscriber( $user_id );
 		}
 
-		$status = new StatusIndicator( $this->options['list'] );
-
-		// build data response
-		$data = array(
-			'progress' => $status->progress
-		);
-
 		// send response
-		$this->respond( $data );
+		$this->respond( array( 'success' => true ) );
 	}
 
 	/**
+	 * Send a JSON response
+	 *
 	 * @param $data
 	 */
 	private function respond( $data ) {
 		wp_send_json( $data );
-		die();
+		exit;
 	}
 
 }

@@ -1,39 +1,47 @@
 #mc4wp-admin {
 
+	/* style the progress bar */
 	.progress-bar {
 		width: 100%;
 		height: 20px;
 		background: lightGrey;
 		position: relative;
+
+		.value,
+		.text {
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 20px;
+			display: inline-block;
+		}
+
+		.value {
+			z-index: 1;
+			background: dodgerblue;
+		}
+
+		.text {
+			color: white;
+			text-align: center;
+			z-index: 2;
+			width: 100%;
+		}
+
 	}
 
-	.progress-bar-value,
-	.progress-text {
-		position: absolute;
-		left: 0;
-		top: 0;
-		height: 20px;
-		display: inline-block;
-	}
+	.log {
 
-	.progress-bar-value {
-		z-index: 1;
-		background: dodgerblue;
-	}
-
-	.progress-text {
-		color: white;
-		text-align: center;
-		z-index: 2;
-		width: 100%;
-	}
-
-	#manual-sync {
-		max-width: 620px;
+		margin: 20px 0;
+		height: 150px;
+		overflow-y: scroll;
 		border: 1px solid #999;
-		padding: 20px;
-		text-align: center;
-	}
+		padding: 5px 20px;
 
+		p {
+			margin: 0 0 2px 0;
+			font-size: smaller;
+		}
+	}
 
 }

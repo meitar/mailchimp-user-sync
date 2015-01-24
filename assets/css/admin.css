@@ -1,32 +1,40 @@
+#mc4wp-admin {
+  /* style the progress bar */
+}
 #mc4wp-admin .progress-bar {
   width: 100%;
   height: 20px;
   background: lightGrey;
   position: relative;
 }
-#mc4wp-admin .progress-bar-value,
-#mc4wp-admin .progress-text {
+#mc4wp-admin .progress-bar .value,
+#mc4wp-admin .progress-bar .text {
   position: absolute;
   left: 0;
   top: 0;
   height: 20px;
   display: inline-block;
 }
-#mc4wp-admin .progress-bar-value {
+#mc4wp-admin .progress-bar .value {
   z-index: 1;
   background: dodgerblue;
 }
-#mc4wp-admin .progress-text {
+#mc4wp-admin .progress-bar .text {
   color: white;
   text-align: center;
   z-index: 2;
   width: 100%;
 }
-#mc4wp-admin #manual-sync {
-  max-width: 620px;
+#mc4wp-admin .log {
+  margin: 20px 0;
+  height: 150px;
+  overflow-y: scroll;
   border: 1px solid #999;
-  padding: 20px;
-  text-align: center;
+  padding: 5px 20px;
+}
+#mc4wp-admin .log p {
+  margin: 0 0 2px 0;
+  font-size: smaller;
 }
 
 /*# sourceMappingURL=admin.css.map */

@@ -94,21 +94,16 @@ defined( 'ABSPATH' ) or exit;
 					<?php echo $statusIndicator->subscriber_count . '/' . $statusIndicator->user_count; ?>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th scope="row">
+					<?php _e( 'Force Synchronisation', 'mailchimp-sync' ) ; ?>
+				</th>
+				<td id="wizard">
+					<?php _e( 'Please enable JavaScript to use the Synchronisation Wizard.', 'mailchimp-sync' ); ?>
+				</td>
+			</tr>
 
 		</table>
-
-		<div id="manual-sync">
-			<p><?php _e( 'You can force synchronisation on all existing users by clicking the "Synchronise All" button.', 'mailchimp-sync' ); ?></p>
-
-			<p>
-				<input id="start-manual-sync" type="submit" class="button" value="<?php _e( "Sync All", 'mailchimp-sync' ); ?>" />
-			</p>
-
-			<div id="sync-progress" class="progress-bar">
-				<div class="progress-bar-value" style="width: <?php echo esc_attr( $statusIndicator->progress . '%' ); ?>;"></div>
-				<div class="progress-text"><?php echo esc_attr( $statusIndicator->progress . '%' ); ?></div>
-			</div>
-		</div>
 
 
 	<?php } ?>
