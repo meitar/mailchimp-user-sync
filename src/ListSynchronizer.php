@@ -66,11 +66,11 @@ class ListSynchronizer {
 
 		$user =  get_user_by( 'id', $user_id );
 
-		// todo: map other fields
+		$merge_vars = $this->extract_merge_vars_from_user( $user );
 
 		// subscribe the user
 		$api = mc4wp_get_api();
-		$success = $api->subscribe( $this->list_id, $user->user_email, array(), $this->settings['email_type'], $this->settings['double_optin'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
+		$success = $api->subscribe( $this->list_id, $user->user_email, $merge_vars, $this->settings['email_type'], $this->settings['double_optin'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
 
 		// todo: remove this
 		if( $api->has_error() ) {
@@ -136,15 +136,34 @@ class ListSynchronizer {
 
 		$user = get_user_by( 'id', $user_id );
 
-		$merge_vars = array(
-			'new-email' => $user->user_email
-		);
-
-		// todo: map other fields
+		$merge_vars = $this->extract_merge_vars_from_user( $user );
+		$merge_vars['new-email'] = $user->user_email;
 
 		// update subscriber in mailchimp
 		$api = mc4wp_get_api();
 		return $api->update_subscriber( $this->list_id, array( 'leid' => $subscriber_uid ), $merge_vars, $this->settings['email_type'], $this->settings['replace_interests'] );
+	}
+
+	/**
+	 * @param \WP_User $user
+	 *
+	 * @return array
+	 */
+	private function extract_merge_vars_from_user( \WP_User $user ) {
+
+		$data = array();
+
+		if( '' !== $user->first_name ) {
+			$data['FNAME'] = $user->first_name;
+		}
+
+		if( '' !== $user->last_name ) {
+			$data['LNAME'] = $user->last_name;
+		}
+
+		// todo: map other fields
+
+		return $data;
 	}
 
 
