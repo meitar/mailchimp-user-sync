@@ -94,8 +94,7 @@
 
 		// add line to log for each user
 		for( var i=0; i < users.length; i++ ) {
-			var user = users[i];
-			Wizard.addLogItem( "Subscribing or updating <strong>user #" + user.id() + " " + user.username() + " (" + user.email() + " )</strong>." );
+			Wizard.addLogItem( "Subscribing or updating <strong>user #" + users[i].id() + "</strong> with username <strong>" + users[i].username() + "</strong> and email <strong>" + users[i].email() + "</strong>." );
 		}
 
 		var data = {
@@ -111,6 +110,8 @@
 		});
 	};
 
+
+	// Add a line to the log
 	Wizard.addLogItem = function( item ) {
 		var logItems = Wizard.vm.logItems();
 		logItems.push( item );
