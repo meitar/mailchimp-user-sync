@@ -19,7 +19,7 @@ final class Plugin {
 	/**
 	 * @const FILE
 	 */
-	const FILE = __FILE__;
+	const FILE = MAILCHIMP_SYNC_FILE;
 
 	/**
 	 * @const DIR
@@ -62,21 +62,25 @@ final class Plugin {
 
 		// Load plugin files on a later hook
 		add_action( 'plugins_loaded', array( $this, 'load' ), 30 );
-
-		$this->options = $this->load_options();
 	}
 
 	/**
 	 * Let's go...
+	 *
+	 * Runs at `plugins_loaded` priority 30.
 	 */
 	public function load() {
 
-		// check if MailChimp for WordPress is running (lite or pro)
-		if( ! defined( 'MC4WP_VERSION' ) && ! defined( 'MC4WP_LITE_VERSION' ) ) {
-			return;
+		// check dependencies and only continue if installed
+		$dependencyCheck = new DependencyCheck();
+		if( ! $dependencyCheck->dependencies_installed ) {
+			return false;
 		}
 
-		// if a list was selected, initialize the ListSynchronizer class
+		// load plugin options
+		$this->options = $this->load_options();
+
+		// if a list was selected, initialise the ListSynchronizer class
 		if( $this->options['list'] != '' ) {
 			$listSyncer = new ListSynchronizer( $this->options['list'], $this->options );
 			$listSyncer->add_hooks();
