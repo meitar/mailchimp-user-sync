@@ -3,7 +3,7 @@
 Plugin Name: MailChimp Sync
 Plugin URI: https://mc4wp.com/
 Description: Synchronizes WP Users with a MailChimp list
-Version: 1.0
+Version: 0.1
 Author: Danny van Kooten
 Author URI: https://dannyvankooten.com
 Text Domain: mailchimp-sync

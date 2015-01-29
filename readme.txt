@@ -16,27 +16,20 @@ Synchronize your registered WordPress users with a MailChimp list of your choice
 
 **This plugin is still in beta. You can definitely use it but it _could_ be subject to changes breaking backwards compatibility.**
 
-> This plugin depends on the [MailChimp for WordPress plugin](https://wordpress.org/plugins/mailchimp-for-wp/).
+> This plugin is an add-on for the [MailChimp for WordPress plugin](https://wordpress.org/plugins/mailchimp-for-wp/).
+> To use it, you need at least MailChimp for WordPress v2.2.3 or MailChimp for WordPress Premium 2.5.5.
 
 = MailChimp Sync, at a glance.. =
 
 MailChimp Sync will watch for changes in your WordPress user base and automatically sync those changes with the selected MailChimp list.
 
-**New Users**
+- New users are automatically subscribed to your MailChimp list.
+- When user data changes, the MailChimp subscriber will be updated as well. **Even when their email address is changed.**
+- Deleted users will be unsubscribed from the selected MailChimp list as well.
+- Manually have MailChimp Sync synchronise all existing users.
+- Choose whether you want to use double opt-in and send a welcome email to new subscribers.
 
-New users are automatically subscribed to your MailChimp list.
-
-**Updated Users**
-
-User fields are synced with your MailChimp list fields, even when users update their profile or change their email address.
-
-**Deleted Users**
-
-When a user is deleted from your site, they will be unsubscribed from the selected MailChimp list as well.
-
-**Synchronise Existing Users**
-
-After activation, the plugin will listen to all changes in your userbase. This doesn't mean you can't synchronise existing users though. :)
+After activation, the plugin will listen to all changes in your WordPress users and make sure everything stays in sync with the selected MailChimp list.
 
 = Development of MailChimp Sync =
 

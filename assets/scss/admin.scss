@@ -4,7 +4,7 @@
 	.progress-bar {
 		width: 100%;
 		height: 20px;
-		background: lightGrey;
+		background: #ccc;
 		position: relative;
 
 		.value,
@@ -14,15 +14,16 @@
 			top: 0;
 			height: 20px;
 			display: inline-block;
+			font-weight: bold;
 		}
 
 		.value {
 			z-index: 1;
-			background: dodgerblue;
+			background: #2ea2cc;
 		}
 
 		.text {
-			color: white;
+			color: #ffffff;
 			text-align: center;
 			z-index: 2;
 			width: 100%;
@@ -32,15 +33,21 @@
 
 	.log {
 
+		background: #111;
+		color: white;
 		margin: 20px 0;
 		height: 150px;
 		overflow-y: scroll;
 		border: 1px solid #999;
 		padding: 5px 20px;
 
+		strong {
+			color: #2ea2cc;
+		}
+
 		p {
+			font-size: 12px !important;
 			margin: 0 0 2px 0;
-			font-size: smaller;
 		}
 	}
 

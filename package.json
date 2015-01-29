@@ -1,10 +1,10 @@
 {
-	"name" : "mailchimp-sync",
+	"name" : "wp-mailchimp-sync",
 	"title" : "MailChimp Sync",
 	"repository" :
 	{
 		"type" : "git",
-		"url" : "https://github.com/dannyvankooten/mailchimp-sync"
+		"url" : "https://github.com/dannyvankooten/wp-mailchimp-sync"
 	},
 	"devDependencies": {
 		"grunt": "0.4.5",

@@ -94,6 +94,12 @@ class Wizard {
 	 * @param $data
 	 */
 	private function respond( $data ) {
+		
+		// clear output, some plugins might have thrown errors by now.
+		if( ob_get_level() > 0 ) {
+			ob_end_clean();
+		}
+
 		wp_send_json( $data );
 		exit;
 	}

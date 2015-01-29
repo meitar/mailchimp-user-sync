@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) or exit;
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="<?php echo $this->name_attr( 'list' ); ?>"><?php _e( 'Sync users with this list', 'mailchimp-sync' ); ?></label></th>
+				<th scope="row"><?php _e( 'Sync users with this list', 'mailchimp-sync' ); ?></th>
 				<td>
 					<?php if( empty( $lists ) ) {
 						printf( __( 'No lists found, <a href="%s">are you connected to MailChimp</a>?', 'mailchimp-for-wp' ), admin_url( 'admin.php?page=mailchimp-for-wp' ) ); ?>
