@@ -4,7 +4,7 @@ Donate link: https://dannyvankooten.com/donate/
 Tags: mailchimp,users,sync
 Requires at least: 3.8
 Tested up to: 4.1.1
-Stable tag: 0.1
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,27 @@ Please open a topic on the [WordPress.org plugin support forums](https://wordpre
 
 == Changelog ==
 
+= 0.1.1 =
+
+**Fixes**
+
+- Force Sync got stuck on users without a valid email address. ([#10](https://github.com/dannyvankooten/wp-mailchimp-sync/issues/10), thanks [girandovoy](https://github.com/girandovoy))
+- JSON response was malformed when any plugin threw a PHP notice
+
+**Improvements**
+
+- Progress log now auto-scrolls to bottom
+- Progress log now shows time
+- Progress log now shows more actions
+- Add settings link to Plugin overview
+- Various JavaScript improvements
+
 = 0.1 =
+
 Initial beta release.
+
+== Upgrade Notice ==
+
+= 0.1.1 =
+Various JavaScript improvements and bugfixes. Please make sure you're on the latest version of MailChimp for WordPress before updating.
 
