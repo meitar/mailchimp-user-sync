@@ -21,7 +21,13 @@
 		this.items = m.prop([]);
 
 		// add line to items array
-		this.addLine = function( line ) {
+		this.addLine = function( text ) {
+
+			var line = {
+				time: new Date(),
+				text: text
+			};
+
 			self.items().push( line );
 			m.redraw();
 		};
@@ -41,7 +47,16 @@
 		this.render = function() {
 			return m("div.log", { config: self.scrollToBottom }, [
 				self.items().map( function( item ) {
-					return m("p", m.trust(item) )
+
+					var timeString =
+						("0" + item.time.getHours()).slice(-2)   + ":" +
+						("0" + item.time.getMinutes()).slice(-2) + ":" +
+						("0" + item.time.getSeconds()).slice(-2);
+
+					return m("p", [
+						m('span.time', timeString),
+						m.trust(item.text )
+					] )
 				})
 			]);
 		};
@@ -123,8 +138,12 @@
 		}).then(function( data ) {
 
 			// update progress
-			var progress = ( Wizard.vm.userCount() - Wizard.vm.users().length  )/ Wizard.vm.userCount() * 100;
+			var progress = Math.round( ( Wizard.vm.userCount() - Wizard.vm.users().length  )/ Wizard.vm.userCount() * 100 );
 			Wizard.vm.progress( progress );
+
+			if( progress === 100 ) {
+				Wizard.vm.log.addLine("Done!");
+			}
 
 			// call self
 			Wizard.subscribeNextUser();

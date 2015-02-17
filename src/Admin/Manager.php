@@ -159,7 +159,8 @@ class Manager {
 		$lists = $mailchimp->get_lists();
 
 		if( $this->options['list'] !== '' ) {
-			$statusIndicator = new StatusIndicator( $this->options['list'] );
+			$status_indicator = new StatusIndicator( $this->options['list'] );
+			$selected_list = $mailchimp->get_list( $this->options['list'] );
 		}
 
 		require Plugin::DIR . '/views/settings-page.php';
