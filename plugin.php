@@ -106,7 +106,7 @@ final class Plugin {
 		$defaults = array(
 			'list' => '',
 			'double_optin' => 0,
-			'send_welcome' => 0
+			'send_welcome' => 0,
 		);
 
 		$options = array_merge( $defaults, $options );
