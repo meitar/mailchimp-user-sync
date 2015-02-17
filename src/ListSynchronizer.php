@@ -66,6 +66,11 @@ class ListSynchronizer {
 
 		$user =  get_user_by( 'id', $user_id );
 
+		// do nothing if user has no valid email
+		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+			return false;
+		}
+
 		$merge_vars = $this->extract_merge_vars_from_user( $user );
 
 		// subscribe the user
@@ -135,6 +140,11 @@ class ListSynchronizer {
 		}
 
 		$user = get_user_by( 'id', $user_id );
+
+		// do nothing if user has no valid email
+		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+			return false;
+		}
 
 		$merge_vars = $this->extract_merge_vars_from_user( $user );
 		$merge_vars['new-email'] = $user->user_email;
