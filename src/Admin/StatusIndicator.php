@@ -49,7 +49,7 @@ class StatusIndicator {
 		global $wpdb;
 
 		// get number of users
-		$user_count = $wpdb->get_var( "SELECT COUNT(u.ID) FROM {$wpdb->users} u" );
+		$user_count = $wpdb->get_var( "SELECT COUNT(u.ID) FROM {$wpdb->users} u WHERE u.user_email != ''" );
 
 		return (int) $user_count;
 	}

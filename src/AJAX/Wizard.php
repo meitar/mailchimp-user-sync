@@ -56,8 +56,11 @@ class Wizard {
 	private function get_users() {
 		global $wpdb;
 
-		// query users in database
-		$result = $wpdb->get_results( "SELECT ID, user_login AS username, user_email AS email FROM {$wpdb->users}", OBJECT );
+		// query users in database, but only users with a valid email
+		$sql = "SELECT ID, user_login AS username, user_email AS email
+			FROM {$wpdb->users}
+			WHERE user_email != ''";
+		$result = $wpdb->get_results( $sql, OBJECT );
 
 		// send response
 		$this->respond( $result );
@@ -94,7 +97,7 @@ class Wizard {
 	 * @param $data
 	 */
 	private function respond( $data ) {
-		
+
 		// clear output, some plugins might have thrown errors by now.
 		if( ob_get_level() > 0 ) {
 			ob_end_clean();
