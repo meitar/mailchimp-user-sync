@@ -75,7 +75,7 @@ Please open a topic on the [WordPress.org plugin support forums](https://wordpre
 
 == Changelog ==
 
-= 0.1.1 =
+= 0.1.1 - February 17, 2015 =
 
 **Fixes**
 
@@ -90,9 +90,9 @@ Please open a topic on the [WordPress.org plugin support forums](https://wordpre
 - Add settings link to Plugin overview
 - Various JavaScript improvements
 
-= 0.1 =
+= 0.1 - January 23, 2015 =
 
-Initial beta release.
+Initial release.
 
 == Upgrade Notice ==
 
