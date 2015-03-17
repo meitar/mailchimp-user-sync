@@ -87,8 +87,23 @@ class Wizard {
 			$result = $syncer->update_subscriber( $user_id );
 		}
 
+		if( $result ) {
+			$this->respond( array( 'success' => true ) );
+			exit;
+		}
+
+		// get api error
+		$api = mc4wp_get_api();
+		$error = $api->get_error_message();
+
 		// send response
-		$this->respond( array( 'success' => $result ) );
+		$this->respond(
+			array(
+				'success' => $result,
+				'error' => $error
+			)
+		);
+		exit;
 	}
 
 	/**

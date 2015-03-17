@@ -77,11 +77,6 @@ class ListSynchronizer {
 		$api = mc4wp_get_api();
 		$success = $api->subscribe( $this->list_id, $user->user_email, $merge_vars, $this->settings['email_type'], $this->settings['double_optin'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
 
-		// todo: remove this
-		if( $api->has_error() ) {
-			die( $api->get_error_message() );
-		}
-
 		if( $success ) {
 
 			// get subscriber uid
@@ -151,7 +146,16 @@ class ListSynchronizer {
 
 		// update subscriber in mailchimp
 		$api = mc4wp_get_api();
-		return $api->update_subscriber( $this->list_id, array( 'leid' => $subscriber_uid ), $merge_vars, $this->settings['email_type'], $this->settings['replace_interests'] );
+		$success = $api->update_subscriber( $this->list_id, array( 'leid' => $subscriber_uid ), $merge_vars, $this->settings['email_type'], $this->settings['replace_interests'] );
+
+		// TODO: Remove check for `get_error_code`, available since MailChimp for WP Lite 2.2.8 and MailChimp for WP Pro 2.6.3. Update dependency check in that case.
+		if( ! $success && ( ! method_exists( $api, 'get_error_code' ) || $api->get_error_code() === 232 ) ) {
+			// subscriber leid did not match anything in the list, remove it and re-subscribe.
+			delete_user_meta( $user_id, $this->meta_key );
+			return $this->subscribe_user( $user_id );
+		}
+
+		return $success;
 	}
 
 	/**
