@@ -84,11 +84,11 @@ class Wizard {
 
 		// loop through user ID's
 		foreach( $user_ids as $user_id ) {
-			$syncer->update_subscriber( $user_id );
+			$result = $syncer->update_subscriber( $user_id );
 		}
 
 		// send response
-		$this->respond( array( 'success' => true ) );
+		$this->respond( array( 'success' => $result ) );
 	}
 
 	/**

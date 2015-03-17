@@ -32,6 +32,14 @@
 			m.redraw();
 		};
 
+		// add some text to last log item
+		this.addTextToLastLine = function( text ) {
+			var line = self.items().pop();
+			line.text += " " + text;
+			self.items().push( line );
+			m.redraw();
+		};
+
 		/**
 		 * Scroll to bottom of log
 		 *
@@ -113,7 +121,10 @@
 	 */
 	Wizard.subscribeNextUser = function() {
 
-		var users = Wizard.vm.users();
+		var users = Wizard.vm.users(),
+			timeout = 0;
+
+		// bail if no users left
 		if( users.length == 0 ) {
 			return false;
 		}
@@ -137,20 +148,29 @@
 			url: ajaxurl
 		}).then(function( data ) {
 
-			// update progress
-			var progress = Math.round( ( Wizard.vm.userCount() - Wizard.vm.users().length  )/ Wizard.vm.userCount() * 100 );
-			Wizard.vm.progress( progress );
+			Wizard.vm.log.addTextToLastLine( ( data.success ) ? "Success!" : "Error." );
+			Wizard.updateProgress();
 
-			if( progress === 100 ) {
-				Wizard.vm.log.addLine("Done!");
-			}
-
-			// call self
+			// call self and clear scheduled call
+			window.clearTimeout( timeout );
 			Wizard.subscribeNextUser();
+
 		}, function( error ) {
-			Wizard.vm.log.addLine( "Error subscribing user #" + user.id() + ". Error: " + error );
+			Wizard.vm.log.addLine( "Error: " + error );
 		});
 
+		// Proceed with next user in 500ms
+		timeout = setTimeout( Wizard.subscribeNextUser, 500 );
+	};
+
+	Wizard.updateProgress = function() {
+		// update progress
+		var progress = Math.round( ( Wizard.vm.userCount() - Wizard.vm.users().length  ) / Wizard.vm.userCount() * 100 );
+		Wizard.vm.progress( progress );
+
+		if( progress === 100 ) {
+			Wizard.vm.log.addLine("Done!");
+		}
 	};
 
 	// View-Model
