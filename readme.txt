@@ -1,10 +1,10 @@
 === MailChimp Sync ===
 Contributors: DvanKooten
 Donate link: https://dannyvankooten.com/donate/
-Tags: mailchimp,users,sync
+Tags: mailchimp,users,sync,mailchimp list,synchronise,zapier
 Requires at least: 3.8
-Tested up to: 4.1.1
-Stable tag: 0.1.1
+Tested up to: 4.2
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,17 @@ Please open a topic on the [WordPress.org plugin support forums](https://wordpre
 2. Status overview
 
 == Changelog ==
+
+= 0.1.2 - March 17, 2015 =
+
+**Fixes**
+
+- Synchronising would stop if a synchronise request failed
+- Conflict with other plugins bundling old versions of Composer, throwing a fatal error on plugin activation
+
+**Improvements**
+
+- Added some feedback to Log whether a synchronisation request succeeded or not.
 
 = 0.1.1 - February 17, 2015 =
 
