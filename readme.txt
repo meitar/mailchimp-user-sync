@@ -81,6 +81,7 @@ Please open a topic on the [WordPress.org plugin support forums](https://wordpre
 
 - Synchronising would stop if a synchronise request failed
 - Conflict with other plugins bundling old versions of Composer, throwing a fatal error on plugin activation
+- Users who were deleted from a list would cause issues, they're now re-subscribed.
 
 **Improvements**
 
