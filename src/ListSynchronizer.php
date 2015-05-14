@@ -175,7 +175,8 @@ class ListSynchronizer {
 			$data['LNAME'] = $user->last_name;
 		}
 
-		// todo: map other fields
+		// Allow other WP extensions to set other list fields (merge variables).
+		$data = apply_filters( 'mailchimp_sync_user_data', $user, $data );
 
 		return $data;
 	}
