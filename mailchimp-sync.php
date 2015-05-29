@@ -2,10 +2,10 @@
 /*
 Plugin Name: MailChimp Sync
 Plugin URI: https://mc4wp.com/
-Description: Synchronizes WP Users with a MailChimp list
-Version: 0.1.2
-Author: Danny van Kooten
-Author URI: https://dannyvankooten.com
+Description: Synchronize your WordPress Users with a MailChimp list.
+Version: 1.0
+Author: ibericode
+Author URI: http://ibericode.com/
 Text Domain: mailchimp-sync
 Domain Path: /languages
 License: GPL v3

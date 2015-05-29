@@ -16,7 +16,7 @@ final class Plugin {
 	/**
 	 * @const VERSION
 	 */
-	const VERSION = '0.1.2';
+	const VERSION = '1.0';
 
 	/**
 	 * @const FILE

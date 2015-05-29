@@ -16,7 +16,7 @@ class SyncCommand extends WP_CLI_Command {
 	 *
 	 * @subcommand sync-all
 	 */
-	public function synchronise_all( $args, $assoc_args ) {
+	public function synchronize_all( $args, $assoc_args ) {
 
 		global $wpdb;
 
@@ -50,7 +50,7 @@ class SyncCommand extends WP_CLI_Command {
 	 * @param $assoc_args
 	 * @subcommand sync-user
 	 */
-	public function synchronise_user( $args, $assoc_args ) {
+	public function synchronize_user( $args, $assoc_args ) {
 
 		$opts = $GLOBALS['MailChimp_Sync']->options;
 		$user_id = absint( $args[0] );

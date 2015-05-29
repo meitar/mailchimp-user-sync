@@ -74,7 +74,7 @@ defined( 'ABSPATH' ) or exit;
 						?>
 					</select>
 				</td>
-				<td class="desc"><?php _e( 'Select a specific role to synchronise.', 'mailchimp-sync' ); ?></td>
+				<td class="desc"><?php _e( 'Select a specific role to synchronize.', 'mailchimp-sync' ); ?></td>
 			</tr>
 
 			<tr>
@@ -95,7 +95,11 @@ defined( 'ABSPATH' ) or exit;
 	<?php if( '' !== $this->options['list'] ) { ?>
 		<h2><?php _e( 'Status', 'mailchimp-for-wp' ); ?></h2>
 
-		<p><?php _e( 'Right now, the plugin is listening to changes in your users and will automatically keep your userbase synced with the selected MailChimp list.', 'mailchimp-sync' ); ?></p>
+		<?php if( $this->options['enabled'] ) { ?>
+			<p><?php _e( 'Right now, the plugin is listening to changes in your users and will automatically keep your userbase synced with the selected MailChimp list.', 'mailchimp-sync' ); ?></p>
+		<?php } else { ?>
+			<p><?php _e( 'The plugin is currently not listening to any changes in your users.', 'mailchimp-sync' ); ?></p>
+		<?php } ?>
 
 		<table class="form-table">
 			<tr valign="top">
