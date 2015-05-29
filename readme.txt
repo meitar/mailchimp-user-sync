@@ -14,20 +14,17 @@ Synchronize your WordPress Users with a MailChimp list.
 
 Synchronize your registered WordPress users with a MailChimp list of your choice.
 
-**This plugin is still in beta. You can definitely use it but it _could_ be subject to changes breaking backwards compatibility.**
-
-> This plugin is an add-on for the [MailChimp for WordPress plugin](https://wordpress.org/plugins/mailchimp-for-wp/).
-> To use it, you need at least MailChimp for WordPress v2.2.3 or MailChimp for WordPress Premium 2.5.5.
+> To use MailChimp Sync, please install either the free or the premium version of the [MailChimp for WordPress plugin](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info/).
 
 = MailChimp Sync, at a glance.. =
 
 MailChimp Sync will watch for changes in your WordPress user base and automatically synchronize any changes with a selected MailChimp list.
 
-- New users are automatically subscribed to your MailChimp list.
-- When user data changes, the MailChimp subscriber will be updated as well. **Even when their email address is changed.**
-- Deleted users will be unsubscribed from the selected MailChimp list as well.
-- You can choose to only synchronize a specific user role, eg "customers"
-- Manually have MailChimp Sync synchronize all existing users.
+- Automatically subscribe new users to your MailChimp list.
+- Sync all profile changes with MailChimp, even when a user's email address changes.
+- When a user is deleted, the associated MailChimp subscriber will be unsubscribed as well.
+- Synchronize all user roles or a specific one, eg all users with the "customer" role.
+- Synchronize all existing users
 - Choose whether you want to use double opt-in and send a welcome email to new subscribers.
 - WP CLI commands to synchronize a large amount of WordPress users at once.
 
@@ -39,7 +36,7 @@ Bug reports (and Pull Requests) for [MailChimp Sync are welcomed on GitHub](http
 
 **More information**
 
-- [MailChimp for WordPress](https://wordpress.org/plugins/mailchimp-for-wp/)
+- [MailChimp for WordPress](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info/)
 - Developers; follow or contribute to the [MailChimp Sync plugin on GitHub](https://github.com/ibericode/mailchimp-sync)
 - Other [WordPress plugins](https://dannyvankooten.com/wordpress-plugins/#utm_source=wp-plugin-repo&utm_medium=link&utm_campaign=more-info-link) by [Danny van Kooten](https://dannyvankooten.com#utm_source=wp-plugin-repo&utm_medium=link&utm_campaign=more-info-link)
 - [@DannyvanKooten](https://twitter.com/dannyvankooten) on Twitter
@@ -52,6 +49,7 @@ Since this plugin depends on the [MailChimp for WordPress plugin](https://wordpr
 
 = Installing MailChimp Sync =
 
+1. Make sure [MailChimp for WordPress](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info/) is installed (free or premium).
 1. In your WordPress admin panel, go to *Plugins > New Plugin*, search for **MailChimp Sync** and click "*Install now*"
 1. Alternatively, download the plugin and upload the contents of `mailchimp-sync.zip` to your plugins directory, which usually is `/wp-content/plugins/`.
 1. Activate the plugin
