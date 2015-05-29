@@ -33,12 +33,12 @@ After activation, the plugin will listen to all changes in your WordPress users 
 
 = Development of MailChimp Sync =
 
-Bug reports (and Pull Requests) for [MailChimp Sync are welcomed on GitHub](https://github.com/dannyvankooten/wp-mailchimp-sync). Please note that GitHub is _not_ a support forum.
+Bug reports (and Pull Requests) for [MailChimp Sync are welcomed on GitHub](https://github.com/ibericode/mailchimp-sync). Please note that GitHub is _not_ a support forum.
 
 **More information**
 
 - [MailChimp for WordPress](https://wordpress.org/plugins/mailchimp-for-wp/)
-- Developers; follow or contribute to the [MailChimp Sync plugin on GitHub](https://github.com/dannyvankooten/wp-mailchimp-sync)
+- Developers; follow or contribute to the [MailChimp Sync plugin on GitHub](https://github.com/ibericode/mailchimp-sync)
 - Other [WordPress plugins](https://dannyvankooten.com/wordpress-plugins/#utm_source=wp-plugin-repo&utm_medium=link&utm_campaign=more-info-link) by [Danny van Kooten](https://dannyvankooten.com#utm_source=wp-plugin-repo&utm_medium=link&utm_campaign=more-info-link)
 - [@DannyvanKooten](https://twitter.com/dannyvankooten) on Twitter
 
@@ -61,7 +61,7 @@ Since this plugin depends on the [MailChimp for WordPress plugin](https://wordpr
 
 = I think I found a bug. What now? =
 
-Please report it on [GitHub issues](https://github.com/dannyvankooten/wp-mailchimp-sync/issues) if it's not in the list of known issues.
+Please report it on [GitHub issues](https://github.com/ibericode/mailchimp-sync/issues) if it's not in the list of known issues.
 
 = I have another question =
 
@@ -91,7 +91,7 @@ Please open a topic on the [WordPress.org plugin support forums](https://wordpre
 
 **Fixes**
 
-- Force Sync got stuck on users without a valid email address. ([#10](https://github.com/dannyvankooten/wp-mailchimp-sync/issues/10), thanks [girandovoy](https://github.com/girandovoy))
+- Force Sync got stuck on users without a valid email address. ([#10](https://github.com/ibericode/mailchimp-sync/issues/10), thanks [girandovoy](https://github.com/girandovoy))
 - JSON response was malformed when any plugin threw a PHP notice
 
 **Improvements**
