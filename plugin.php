@@ -60,7 +60,7 @@ final class Plugin {
 		$this->options = $this->load_options();
 
 		// if a list was selected, initialise the ListSynchronizer class
-		if( $this->options['list'] != '' ) {
+		if( $this->options['list'] != '' && $this->options['enabled'] ) {
 			$listSyncer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
 			$listSyncer->add_hooks();
 		}
@@ -93,7 +93,8 @@ final class Plugin {
 			'list' => '',
 			'double_optin' => 0,
 			'send_welcome' => 0,
-			'role' => ''
+			'role' => '',
+			'enabled' => 1
 		);
 
 		$options = array_merge( $defaults, $options );

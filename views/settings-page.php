@@ -74,6 +74,16 @@ defined( 'ABSPATH' ) or exit;
 						?>
 					</select>
 				</td>
+				<td class="desc"><?php _e( 'Select a specific role to synchronise.', 'mailchimp-sync' ); ?></td>
+			</tr>
+
+			<tr>
+				<th scope="row"><?php _e( 'Enabled?', 'mailchimp-sync' ); ?></th>
+				<td class="nowrap">
+					<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="1" <?php checked( $this->options['enabled'], 1 ); ?> /> <?php _e( 'Yes' ); ?></label>
+					<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="0" <?php checked( $this->options['enabled'], 0 ); ?> /> <?php _e( 'No' ); ?></label>
+				</td>
+				<td class="desc"><?php _e( 'Select "yes" if you want the plugin to "listen" to all changes in your WordPress user base and auto-sync them with the selected MailChimp list..', 'mailchimp-sync' ); ?></td>
 			</tr>
 
 		</table>
