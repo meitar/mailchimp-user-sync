@@ -175,6 +175,10 @@ class ListSynchronizer {
 			$data['LNAME'] = $user->last_name;
 		}
 
+		if( '' !== $user->first_name  && '' !== $user->last_name ) {
+			$data['NAME'] = sprintf( '%s %s', $user->first_name, $user->last_name );
+		}
+
 		// Allow other WP extensions to set other list fields (merge variables).
 		$data = apply_filters( 'mailchimp_sync_user_data', $data, $user );
 
