@@ -4,7 +4,7 @@ var User = require('./User.js');
 
 var Wizard = (function() {
 
-	var running = false, done = false;
+	var started = false, running = false, done = false;
 	var userCount = 0;
 	var usersProcessed = 0;
 	var progress = m.prop( 0 );
@@ -25,6 +25,7 @@ var Wizard = (function() {
 	}
 
 	function start() {
+		started = true;
 		running = true;
 
 		fetchTotalUserCount()
@@ -33,8 +34,15 @@ var Wizard = (function() {
 
 	}
 
+	function resume() {
+		running = true;
+		subscribeFromBatch();
+		m.redraw();
+	}
+
 	function pause() {
 		running = false;
+		m.redraw();
 	}
 
 	function fetchTotalUserCount() {
@@ -69,7 +77,7 @@ var Wizard = (function() {
 			log.addLine("Fetched " + users.length + " users.");
 			batch( users );
 			deferred.resolve();
-			m.render();
+			m.redraw();
 		}, function( error ) {
 			log.addLine( "Error fetching users. Error: " + error );
 		});
@@ -145,14 +153,17 @@ var Wizard = (function() {
 	function view() {
 
 		// Wizard isn't running, show button to start it
-		if( ! running ) {
+		if( ! started ) {
 			return m('p', [
-				m('input', { type: 'submit', class: 'button', value: 'Synchronise All', onclick: askToStart } )
+				m('input', { type: 'button', class: 'button', value: 'Synchronise All', onclick: askToStart } )
 			]);
-		}
+		} else
 
 		// Show progress
 		return [
+			m("p",[
+				m("input", { type: 'button', class: 'button', value: ( running ) ? "Pause" : "Resume", onclick: ( running ) ? pause : resume })
+			]),
 			m('div.progress-bar', [
 				m( "div.value", { style: "width: "+ progress() +"%" } ),
 				m( "div.text", {}, ( progress() == 100 ) ? "Done!" : "Working: " + progress() + "%" )

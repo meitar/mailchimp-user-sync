@@ -6,6 +6,7 @@
   height: 20px;
   background: #ccc;
   position: relative;
+  margin: 20px 0;
 }
 #mc4wp-admin .progress-bar .value,
 #mc4wp-admin .progress-bar .text {
