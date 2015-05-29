@@ -61,6 +61,21 @@ defined( 'ABSPATH' ) or exit;
 				<td class="desc"><?php _e( 'Select "yes" if you want to send your lists Welcome Email if a subscribe succeeds (only when double opt-in is disabled).', 'mailchimp-for-wp' ); ?></td>
 			</tr>
 
+			<tr valign="top">
+				<th scope="row"><?php _e( 'Role to sync', 'mailchimp-sync' ); ?></th>
+				<td class="nowrap">
+					<select name="<?php echo $this->name_attr('role'); ?>" id="role-select">
+						<option value="" <?php selected( $this->options['role'], '' ); ?>>All roles</option>
+						<?php
+						$roles = get_editable_roles();
+						foreach( $roles as $key => $role ) {
+							echo '<option value="' . $key . '" '. selected( $this->options['role'], $key, false ) .'>' . $role['name'] . '</option>';
+						}
+						?>
+					</select>
+				</td>
+			</tr>
+
 		</table>
 
 		<?php submit_button(); ?>

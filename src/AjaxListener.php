@@ -63,7 +63,8 @@ class AjaxListener {
 	 * Get user count
 	 */
 	protected function get_user_count() {
-		$this->respond( $this->wizard->get_user_count() );
+		$role = ( isset( $_REQUEST['role'] ) ) ? $_REQUEST['role'] : '';
+		$this->respond( $this->wizard->get_user_count( $role ) );
 	}
 
 	/**
@@ -72,7 +73,8 @@ class AjaxListener {
 	protected function get_users() {
 
 		$offset = ( isset( $_REQUEST['offset'] ) ? absint( $_REQUEST['offset'] ) : 0 );
-		$users = $this->wizard->get_users( '', $offset );
+		$role = ( isset( $_REQUEST['role'] ) ) ? $_REQUEST['role'] : '';
+		$users = $this->wizard->get_users( $role, $offset );
 
 		// send response
 		$this->respond( $users );

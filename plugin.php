@@ -93,6 +93,7 @@ final class Plugin {
 			'list' => '',
 			'double_optin' => 0,
 			'send_welcome' => 0,
+			'role' => ''
 		);
 
 		$options = array_merge( $defaults, $options );
