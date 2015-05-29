@@ -12,6 +12,9 @@ class Wizard {
 
 	/**
 	 * Constructor
+	 *
+	 * @param       $list_id
+	 * @param array $options
 	 */
 	public function __construct( $list_id, $options = array() ) {
 

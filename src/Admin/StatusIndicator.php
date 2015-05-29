@@ -2,6 +2,8 @@
 
 namespace MailChimp\Sync\Admin;
 
+use MailChimp\Sync\Wizard;
+
 class StatusIndicator {
 
 	/**
@@ -22,7 +24,7 @@ class StatusIndicator {
 	/**
 	 * @var int Number of registered WP users
 	 */
-	public $user_count = 1;
+	public $user_count = 0;
 
 	/**
 	 * @var int Number of WP Users on the selected list (according to local meta value)
@@ -30,41 +32,56 @@ class StatusIndicator {
 	public $subscriber_count = 0;
 
 	/**
-	 * @param $list_id
+	 * @var string
 	 */
-	public function __construct( $list_id ) {
-		$this->list_id = $list_id;
+	public $user_role = '';
 
-		$this->user_count = $this->get_user_count();
+	/**
+	 * @param        $list_id
+	 * @param string $user_role
+	 */
+	public function __construct( $list_id, $user_role = '' ) {
+		$this->list_id   = $list_id;
+		$this->user_role = $user_role;
+		$this->wizard = new Wizard( $list_id );
+	}
+
+	/**
+	 *
+	 */
+	public function check() {
+		$this->user_count = $this->wizard->get_user_count( $this->user_role );
 		$this->subscriber_count = $this->get_subscriber_count();
 		$this->status = ( $this->user_count === $this->subscriber_count );
-		$this->progress = ceil( $this->subscriber_count / $this->user_count * 100 );
+		$this->progress = ( $this->user_count > 0 ) ? ceil( $this->subscriber_count / $this->user_count * 100 ) : 0;
 	}
+
 
 	/**
 	 * @return int
 	 */
-	private function get_user_count() {
-		// count user meta rows WITHOUT meta field with key mailchimp_sync_{$LIST_ID}
+	public function get_subscriber_count() {
 		global $wpdb;
 
-		// get number of users
-		$user_count = $wpdb->get_var( "SELECT COUNT(u.ID) FROM {$wpdb->users} u WHERE u.user_email != ''" );
+		$sql = "SELECT COUNT(u.ID) FROM $wpdb->users u INNER JOIN $wpdb->usermeta um1 ON um1.user_id = u.ID ";
 
-		return (int) $user_count;
-	}
+		if( '' !== $this->user_role ) {
+			$sql .= "INNER JOIN $wpdb->usermeta um2 ON um2.user_id = u.ID WHERE um2.meta_key = 'wp_capabilities' AND um2.meta_value LIKE %s AND ";
+			$sql .= "um1.meta_key = %s";
 
-	/**
-	 * @return int
-	 */
-	private function get_subscriber_count() {
-		global $wpdb;
+			$query = $wpdb->prepare( $sql, '%%' . $this->user_role . '%%', 'mailchimp_sync_' . $this->list_id );
+		} else {
+			$sql .= "WHERE ";
+			$sql .= "um1.meta_key = %s";
+
+			$query = $wpdb->prepare( $sql, 'mailchimp_sync_' . $this->list_id );
+		}
 
 		// now get number of users with meta key
-		$query = $wpdb->prepare( "SELECT COUNT(um.user_id) FROM {$wpdb->usermeta} um WHERE um.meta_key = %s", 'mailchimp_sync_' . $this->list_id );
 		$subscriber_count = $wpdb->get_var( $query );
-
 		return (int) $subscriber_count;
 	}
+
+
 
 }

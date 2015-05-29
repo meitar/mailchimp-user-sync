@@ -163,7 +163,8 @@ class Manager {
 		$lists = $mailchimp->get_lists();
 
 		if( $this->options['list'] !== '' ) {
-			$status_indicator = new StatusIndicator( $this->options['list'] );
+			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
+			$status_indicator->check();
 			$selected_list = $mailchimp->get_list( $this->options['list'] );
 		}
 
