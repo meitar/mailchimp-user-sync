@@ -78,8 +78,8 @@ module.exports = Log;
  */
 var User = function( data ) {
 	this.id = m.prop( data.ID );
-	this.username = m.prop( data.username );
-	this.email = m.prop( data.email );
+	this.username = m.prop( data.user_login );
+	this.email = m.prop( data.user_email );
 };
 
 module.exports = User;

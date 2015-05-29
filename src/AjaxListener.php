@@ -72,7 +72,7 @@ class AjaxListener {
 	protected function get_users() {
 
 		$offset = ( isset( $_REQUEST['offset'] ) ? absint( $_REQUEST['offset'] ) : 0 );
-		$users = $this->wizard->get_users( $offset );
+		$users = $this->wizard->get_users( '', $offset );
 
 		// send response
 		$this->respond( $users );

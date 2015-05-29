@@ -21,16 +21,17 @@ class SyncCommand extends WP_CLI_Command {
 		global $wpdb;
 
 		$wizard = new Wizard( $GLOBALS['MailChimp_Sync']->options['list'], $GLOBALS['MailChimp_Sync']->options );
+		$user_role = ( isset( $assoc_args['role'] ) ) ? $assoc_args['role'] : '';
 
 		// start by counting all users
-		$user_count = $wizard->get_user_count();
+		$user_count = $wizard->get_user_count( $user_role );
 		WP_CLI::line( "Found $user_count users." );
 
 		// query users in batches of 50
 		$processed = 0;
 		while( $processed < $user_count ) {
 
-			$batch = $wizard->get_users( $processed );
+			$batch = $wizard->get_users( $user_role, $processed );
 
 			if( $batch ) {
 				$wizard->subscribe_users( $batch );

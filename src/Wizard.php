@@ -25,31 +25,42 @@ class Wizard {
 	/**
 	 * Get user count
 	 *
+	 * @param string $role
+	 *
 	 * @return int
 	 */
-	public function get_user_count() {
-		$result = $this->db->get_var( "SELECT count(ID) FROM {$this->db->users} WHERE user_email != ''" );
-		return $result;
+	public function get_user_count( $role = '' ) {
+		$count = count_users();
+
+		if( '' !== $role ) {
+			return isset( $count['avail_roles'][ $role ] ) ? $count['avail_roles'][ $role ] : 0;
+		}
+
+		return $count['total_users'];
 	}
 
 	/**
 	 * Responds with an array of all user ID's
 	 *
-	 * @param int $offset
-	 * @param int $limit
+	 * @param string $role
+	 * @param int    $offset
+	 * @param int    $limit
 	 *
 	 * @return mixed
 	 */
-	public function get_users( $offset = 0, $limit = 50 ) {
+	public function get_users( $role = '', $offset = 0, $limit = 50 ) {
 
 		// query users in database, but only users with a valid email
-		$sql = "SELECT ID, user_login AS username, user_email AS email
-			FROM {$this->db->users}
-			WHERE user_email != ''
-			LIMIT %d, %d";
+		$users = get_users(
+			array(
+				'role' => $role,
+				'offset' => $offset,
+				'limit' => $limit,
+				'fields' => array( 'ID', 'user_login', 'user_email' )
+			)
+		);
 
-		$query = $this->db->prepare( $sql, $offset, $limit );
-		return $this->db->get_results( $query, OBJECT );
+		return $users;
 	}
 
 	/**
