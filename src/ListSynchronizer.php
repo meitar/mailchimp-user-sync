@@ -2,6 +2,8 @@
 
 namespace MailChimp\Sync;
 
+use WP_User;
+
 class ListSynchronizer {
 
 
@@ -67,7 +69,7 @@ class ListSynchronizer {
 		$user =  get_user_by( 'id', $user_id );
 
 		// do nothing if user has no valid email
-		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+		if(  ! $user instanceof WP_User || '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			return false;
 		}
 
@@ -137,7 +139,7 @@ class ListSynchronizer {
 		$user = get_user_by( 'id', $user_id );
 
 		// do nothing if user has no valid email
-		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+		if( ! $user instanceof WP_User || '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			return false;
 		}
 

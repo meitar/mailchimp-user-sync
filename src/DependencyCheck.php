@@ -12,9 +12,16 @@ class DependencyCheck {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
-		$this->dependencies_installed = $this->check_dependencies();
-		$this->add_actions();
+	public function __construct() {}
+
+	public function check() {
+		$check = $this->check_dependencies();
+
+		if( ! $check ) {
+			$this->add_actions();
+		}
+
+		return $check;
 	}
 
 	/**
@@ -40,14 +47,7 @@ class DependencyCheck {
 	 * @return bool
 	 */
 	private function add_actions() {
-
-		// only add actions when dependencies are not installed
-		if( $this->dependencies_installed ) {
-			return false;
-		}
-
 		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
-
 		return true;
 	}
 

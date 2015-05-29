@@ -3,6 +3,8 @@
 namespace MailChimp\Sync;
 
 // Prevent direct file access
+use MailChimp\Sync\CLI\CommandProvider;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -34,13 +36,18 @@ final class Plugin {
 	/**
 	 * @var array
 	 */
-	private $options = array();
+	public $options = array();
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {	}
 
+	public function dependencies_met() {
+		// check dependencies and only continue if installed
+		$dependencyCheck = new DependencyCheck();
+		return $dependencyCheck->check();
+	}
 
 	/**
 	 * Let's go...
@@ -48,12 +55,6 @@ final class Plugin {
 	 * Runs at `plugins_loaded` priority 30.
 	 */
 	public function load() {
-
-		// check dependencies and only continue if installed
-		$dependencyCheck = new DependencyCheck();
-		if( ! $dependencyCheck->dependencies_installed ) {
-			return false;
-		}
 
 		// load plugin options
 		$this->options = $this->load_options();
@@ -64,11 +65,17 @@ final class Plugin {
 			$listSyncer->add_hooks();
 		}
 
+		if( defined( 'WP_CLI' ) && WP_CLI ) {
+			$commands = new CommandProvider();
+			$commands->register();
+		}
+
 		// Load area-specific code
 		if( ! is_admin() ) {
 
 		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			new AJAX\Wizard( $this->options );
+			$ajax = new AjaxListener( $this->options );
+			$ajax->add_hooks();
 		} else {
 			$admin = new Admin\Manager( $this->options );
 			$admin->add_hooks();
@@ -104,6 +111,10 @@ final class Plugin {
 
 add_action( 'plugins_loaded', function() {
 	$plugin = new Plugin();
-	$plugin->load();
+
+	if( $plugin->dependencies_met() ) {
+		$plugin->load();
+	}
+
 	$GLOBALS['MailChimp_Sync'] = $plugin;
 } );

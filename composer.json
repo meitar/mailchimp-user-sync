@@ -1,5 +1,5 @@
 {
-  "name": "dannyvankooten/wp-mailchimp-sync",
+  "name": "ibericode/mailchimp-sync",
   "type": "wordpress-plugin",
   "description": "Synchronze your WP Users with a MailChimp list.",
   "keywords": ["wordpress", "mailchimp"],

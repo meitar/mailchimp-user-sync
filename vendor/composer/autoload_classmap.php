@@ -6,9 +6,12 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'MailChimp\\Sync\\AJAX\\Wizard' => $baseDir . '/src/AJAX/Wizard.php',
     'MailChimp\\Sync\\Admin\\Manager' => $baseDir . '/src/Admin/Manager.php',
     'MailChimp\\Sync\\Admin\\StatusIndicator' => $baseDir . '/src/Admin/StatusIndicator.php',
+    'MailChimp\\Sync\\AjaxListener' => $baseDir . '/src/AjaxListener.php',
+    'MailChimp\\Sync\\CLI\\CommandProvider' => $baseDir . '/src/CLI/CommandProvider.php',
+    'MailChimp\\Sync\\CLI\\SyncCommand' => $baseDir . '/src/CLI/SyncCommand.php',
     'MailChimp\\Sync\\DependencyCheck' => $baseDir . '/src/DependencyCheck.php',
     'MailChimp\\Sync\\ListSynchronizer' => $baseDir . '/src/ListSynchronizer.php',
+    'MailChimp\\Sync\\Wizard' => $baseDir . '/src/Wizard.php',
 );

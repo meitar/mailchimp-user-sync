@@ -1,25 +1,27 @@
 <?php
 
-namespace MailChimp\Sync\AJAX;
+namespace MailChimp\Sync;
 
-use MailChimp\Sync\Admin\StatusIndicator,
-	MailChimp\Sync\ListSynchronizer;
-
-class Wizard {
+class AjaxListener {
 
 	/**
 	 * @var array
 	 */
-	private $options;
+	protected $options;
 
 	/**
 	 * @var array
 	 */
-	private $allowed_actions = array(
+	protected $allowed_actions = array(
 		'get_users',
 		'subscribe_users',
 		'get_user_count'
 	);
+
+	/**
+	 * @var Wizard
+	 */
+	protected $wizard;
 
 	/**
 	 * Constructor
@@ -27,7 +29,12 @@ class Wizard {
 	 */
 	public function __construct( array $options ) {
 		$this->options = $options;
+	}
 
+	/**
+	 * Add hooks
+	 */
+	public function add_hooks() {
 		add_action( 'wp_ajax_mcs_wizard', array( $this, 'route' ) );
 	}
 
@@ -44,6 +51,7 @@ class Wizard {
 
 		// check if method exists and is allowed
 		if( in_array( $_REQUEST['mcs_action'], $this->allowed_actions ) ) {
+			$this->wizard = new Wizard( $this->options['list'], $this->options );
 			$this->{$_REQUEST['mcs_action']}();
 			exit;
 		}
@@ -55,70 +63,47 @@ class Wizard {
 	 * Get user count
 	 */
 	protected function get_user_count() {
-		global $wpdb;
-		$result = $wpdb->get_var( "SELECT count(ID) FROM {$wpdb->users} WHERE user_email != ''" );
-		$this->respond( $result );
+		$this->respond( $this->wizard->get_user_count() );
 	}
 
 	/**
 	 * Responds with an array of all user ID's
 	 */
-	private function get_users() {
-		global $wpdb;
-
-		// query users in database, but only users with a valid email
-		$sql = "SELECT ID, user_login AS username, user_email AS email
-			FROM $wpdb->users
-			WHERE user_email != ''
-			LIMIT %d, 50";
-
+	protected function get_users() {
 
 		$offset = ( isset( $_REQUEST['offset'] ) ? absint( $_REQUEST['offset'] ) : 0 );
-		$query = $wpdb->prepare( $sql, $offset );
-		$result = $wpdb->get_results( $query, OBJECT );
+		$users = $this->wizard->get_users( $offset );
 
 		// send response
-		$this->respond( $result );
+		$this->respond( $users );
 	}
 
 	/**
 	 * Subscribes the provided user ID's
 	 * Returns the updates progress
 	 */
-	private function subscribe_users() {
-
-		// instantiate list syncer for selected list
-		$syncer = new ListSynchronizer( $this->options['list'], $this->options );
+	protected function subscribe_users() {
 
 		// make sure `user_ids` is an array
-		$user_ids = $_GET['user_ids'];
+		$user_ids = $_REQUEST['user_ids'];
 		if( ! is_array( $user_ids ) ) {
 			$user_ids = sanitize_text_field( $user_ids );
 			$user_ids = explode( ',', $user_ids );
 		}
 
-		// loop through user ID's
-		foreach( $user_ids as $user_id ) {
-			$result = $syncer->update_subscriber( $user_id );
-		}
+		$result = $this->wizard->subscribe_users( $user_ids );
 
 		if( $result ) {
 			$this->respond( array( 'success' => true ) );
-			exit;
 		}
-
-		// get api error
-		$api = mc4wp_get_api();
-		$error = $api->get_error_message();
 
 		// send response
 		$this->respond(
 			array(
 				'success' => $result,
-				'error' => $error
+				'error' =>  $this->wizard->get_error()
 			)
 		);
-		exit;
 	}
 
 	/**
