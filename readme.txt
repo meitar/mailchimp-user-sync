@@ -75,6 +75,7 @@ You can send additional user data by hooking into the `mailchimp_sync_user_data`
 `
 add_filter( 'mailchimp_sync_user_data', function( $data, $user ) {
 	$data['WEBSITE'] = $user->user_url;
+	return $data;
 }, 10, 2 );
 `
 
@@ -92,7 +93,7 @@ This is especially useful for synchronising a huge amount of users.
 
 == Screenshots ==
 
-1. synchronization settings
+1. Synchronization settings
 2. Status overview
 
 == Changelog ==
@@ -105,14 +106,16 @@ This is especially useful for synchronising a huge amount of users.
 
 **Improvements**
 
-- Pause / resume the forced sync process
+- Pause & resume the forced synchronization process
 
 **Additions**
 
-- Enable / disable auto-syncing
+- Enable & disable auto-syncing
 - Choose a user role to synchronize.
-- [WP CLI](http://wp-cli.org/) commands: `wp mailchimp-sync sync-all` and `wp mailchimp-sync sync-user $user_id`. For more usage info, have a look at the [MailChimp Sync FAQ](https://wordpress.org/plugins/mailchimp-sync/faq/).
-- `mailchimp_sync_user_data` to modify user data before it's sent to MailChimp.
+- [WP CLI](http://wp-cli.org/) commands: `wp mailchimp-sync sync-all` and `wp mailchimp-sync sync-user $user_id`.
+- Filter: `mailchimp_sync_user_data` to modify user data before it's sent to MailChimp.
+
+For more detailed usage info on the introduced features, have a look at the [MailChimp Sync FAQ](https://wordpress.org/plugins/mailchimp-sync/faq/).
 
 = 0.1.2 - March 17, 2015 =
 
