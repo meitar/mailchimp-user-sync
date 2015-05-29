@@ -18,10 +18,14 @@ class Manager {
 	 * @param array $options
 	 */
 	public function __construct( array $options ) {
-
 		$this->options = $options;
 		$this->plugin_slug = basename( Plugin::DIR ) . '/mailchimp-sync.php';
+	}
 
+	/**
+	 * Add hooks
+	 */
+	public function add_hooks() {
 		add_action( 'admin_init', array( $this, 'init' ) );
 		add_filter( 'mc4wp_menu_items', array( $this, 'add_menu_items' ) );
 	}

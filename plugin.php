@@ -37,32 +37,10 @@ final class Plugin {
 	private $options = array();
 
 	/**
-	 * @var
-	 */
-	private static $instance;
-
-	/**
-	 * @return Plugin
-	 */
-	public static function instance() {
-
-		if( ! self::$instance ) {
-			self::$instance = new Plugin;
-		}
-
-		return self::$instance;
-	}
-
-	/**
 	 * Constructor
 	 */
-	private function __construct() {
+	public function __construct() {	}
 
-		require __DIR__ . '/vendor/autoload.php';
-
-		// Load plugin files on a later hook
-		add_action( 'plugins_loaded', array( $this, 'load' ), 30 );
-	}
 
 	/**
 	 * Let's go...
@@ -92,7 +70,8 @@ final class Plugin {
 		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			new AJAX\Wizard( $this->options );
 		} else {
-			new Admin\Manager( $this->options );
+			$admin = new Admin\Manager( $this->options );
+			$admin->add_hooks();
 		}
 	}
 
@@ -123,4 +102,8 @@ final class Plugin {
 
 }
 
-$GLOBALS['MailChimp_Sync'] = Plugin::instance();
+add_action( 'plugins_loaded', function() {
+	$plugin = new Plugin();
+	$plugin->load();
+	$GLOBALS['MailChimp_Sync'] = $plugin;
+} );

@@ -36,10 +36,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Check if PHP is at the minimum required version
 if( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
+
 	define( 'MAILCHIMP_SYNC_FILE', __FILE__ );
-	require_once dirname( __FILE__ ) . '/plugin.php';
+	require dirname( __FILE__ ) . '/vendor/autoload.php';
+	require dirname( __FILE__ ) . '/plugin.php';
 } else {
-	require_once dirname( __FILE__ ) . '/php-backwards-compatibility.php';
+	require dirname( __FILE__ ) . '/php-backwards-compatibility.php';
 }
 
 

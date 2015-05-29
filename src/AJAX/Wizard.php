@@ -68,7 +68,7 @@ class Wizard {
 
 		// query users in database, but only users with a valid email
 		$sql = "SELECT ID, user_login AS username, user_email AS email
-			FROM {$wpdb->users}
+			FROM $wpdb->users
 			WHERE user_email != ''
 			LIMIT %d, 50";
 
