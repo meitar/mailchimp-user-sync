@@ -61,7 +61,7 @@ final class Plugin {
 
 		// if a list was selected, initialise the ListSynchronizer class
 		if( $this->options['list'] != '' ) {
-			$listSyncer = new ListSynchronizer( $this->options['list'], $this->options );
+			$listSyncer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
 			$listSyncer->add_hooks();
 		}
 

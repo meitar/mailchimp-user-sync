@@ -72,7 +72,8 @@ class Wizard {
 	public function subscribe_users( array $user_ids ) {
 
 		// instantiate list syncer for selected list
-		$syncer = new ListSynchronizer( $this->options['list'], $this->options );
+		// use an empty role here, since user_id should already be filtered on a role
+		$syncer = new ListSynchronizer( $this->options['list'], '', $this->options );
 
 		// loop through user ID's
 		$result = false;
