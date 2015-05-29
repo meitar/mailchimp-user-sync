@@ -38,6 +38,15 @@ module.exports = function(grunt) {
 			}
 		},
 
+		browserify: {
+
+			Admin: {
+				src: ['assets/js-src/Admin.js'],
+				dest: 'assets/js/admin.js'
+			}
+
+		},
+
 		watch: {
 			js:  {
 				files: 'assets/js/*.js',
@@ -59,8 +68,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-browserify');
 
 	// register at least this one task
-	grunt.registerTask('default', [ 'uglify', 'sass', 'cssmin' ]);
+	grunt.registerTask('default', [ 'browserify:Admin', 'uglify', 'sass', 'cssmin' ]);
 
 };
