@@ -161,9 +161,10 @@ var Wizard = (function() {
 
 		// Show progress
 		return [
-			m("p",[
-				m("input", { type: 'button', class: 'button', value: ( running ) ? "Pause" : "Resume", onclick: ( running ) ? pause : resume })
-			]),
+			(
+				( done ) ? '' : m("p",[
+					m("input", { type: 'button', class: 'button', value: ( running ) ? "Pause" : "Resume", onclick: ( running ) ? pause : resume })
+				]) ),
 			m('div.progress-bar', [
 				m( "div.value", { style: "width: "+ progress() +"%" } ),
 				m( "div.text", {}, ( progress() == 100 ) ? "Done!" : "Working: " + progress() + "%" )
