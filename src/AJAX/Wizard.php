@@ -17,7 +17,8 @@ class Wizard {
 	 */
 	private $allowed_actions = array(
 		'get_users',
-		'subscribe_users'
+		'subscribe_users',
+		'get_user_count'
 	);
 
 	/**
@@ -51,6 +52,15 @@ class Wizard {
 	}
 
 	/**
+	 * Get user count
+	 */
+	protected function get_user_count() {
+		global $wpdb;
+		$result = $wpdb->get_var( "SELECT count(ID) FROM {$wpdb->users} WHERE user_email != ''" );
+		$this->respond( $result );
+	}
+
+	/**
 	 * Responds with an array of all user ID's
 	 */
 	private function get_users() {
@@ -59,8 +69,13 @@ class Wizard {
 		// query users in database, but only users with a valid email
 		$sql = "SELECT ID, user_login AS username, user_email AS email
 			FROM {$wpdb->users}
-			WHERE user_email != ''";
-		$result = $wpdb->get_results( $sql, OBJECT );
+			WHERE user_email != ''
+			LIMIT %d, 50";
+
+
+		$offset = ( isset( $_REQUEST['offset'] ) ? absint( $_REQUEST['offset'] ) : 0 );
+		$query = $wpdb->prepare( $sql, $offset );
+		$result = $wpdb->get_results( $query, OBJECT );
 
 		// send response
 		$this->respond( $result );
