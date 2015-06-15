@@ -159,13 +159,12 @@ class Manager {
 	 */
 	public function show_settings_page() {
 
-		$mailchimp = new \MC4WP_MailChimp();
-		$lists = $mailchimp->get_lists();
+		$lists = $this->get_mailchimp_lists();
 
 		if( $this->options['list'] !== '' ) {
 			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
 			$status_indicator->check();
-			$selected_list = $mailchimp->get_list( $this->options['list'] );
+			$selected_list = isset( $lists[ $this->options['list'] ] ) ? $lists[ $this->options['list'] ] : null;
 		}
 
 		require Plugin::DIR . '/views/settings-page.php';
@@ -195,6 +194,28 @@ class Manager {
 		$clean = $dirty;
 
 		return $clean;
+	}
+
+	/**
+	 * Helper function to retrieve MailChimp lists through MailChimp for WordPress
+	 *
+	 * Will try v3.0+ first, then fallback to older versions.
+	 *
+	 * @return array
+	 */
+	protected function get_mailchimp_lists() {
+
+		if( method_exists( 'MC4WP_MailChimp_Tools', 'get_lists' ) ) {
+			return \MC4WP_MailChimp_Tools::get_lists();
+		}
+
+		/** @deprecated MailChimp for WordPress v3.0  */
+		if( class_exists( 'MC4WP_MailChimp' ) ) {
+			$mailchimp = new \MC4WP_MailChimp();
+			return $mailchimp->get_lists();
+		}
+
+		return array();
 	}
 
 
