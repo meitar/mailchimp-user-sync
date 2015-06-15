@@ -1,6 +1,6 @@
 === MailChimp Sync ===
 Contributors: DvanKooten, ibericode, iMazed, hchouhan
-Donate link: https://mc4wp.com/
+Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-top-bar&utm_campaign=donate-link
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce
 Requires at least: 3.8
 Tested up to: 4.2.2
@@ -14,7 +14,7 @@ Synchronize your WordPress Users with a MailChimp list.
 
 Synchronize your registered WordPress users with a MailChimp list of your choice.
 
-> To use MailChimp Sync, please install either the free or the premium version of the [MailChimp for WordPress plugin](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info/).
+> To use MailChimp Sync, please install either the free or the premium version of the [MailChimp for WordPress plugin](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info).
 
 = MailChimp Sync, at a glance.. =
 
