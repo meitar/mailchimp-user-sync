@@ -1,10 +1,10 @@
 === MailChimp Sync ===
-Contributors: DvanKooten, ibericode, iMazed, hchouhan
-Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-top-bar&utm_campaign=donate-link
-Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce
+Contributors: Ibericode, DvanKooten, iMazed, hchouhan
+Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=donate-link
+Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.2.2
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,7 @@ This is especially useful for synchronising a huge amount of users.
 **Improvements**
 
 - More detailed error message are now shown in the log.
+- Force Sync will now start with unsynced users.
 
 = 1.0 - May 29, 2015 =
 
@@ -157,5 +158,5 @@ Initial release.
 
 == Upgrade Notice ==
 
-= 1.0 =
-Fix for large data sets, sync a specific user role only, WP CLI commands & various other improvements.
+= 1.0.1 =
+Forced Sync will now start with unsynced users and show more detailed error messages.

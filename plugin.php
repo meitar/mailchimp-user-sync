@@ -16,7 +16,7 @@ final class Plugin {
 	/**
 	 * @const VERSION
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 	/**
 	 * @const FILE
@@ -43,6 +43,9 @@ final class Plugin {
 	 */
 	public function __construct() {	}
 
+	/**
+	 * @return bool
+	 */
 	public function dependencies_met() {
 		// check dependencies and only continue if installed
 		$dependencyCheck = new DependencyCheck();
@@ -111,6 +114,7 @@ final class Plugin {
 
 }
 
+// Instantiate plugin on a later hook.
 add_action( 'plugins_loaded', function() {
 	$plugin = new Plugin();
 
