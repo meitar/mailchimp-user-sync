@@ -88,9 +88,7 @@ class Wizard {
 			return true;
 		}
 
-		// get api error
-		$api = mc4wp_get_api();
-		$this->error = $api->get_error_message();
+		$this->error = $syncer->error;
 		return false;
 	}
 

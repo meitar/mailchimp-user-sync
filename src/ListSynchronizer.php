@@ -22,6 +22,11 @@ class ListSynchronizer {
 	private $meta_key = 'mailchimp_sync';
 
 	/**
+	 * @var string
+	 */
+	public $error = '';
+
+	/**
 	 * @var array
 	 */
 	private $settings = array(
@@ -77,7 +82,13 @@ class ListSynchronizer {
 		$user =  get_user_by( 'id', $user_id );
 
 		// do nothing if user has no valid email
-		if(  ! $user instanceof WP_User || '' === $user->user_email || ! is_email( $user->user_email ) ) {
+		if(  ! $user instanceof WP_User ) {
+			$this->error = 'Invalid user ID.';
+			return false;
+		}
+
+		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+			$this->error = 'Invalid email.';
 			return false;
 		}
 
@@ -102,6 +113,8 @@ class ListSynchronizer {
 			return true;
 		}
 
+		// store error message returned by API
+		$this->error = $api->get_error_message();
 		return false;
 	}
 
@@ -152,7 +165,11 @@ class ListSynchronizer {
 		$user = get_user_by( 'id', $user_id );
 
 		// do nothing if user has no valid email
-		if( ! $user instanceof WP_User || '' === $user->user_email || ! is_email( $user->user_email ) ) {
+		if( ! $user instanceof WP_User ) {
+			$this->error = 'Invalid user ID.';
+			return false;
+		} elseif( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+			$this->error = 'Invalid email.';
 			return false;
 		}
 
@@ -169,10 +186,15 @@ class ListSynchronizer {
 		$success = $api->update_subscriber( $this->list_id, array( 'leid' => $subscriber_uid ), $merge_vars, $this->settings['email_type'], $this->settings['replace_interests'] );
 
 		// TODO: Remove check for `get_error_code`, available since MailChimp for WP Lite 2.2.8 and MailChimp for WP Pro 2.6.3. Update dependency check in that case.
-		if( ! $success && ( ! method_exists( $api, 'get_error_code' ) || $api->get_error_code() === 232 ) ) {
+		if( ! $success ) {
+
 			// subscriber leid did not match anything in the list, remove it and re-subscribe.
-			delete_user_meta( $user_id, $this->meta_key );
-			return $this->subscribe_user( $user_id );
+			if( ! method_exists( $api, 'get_error_code' ) || $api->get_error_code() === 232 ) {
+				delete_user_meta( $user_id, $this->meta_key );
+				return $this->subscribe_user( $user_id );
+			}
+
+			$this->error = $api->get_error_message();
 		}
 
 		return $success;

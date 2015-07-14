@@ -122,11 +122,18 @@ var Wizard = (function() {
 			url: ajaxurl
 		}).then(function( data ) {
 
-			log.addTextToLastLine( ( data.success ) ? "Success!" : "Error." );
+
+			if( data.success ) {
+				log.addTextToLastLine( "Success!" );
+
+			}
+
+			if( data.error ) {
+				log.addTextToLastLine( "Error: " + data.error );
+			}
+
 			usersProcessed++;
-
 			updateProgress();
-
 
 		}, function( error ) {
 			log.addLine( "Error: " + error );
