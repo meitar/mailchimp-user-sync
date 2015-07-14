@@ -29,6 +29,7 @@ class AjaxListener {
 	 */
 	public function __construct( array $options ) {
 		$this->options = $options;
+		$this->wizard = new Wizard( $this->options['list'], $this->options );
 	}
 
 	/**
@@ -51,7 +52,6 @@ class AjaxListener {
 
 		// check if method exists and is allowed
 		if( in_array( $_REQUEST['mcs_action'], $this->allowed_actions ) ) {
-			$this->wizard = new Wizard( $this->options['list'], $this->options );
 			$this->{$_REQUEST['mcs_action']}();
 			exit;
 		}
