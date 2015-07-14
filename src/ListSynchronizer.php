@@ -19,7 +19,7 @@ class ListSynchronizer {
 	/**
 	 * @var string
 	 */
-	private $meta_key = 'mailchimp_sync';
+	public $meta_key = 'mailchimp_sync';
 
 	/**
 	 * @var string

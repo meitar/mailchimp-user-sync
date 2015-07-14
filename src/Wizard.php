@@ -3,12 +3,24 @@
 
 namespace MailChimp\Sync;
 
+use WP_User_Query;
+
 class Wizard {
 
 	/**
 	 * @var string
 	 */
 	protected $error = '';
+
+	/**
+	 * @var string
+	 */
+	protected $list_id = '';
+
+	/**
+	 * @var array
+	 */
+	protected $options = array();
 
 	/**
 	 * Constructor
@@ -23,6 +35,10 @@ class Wizard {
 
 		global $wpdb;
 		$this->db = $wpdb;
+
+		// instantiate list syncer for selected list
+		// use an empty role here, since user_id should already be filtered on a role
+		$this->sync = new ListSynchronizer( $list_id, '', $this->options );
 	}
 
 	/**
@@ -53,17 +69,29 @@ class Wizard {
 	 */
 	public function get_users( $role = '', $offset = 0, $limit = 50 ) {
 
-		// query users in database, but only users with a valid email
-		$users = get_users(
+		$user_query = new WP_User_Query(
 			array(
+				'meta_query' => array(
+					'relation' => 'OR',
+					array( //if no date has been added show these posts too
+						'key' => $this->sync->meta_key,
+						'compare' => 'NOT EXISTS'
+					),
+					array( //check to see if date has been filled out
+						'key' => $this->sync->meta_key,
+						'compare' => 'EXISTS'
+					)
+				),
 				'role' => $role,
 				'offset' => $offset,
 				'limit' => $limit,
-				'fields' => array( 'ID', 'user_login', 'user_email' )
+				'fields' => array( 'ID', 'user_login', 'user_email' ),
+				'orderby' => 'meta_value'
 			)
 		);
 
-		return $users;
+
+		return $user_query->get_results();
 	}
 
 	/**
@@ -74,21 +102,19 @@ class Wizard {
 	 */
 	public function subscribe_users( array $user_ids ) {
 
-		// instantiate list syncer for selected list
-		// use an empty role here, since user_id should already be filtered on a role
-		$syncer = new ListSynchronizer( $this->options['list'], '', $this->options );
+
 
 		// loop through user ID's
 		$result = false;
 		foreach( $user_ids as $user_id ) {
-			$result = $syncer->update_subscriber( $user_id );
+			$result = $this->sync->update_subscriber( $user_id );
 		}
 
 		if( $result ) {
 			return true;
 		}
 
-		$this->error = $syncer->error;
+		$this->error = $this->sync->error;
 		return false;
 	}
 
