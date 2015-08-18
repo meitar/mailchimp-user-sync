@@ -3,8 +3,8 @@ Contributors: Ibericode, DvanKooten, iMazed, hchouhan
 Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=donate-link
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
-Tested up to: 4.2.2
-Stable tag: 1.0.1
+Tested up to: 4.2.4
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,13 @@ This is especially useful for synchronising a huge amount of users.
 2. Status overview
 
 == Changelog ==
+
+= 1.0.2 - August 18, 2015 =
+
+**Improvements**
+
+- Errors are now written to dedicated log file, usually located in `/wp-content/uploads/mailchimp-sync.log`.
+- Added `mailchimp_sync_should_sync_user` filter, which lets you set your own criteria for subscribing a user.
 
 = 1.0.1 - July 14, 2015 =
 

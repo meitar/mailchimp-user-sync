@@ -16,7 +16,7 @@ final class Plugin {
 	/**
 	 * @const VERSION
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 	/**
 	 * @const FILE
@@ -58,7 +58,6 @@ final class Plugin {
 	 * Runs at `plugins_loaded` priority 30.
 	 */
 	public function load() {
-
 		// load plugin options
 		$this->options = $this->load_options();
 
