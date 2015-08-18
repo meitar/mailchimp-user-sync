@@ -59,6 +59,8 @@ class ListSynchronizer {
 		if( $settings ) {
 			$this->settings = array_merge( $this->settings, $settings );
 		}
+
+		$this->log = new Log();
 	}
 
 	/**
@@ -149,7 +151,7 @@ class ListSynchronizer {
 
 		// store error message returned by API
 		$this->error = $api->get_error_message();
-		error_log( sprintf( 'MailChimp Sync: Can not subscribe user %d. MailChimp returned the following error: %s', $user_id, $this->error ) );
+		$this->log->write_line( sprintf( 'MailChimp Sync: Can not subscribe user %d. MailChimp returned the following error: %s', $user_id, $this->error ) );
 
 		return false;
 	}
@@ -228,7 +230,7 @@ class ListSynchronizer {
 			}
 
 			$this->error = $api->get_error_message();
-			error_log( sprintf( 'MailChimp Sync: Can not update user %d. MailChimp returned the following error: %s', $user_id, $this->error ) );
+			$this->log->write_line( sprintf( 'MailChimp Sync: Can not update user %d. MailChimp returned the following error: %s', $user_id, $this->error ) );
 		}
 
 		return $success;
