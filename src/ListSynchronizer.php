@@ -72,6 +72,42 @@ class ListSynchronizer {
 	}
 
 	/**
+	 * @param mixed $user A user ID or a WP_User object
+	 *
+	 * @return bool|WP_User
+	 */
+	protected function get_user( $user ) {
+
+		if( ! is_object( $user ) ) {
+			$user = get_user_by( 'id', $user );
+		}
+
+		if( ! $user instanceof WP_User ) {
+			$this->error = 'Invalid user ID.';
+			return false;
+		}
+
+		return $user;
+	}
+
+	/**
+	 * @param WP_User $user
+	 * @return bool
+	 */
+	public function should_sync_user( WP_User $user ) {
+
+		$sync = true;
+
+		// if role is set, make sure user has that role
+		if( '' !== $this->user_role && ! in_array( $this->user_role, $user->roles ) ) {
+			$sync = false;
+		}
+
+		// allow plugins to set their own criteria
+		return (bool) apply_filters( 'mailchimp_sync_should_sync_user', $sync, $user );
+	}
+
+	/**
 	 * Subscribes a user to the selected MailChimp list, stores a meta field with the subscriber uid
 	 *
 	 * @param int $user_id
@@ -79,21 +115,19 @@ class ListSynchronizer {
 	 */
 	public function subscribe_user( $user_id ) {
 
-		$user =  get_user_by( 'id', $user_id );
-
-		// do nothing if user has no valid email
-		if(  ! $user instanceof WP_User ) {
-			$this->error = 'Invalid user ID.';
+		$user = $this->get_user( $user_id );
+		if( ! $user ) {
 			return false;
 		}
 
+		// Only subscribe user if it has a valid email address
 		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			$this->error = 'Invalid email.';
 			return false;
 		}
 
 		// if role is set, make sure user has that role
-		if( '' !== $this->user_role && ! in_array( $this->user_role, $user->roles ) ) {
+		if( ! $this->should_sync_user( $user ) ) {
 			return false;
 		}
 
@@ -164,19 +198,16 @@ class ListSynchronizer {
 			return $this->subscribe_user( $user_id );
 		}
 
-		$user = get_user_by( 'id', $user_id );
-
-		// do nothing if user has no valid email
-		if( ! $user instanceof WP_User ) {
-			$this->error = 'Invalid user ID.';
+		$user = $this->get_user( $user_id );
+		if( ! $user ) {
 			return false;
 		} elseif( '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			$this->error = 'Invalid email.';
 			return false;
 		}
 
-		// if role is set, make sure user has that role
-		if( '' !== $this->user_role && ! in_array( $this->user_role, $user->roles ) ) {
+		// check if user should be synced
+		if( ! $this->should_sync_user( $user ) ) {
 			return false;
 		}
 
