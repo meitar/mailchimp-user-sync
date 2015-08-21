@@ -94,6 +94,21 @@ class ListSynchronizer {
 
 	/**
 	 * @param WP_User $user
+	 *
+	 * @return string
+	 */
+	public function get_user_subscriber_uid( WP_User $user ) {
+		$subscriber_uid = get_user_meta( $user->ID, $this->meta_key, true );
+
+		if( is_string( $subscriber_uid ) && '' !== $subscriber_uid ) {
+			return $subscriber_uid;
+		}
+
+		return '';
+	}
+
+	/**
+	 * @param WP_User $user
 	 * @return bool
 	 */
 	public function should_sync_user( WP_User $user ) {
@@ -165,9 +180,9 @@ class ListSynchronizer {
 	public function unsubscribe_user( $user_id ) {
 
 		// get subscriber uid from user meta
-		$subscriber_uid = get_user_meta( $user_id, $this->meta_key, true );
-
-		if( is_string( $subscriber_uid ) && '' !== $subscriber_uid ) {
+		$user = $this->get_user( $user_id );
+		$subscriber_uid = $this->get_user_subscriber_uid( $user );
+		if( $subscriber_uid ) {
 
 			// unsubscribe user email from the selected list
 			$api = mc4wp_get_api();
@@ -192,18 +207,20 @@ class ListSynchronizer {
 	 */
 	public function update_subscriber( $user_id ) {
 
-		// get subscriber uid from user meta
-		$subscriber_uid = get_user_meta( $user_id, $this->meta_key, true );
-
-		// if subscriber uid is empty, add to list
-		if( ! is_string( $subscriber_uid ) || $subscriber_uid === '' ) {
-			return $this->subscribe_user( $user_id );
-		}
-
+		// get user
 		$user = $this->get_user( $user_id );
 		if( ! $user ) {
 			return false;
-		} elseif( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+		}
+
+		// get subscriber uid
+		$subscriber_uid = $this->get_user_subscriber_uid( $user );
+		if( ! $subscriber_uid ) {
+			return $this->subscribe_user( $user_id );
+		}
+
+		// check email address
+		 if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			$this->error = 'Invalid email.';
 			return false;
 		}

@@ -44,6 +44,11 @@ final class Plugin {
 	public function __construct() {	}
 
 	/**
+	 * @var ListSynchronizer
+	 */
+	public $list_synchronizer;
+
+	/**
 	 * @return bool
 	 */
 	public function dependencies_met() {
@@ -63,8 +68,8 @@ final class Plugin {
 
 		// if a list was selected, initialise the ListSynchronizer class
 		if( $this->options['list'] != '' && $this->options['enabled'] ) {
-			$listSyncer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
-			$listSyncer->add_hooks();
+			$this->list_synchronizer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
+			$this->list_synchronizer->add_hooks();
 		}
 
 		if( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -79,7 +84,7 @@ final class Plugin {
 			$ajax = new AjaxListener( $this->options );
 			$ajax->add_hooks();
 		} else {
-			$admin = new Admin\Manager( $this->options );
+			$admin = new Admin\Manager( $this->options, $this->list_synchronizer );
 			$admin->add_hooks();
 		}
 	}

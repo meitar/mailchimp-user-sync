@@ -3,6 +3,8 @@
 namespace MailChimp\Sync\Admin;
 
 use MailChimp\Sync\Plugin;
+use MailChimp\Sync\ListSynchronizer;
+use WP_User;
 
 class Manager {
 
@@ -14,12 +16,18 @@ class Manager {
 	private $options;
 
 	/**
+	 * @var ListSynchronizer
+	 */
+	protected $list_synchronizer;
+
+	/**
 	 * Constructor
 	 * @param array $options
 	 */
-	public function __construct( array $options ) {
+	public function __construct( array $options, $list_synchronizer ) {
 		$this->options = $options;
 		$this->plugin_slug = basename( Plugin::DIR ) . '/mailchimp-sync.php';
+		$this->list_synchronizer = $list_synchronizer;
 	}
 
 	/**
@@ -28,6 +36,7 @@ class Manager {
 	public function add_hooks() {
 		add_action( 'admin_init', array( $this, 'init' ) );
 		add_filter( 'mc4wp_menu_items', array( $this, 'add_menu_items' ) );
+		add_action( 'edit_user_profile', array( $this, 'add_user_actions' ) );
 	}
 
 	/**
@@ -36,7 +45,7 @@ class Manager {
 	public function init() {
 
 		// only run for administrators
-		if( ! current_user_can( 'manage_options' ) ) {
+		if( ! current_user_can( self::SETTINGS_CAP ) ) {
 			return false;
 		}
 
@@ -79,6 +88,20 @@ class Manager {
 	 */
 	private function listen() {
 
+		if( ! isset( $_GET['mc4wp-sync-action'] ) ) {
+			return false;
+		}
+
+		$action = (string) $_GET['mc4wp-sync-action'];
+
+		switch( $action ) {
+			case 'sync-user':
+				$user_id = intval( $_GET['user_id'] );
+				$success = $this->list_synchronizer->update_subscriber( $user_id );
+
+				// todo: show some visual feedback
+				break;
+		}
 	}
 
 	/**
@@ -101,6 +124,41 @@ class Manager {
 		array_splice( $items, count( $items ) - 1, 0, array( $item ) );
 
 		return $items;
+	}
+
+	/**
+	 *
+	 */
+	public function add_user_actions( WP_User $user ) {
+
+		if( ! $this->list_synchronizer instanceof ListSynchronizer ) {
+			return;
+		}
+
+		$is_subscribed = $this->list_synchronizer->get_user_subscriber_uid( $user );
+		$sync_url = add_query_arg(
+			array(
+				'mc4wp-sync-action' => 'sync-user',
+				'user_id' => $user->ID
+			)
+		);
+		?>
+
+		<h3><?php _e( 'MailChimp Status', 'mailchimp-sync' ); ?></h3>
+
+		<p><?php printf( __( 'To change your list synchronization settings, please go to the <a href="%s">MailChimp Sync settings page</a>.', 'mailchimp-sync' ), admin_url( 'admin.php?page=mailchimp-for-wp-sync' ) ); ?></p>
+
+		<table class="form-table">
+			<tr>
+				<th><?php $is_subscribed ? _e( 'Subscribed', 'mailchimp-for-wp' ) : _e( 'Not Subscribed', 'mailchimp-sync' ); ?></th>
+				<td>
+					<a href="<?php echo esc_url( $sync_url ); ?>" class="button">
+						<?php $is_subscribed ? _e( 'Update' ) : _e( 'Subscribe', 'mailchimp-for-wp' ); ?>
+					</a>
+				</td>
+			</tr>
+		</table>
+		<?php
 	}
 
 	/**
