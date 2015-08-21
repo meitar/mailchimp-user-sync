@@ -36,7 +36,6 @@ class Manager {
 	public function add_hooks() {
 		add_action( 'admin_init', array( $this, 'init' ) );
 		add_filter( 'mc4wp_menu_items', array( $this, 'add_menu_items' ) );
-		add_action( 'edit_user_profile', array( $this, 'add_user_actions' ) );
 	}
 
 	/**
@@ -55,6 +54,9 @@ class Manager {
 		// add link to settings page from plugins page
 		add_filter( 'plugin_action_links_' . $this->plugin_slug, array( $this, 'add_plugin_settings_link' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'add_plugin_meta_links'), 10, 2 );
+
+		// only show this if user has settings cap
+		add_action( 'edit_user_profile', array( $this, 'add_user_actions' ) );
 
 		// listen for wphs requests, user is authorized by now
 		$this->listen();
