@@ -41,7 +41,7 @@ class FieldMapper {
 
 		$this->mailchimp_fields = $mailchimp_fields;
 		$this->available_mailchimp_fields = $this->check_available_mailchimp_fields();
-		$this->user_fields = $this->get_current_user_meta_keys();
+		$this->user_fields = $this->get_current_user_fields();
 	}
 
 	/**
@@ -71,20 +71,12 @@ class FieldMapper {
 	/**
 	 * @return array
 	 */
-	public function get_current_user_meta_keys() {
+	public function get_current_user_fields() {
 
-		$default_meta = array(
-			'ID',
-			'user_email',
-			'user_login',
-			'user_url',
-			'role',
-			'description'
-		);
+		$default_fields = $this->get_current_user_default_fields();
+		$custom_fields = $this->get_current_user_custom_fields();
 
-		$custom_meta = array_keys( $this->get_current_user_custom_meta() );
-
-		$meta = array_merge( $custom_meta, $default_meta );
+		$meta = array_merge( $custom_fields, $default_fields );
 
 		sort( $meta );
 		return $meta;
@@ -93,9 +85,29 @@ class FieldMapper {
 	/**
 	 * @return array
 	 */
-	protected function get_current_user_custom_meta() {
+	protected function get_current_user_default_fields() {
 		$user = wp_get_current_user();
-		return $this->get_user_custom_meta( $user );
+		$hidden_fields = array( 'user_pass', 'user_status', 'spam', 'deleted', 'user_activation_key' );
+		$fields = array();
+
+		foreach( $user->data as $field => $value ) {
+
+			if( in_array( $field, $hidden_fields ) ) {
+				continue;
+			}
+
+			$fields[] = $field;
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function get_current_user_custom_fields() {
+		$user = wp_get_current_user();
+		return $this->get_user_custom_fields( $user );
 	}
 
 	/**
@@ -103,25 +115,39 @@ class FieldMapper {
 	 *
 	 * @return array
 	 */
-	protected function get_user_custom_meta( WP_User $user ) {
+	protected function get_user_custom_fields( WP_User $user ) {
 
 		$meta = array_map(
 			function( $a ){ return $a[0]; },
 			get_user_meta( $user->ID )
 		);
 
+		$hidden_fields = array(
+			'show_admin_bar_front',
+			'use_ssl',
+			'comment_shortcuts',
+			'dismissed_wp_pointers',
+			'show_welcome_panel',
+			'rich_editing',
+			'admin_color'
+		);
+
+		$fields = array();
+
 		foreach( $meta as $key => $value ) {
 			// only use direct strings
 			if( ! is_string( $value )
 			    || strpos( $key, 'wp_' ) === 0
 			    || strpos( $key, '_' ) === 0
-			    || is_serialized( $value ) ) {
-				unset( $meta[ $key ] );
+			    || is_serialized( $value )
+				|| in_array( $key, $hidden_fields )) {
 				continue;
 			}
+
+			$fields[] = $key;
 		}
 
-		return $meta;
+		return $fields;
 	}
 
 }

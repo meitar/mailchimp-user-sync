@@ -266,6 +266,20 @@ class Manager {
 		// todo: perform some actual sanitization
 		$clean = $dirty;
 
+		if( isset( $clean['field_mappers'] ) ) {
+
+			if( ! is_array( $clean['field_mappers'] ) ) {
+				unset( $clean['field_mappers'] );
+			}
+
+			foreach( $clean['field_mappers'] as $key=> $mapper ) {
+				if( empty( $mapper['user_field'] ) ) {
+					unset( $clean['field_mappers'][ $key ] );
+				}
+			}
+
+		}
+
 		return $clean;
 	}
 

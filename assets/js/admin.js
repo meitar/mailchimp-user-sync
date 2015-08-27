@@ -4,9 +4,7 @@ var Admin = (function() {
 
 	var Wizard = require('./Wizard.js');
 	var $ = window.jQuery;
-
-	// Let's go
-	m.module( document.getElementById('wizard'), Wizard );
+	var wizardContainer = document.getElementById('wizard');
 
 	function addFieldMapRow() {
 		var $row = $(".mc4wp-sync-field-map-row").last();
@@ -30,6 +28,10 @@ var Admin = (function() {
 
 	$('.mc4wp-sync-field-map-add-row').click(addFieldMapRow);
 	$('.mc4wp-sync-field-map-remove-row').click(removeFieldMapRow);
+
+	if( wizardContainer ) {
+		m.module( wizardContainer , Wizard );
+	}
 })();
 
 module.exports = Admin;

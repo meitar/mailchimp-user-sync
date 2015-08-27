@@ -31,7 +31,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 				<td>
 					<?php if( empty( $lists ) ) {
 						printf( __( 'No lists found, <a href="%s">are you connected to MailChimp</a>?', 'mailchimp-for-wp' ), admin_url( 'admin.php?page=mailchimp-for-wp' ) ); ?>
-					<?php } ?>
+					<?php } else { ?>
 
 					<select name="<?php echo $this->name_attr( 'list' ); ?>" class="widefat">
 						<option disabled <?php selected( $this->options['list'], '' ); ?>><?php _e( 'Select a list..', 'mailchimp-sync' ); ?></option>
@@ -39,6 +39,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 							<option value="<?php echo esc_attr( $list->id ); ?>" <?php selected( $this->options['list'], $list->id ); ?>><?php echo esc_html( $list->name ); ?></option>
 						<?php } ?>
 					</select>
+					<?php } ?>
 
 				</td>
 				<td class="desc"><?php _e( 'Select the list to synchronize your WordPress user base with.' ,'mailchimp-sync' ); ?></td>
@@ -93,13 +94,17 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 				</th>
 				<td colspan="2" class="mc4wp-sync-field-map">
 					<?php
-					$index = 0;
 
+					if( ! isset( $selected_list ) ) {
+						echo '<p>' . __( 'Please select a MailChimp list first.', 'mailchimp-sync' ) . '</p>';
+					} else {
+
+					$index = 0;
 					foreach( $field_mapper->map as $mapper ) {
 						?>
 						<div class="mc4wp-sync-field-map-row">
 							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>">
-								<option disabled selected></option>
+								<option value="" readonly selected></option>
 								<?php foreach( $field_mapper->user_fields as $name ) { ?>
 									<option
 										value="<?php echo esc_attr( $name ); ?>"
@@ -108,26 +113,24 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 									</option>
 								<?php } ?>
 							</select>
-							&nbsp; to &nbsp;
-							<?php if( ! isset( $selected_list->merge_vars ) ) { ?>
-								<p>Please select a MailChimp list first.</p>
-							<?php } else { ?>
-								<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][mailchimp_field]' ); ?>">
-									<option disabled selected></option>
-									<?php foreach( $field_mapper->mailchimp_fields as $field ) { ?>
-										<option
-											value="<?php echo esc_attr( $field->tag ); ?>"
-											<?php selected( $field->tag, $mapper['mailchimp_field'] ); ?>>
-											<?php echo strip_tags( $field->name ); ?>
-										</option>
-									<?php } ?>
-								</select>
-							<?php }
 
+							&nbsp; to &nbsp;
+
+							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][mailchimp_field]' ); ?>">
+								<option value="" readonly selected></option>
+								<?php foreach( $field_mapper->mailchimp_fields as $field ) { ?>
+									<option
+										value="<?php echo esc_attr( $field->tag ); ?>"
+										<?php selected( $field->tag, $mapper['mailchimp_field'] ); ?>>
+										<?php echo strip_tags( $field->name ); ?>
+									</option>
+								<?php } ?>
+							</select>
+							<?php
 							// output button to remove this row
-							if( $index > 0 ) { ?>
-							<input type="button" value="&times;" class="button mc4wp-sync-field-map-remove-row" />
-							<?php } ?>
+							if( $index > 0 ) {
+								echo '<input type="button" value="&times;" class="button mc4wp-sync-field-map-remove-row" />';
+							} ?>
 						</div>
 						<?php
 						$index++;
@@ -135,6 +138,8 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 					?>
 
 					<p><input type="button" class="button mc4wp-sync-field-map-add-row" value="&plus; Add line" /></p>
+
+					<?php } ?>
 				</td>
 			</tr>
 

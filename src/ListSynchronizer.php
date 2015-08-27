@@ -278,24 +278,24 @@ class ListSynchronizer {
 		// Do we have mapping rules for user fields to mailchimp fields?
 		if( ! empty( $this->settings['field_mappers'] ) ) {
 
-			// get all user meta
-			$meta = array_map(
-				function( $a ){ return $a[0]; },
-				get_user_meta( $user->ID )
-			);
-
 			// loop through mapping rules
 			foreach( $this->settings['field_mappers'] as $map ) {
 
-				// if meta is set AND contains a scalar value AND is not empty
-				if( isset( $meta[ $map['user_field'] ] )
-				    && is_scalar( $meta[ $map['user_field'] ] )
-					&& strlen( $meta[ $map['user_field'] ] ) !== 0 ) {
-					$data[ $map['mailchimp_field'] ] = $meta[ $map['user_field'] ];
+				if( ! $user->has_prop( $map['user_field'] ) ) {
+					continue;
 				}
+
+				$value = $user->get( $map['user_field'] );
+
+				if( ! is_scalar( $value ) || strlen( $value ) === 0 ) {
+					continue;
+				}
+
+				$data[ $map['mailchimp_field'] ] = $value;
 			}
 		}
 
+		//var_dump( $user->data ); die();
 
 		// Allow other WP extensions to set other list fields (merge variables).
 		$data = apply_filters( 'mailchimp_sync_user_data', $data, $user );
