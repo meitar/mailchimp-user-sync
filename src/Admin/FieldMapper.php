@@ -72,15 +72,30 @@ class FieldMapper {
 	 * @return array
 	 */
 	public function get_current_user_meta_keys() {
-		return array_keys( $this->get_current_user_meta() );
+
+		$default_meta = array(
+			'ID',
+			'user_email',
+			'user_login',
+			'user_url',
+			'role',
+			'description'
+		);
+
+		$custom_meta = array_keys( $this->get_current_user_custom_meta() );
+
+		$meta = array_merge( $custom_meta, $default_meta );
+
+		sort( $meta );
+		return $meta;
 	}
 
 	/**
 	 * @return array
 	 */
-	protected function get_current_user_meta() {
+	protected function get_current_user_custom_meta() {
 		$user = wp_get_current_user();
-		return $this->get_user_meta( $user );
+		return $this->get_user_custom_meta( $user );
 	}
 
 	/**
@@ -88,7 +103,7 @@ class FieldMapper {
 	 *
 	 * @return array
 	 */
-	protected function get_user_meta( WP_User $user ) {
+	protected function get_user_custom_meta( WP_User $user ) {
 
 		$meta = array_map(
 			function( $a ){ return $a[0]; },
