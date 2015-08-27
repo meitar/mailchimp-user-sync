@@ -1,7 +1,17 @@
 <?php
+namespace MailChimp\Sync\Admin;
+
 use MailChimp\Sync\Plugin;
 
 defined( 'ABSPATH' ) or exit;
+
+function map_row( $index, $user_field, $mailchimp_field ) {
+
+}
+
+/**
+ * @var FieldMapper $field_mapper
+ */
 ?>
 <div class="wrap" id="mc4wp-admin">
 
@@ -77,13 +87,64 @@ defined( 'ABSPATH' ) or exit;
 				<td class="desc"><?php _e( 'Select a specific role to synchronize.', 'mailchimp-sync' ); ?></td>
 			</tr>
 
+			<tr valign="top">
+				<th scope="row">
+					<label>Send Additional Fields</label>
+				</th>
+				<td colspan="2" class="mc4wp-sync-field-map">
+					<?php
+					$index = 0;
+
+					foreach( $field_mapper->map as $mapper ) {
+						?>
+						<div class="mc4wp-sync-field-map-row">
+							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>">
+								<option disabled selected></option>
+								<?php foreach( $field_mapper->user_fields as $name ) { ?>
+									<option
+										value="<?php echo esc_attr( $name ); ?>"
+										<?php selected( $name, $mapper['user_field'] ); ?>>
+										<?php echo strip_tags( $name ); ?>
+									</option>
+								<?php } ?>
+							</select>
+							&nbsp; to &nbsp;
+							<?php if( ! isset( $selected_list->merge_vars ) ) { ?>
+								<p>Please select a MailChimp list first.</p>
+							<?php } else { ?>
+								<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][mailchimp_field]' ); ?>">
+									<option disabled selected></option>
+									<?php foreach( $field_mapper->mailchimp_fields as $field ) { ?>
+										<option
+											value="<?php echo esc_attr( $field->tag ); ?>"
+											<?php selected( $field->tag, $mapper['mailchimp_field'] ); ?>>
+											<?php echo strip_tags( $field->name ); ?>
+										</option>
+									<?php } ?>
+								</select>
+							<?php }
+
+							// output button to remove this row
+							if( $index > 0 ) { ?>
+							<input type="button" value="&times;" class="button mc4wp-sync-field-map-remove-row" />
+							<?php } ?>
+						</div>
+						<?php
+						$index++;
+					}
+					?>
+
+					<p><input type="button" class="button mc4wp-sync-field-map-add-row" value="&plus; Add line" /></p>
+				</td>
+			</tr>
+
 			<tr>
 				<th scope="row"><?php _e( 'Enabled?', 'mailchimp-sync' ); ?></th>
 				<td class="nowrap">
 					<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="1" <?php checked( $this->options['enabled'], 1 ); ?> /> <?php _e( 'Yes' ); ?></label>
 					<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="0" <?php checked( $this->options['enabled'], 0 ); ?> /> <?php _e( 'No' ); ?></label>
 				</td>
-				<td class="desc"><?php _e( 'Select "yes" if you want the plugin to "listen" to all changes in your WordPress user base and auto-sync them with the selected MailChimp list..', 'mailchimp-sync' ); ?></td>
+				<td class="desc"><?php _e( 'Select "yes" if you want the plugin to "listen" to all changes in your WordPress user base and auto-sync them with the selected MailChimp list.', 'mailchimp-sync' ); ?></td>
 			</tr>
 
 		</table>

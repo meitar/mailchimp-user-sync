@@ -1,5 +1,12 @@
 #mc4wp-admin {
 
+	select{
+		option[disabled] {
+			display: none;
+			color: #ccc !important;
+		}
+	}
+
 	/* style the progress bar */
 	.progress-bar {
 		width: 100%;

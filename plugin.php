@@ -101,7 +101,8 @@ final class Plugin {
 			'double_optin' => 0,
 			'send_welcome' => 0,
 			'role' => '',
-			'enabled' => 1
+			'enabled' => 1,
+			'field_mappers' => array()
 		);
 
 		$options = array_merge( $defaults, $options );

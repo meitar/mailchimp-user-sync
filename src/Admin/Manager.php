@@ -225,6 +225,9 @@ class Manager {
 			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
 			$status_indicator->check();
 			$selected_list = isset( $lists[ $this->options['list'] ] ) ? $lists[ $this->options['list'] ] : null;
+			$field_mapper = new FieldMapper( $this->options['field_mappers'], $selected_list->merge_vars );
+		} else {
+			$field_mapper = new FieldMapper( $this->options['field_mappers'] );
 		}
 
 		require Plugin::DIR . '/views/settings-page.php';
@@ -239,8 +242,18 @@ class Manager {
 		return plugins_url( '/assets' . $url, Plugin::FILE );
 	}
 
+	/**
+	 * @param $option_name
+	 *
+	 * @return string
+	 */
 	protected function name_attr( $option_name ) {
-		return Plugin::OPTION_NAME . '[' . $option_name . ']';
+
+		if( substr( $option_name, -1 ) !== ']' ) {
+			return Plugin::OPTION_NAME . '[' . $option_name . ']';
+		}
+
+		return Plugin::OPTION_NAME . $option_name;
 	}
 
 	/**
@@ -277,6 +290,8 @@ class Manager {
 
 		return array();
 	}
+
+
 
 
 }

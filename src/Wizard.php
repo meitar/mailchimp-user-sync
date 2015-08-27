@@ -102,8 +102,6 @@ class Wizard {
 	 */
 	public function subscribe_users( array $user_ids ) {
 
-
-
 		// loop through user ID's
 		$result = false;
 		foreach( $user_ids as $user_id ) {

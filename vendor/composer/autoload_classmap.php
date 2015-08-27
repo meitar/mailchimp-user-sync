@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'MailChimp\\Sync\\Admin\\FieldMapper' => $baseDir . '/src/Admin/FieldMapper.php',
     'MailChimp\\Sync\\Admin\\Manager' => $baseDir . '/src/Admin/Manager.php',
     'MailChimp\\Sync\\Admin\\StatusIndicator' => $baseDir . '/src/Admin/StatusIndicator.php',
     'MailChimp\\Sync\\AjaxListener' => $baseDir . '/src/AjaxListener.php',
