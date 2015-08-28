@@ -289,7 +289,7 @@ class ListSynchronizer {
 				}
 			}
 		}
-		
+
 		// Allow other WP extensions to set other list fields (merge variables).
 		$data = apply_filters( 'mailchimp_sync_user_data', $data, $user );
 

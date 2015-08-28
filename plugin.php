@@ -2,9 +2,9 @@
 
 namespace MailChimp\Sync;
 
-// Prevent direct file access
 use MailChimp\Sync\CLI\CommandProvider;
 
+// Prevent direct file access
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -16,7 +16,7 @@ final class Plugin {
 	/**
 	 * @const VERSION
 	 */
-	const VERSION = '1.1';
+	const VERSION = '1.1.1';
 
 	/**
 	 * @const FILE

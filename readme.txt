@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,12 @@ This is especially useful for synchronising a huge amount of users.
 2. Status overview
 
 == Changelog ==
+
+= 1.1.1 - August 28, 2015 =
+
+**Additions**
+
+- Allows you to send the user role as well.
 
 = 1.1 - August 28, 2015 =
 
