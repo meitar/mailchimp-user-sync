@@ -56,6 +56,7 @@ class Manager {
 		add_filter( 'plugin_row_meta', array( $this, 'add_plugin_meta_links'), 10, 2 );
 
 		// only show this if user has settings cap
+		add_action( 'show_user_profile', array( $this, 'add_user_actions' ) );
 		add_action( 'edit_user_profile', array( $this, 'add_user_actions' ) );
 
 		// listen for wphs requests, user is authorized by now
