@@ -62,6 +62,7 @@ class ListSynchronizer {
 		}
 
 		$this->log = new Log();
+		$this->tools = new Tools();
 	}
 
 	/**
@@ -281,21 +282,15 @@ class ListSynchronizer {
 			// loop through mapping rules
 			foreach( $this->settings['field_mappers'] as $rule ) {
 
-				// does user have this property?
-				if( ! $user->has_prop( $rule['user_field'] ) ) {
-					continue;
+				// get field value
+				$value = $this->tools->get_user_field( $user, $rule['user_field'] );
+				if( is_string( $value ) ) {
+					$data[ $rule['mailchimp_field'] ] = $value;
 				}
-
-				// get value and check if it's usable
-				// todo: check if we're not getting a hidden field?
-				$value = $user->get( $rule['user_field'] );
-				if( ! is_scalar( $value ) || strlen( $value ) === 0 ) {
-					continue;
-				}
-
-				$data[ $rule['mailchimp_field'] ] = $value;
 			}
 		}
+
+		var_dump( $data ); die();
 
 		// Allow other WP extensions to set other list fields (merge variables).
 		$data = apply_filters( 'mailchimp_sync_user_data', $data, $user );

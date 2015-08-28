@@ -14,5 +14,6 @@ return array(
     'MailChimp\\Sync\\CLI\\SyncCommand' => $baseDir . '/src/CLI/SyncCommand.php',
     'MailChimp\\Sync\\ListSynchronizer' => $baseDir . '/src/ListSynchronizer.php',
     'MailChimp\\Sync\\Log' => $baseDir . '/src/Log.php',
+    'MailChimp\\Sync\\Tools' => $baseDir . '/src/Tools.php',
     'MailChimp\\Sync\\Wizard' => $baseDir . '/src/Wizard.php',
 );

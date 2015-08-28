@@ -155,7 +155,6 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 		<?php submit_button(); ?>
 	</form>
 
-
 	<?php if( '' !== $this->options['list'] ) { ?>
 		<h2><?php _e( 'Status', 'mailchimp-for-wp' ); ?></h2>
 

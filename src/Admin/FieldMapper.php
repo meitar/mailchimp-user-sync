@@ -40,17 +40,34 @@ class FieldMapper {
 	}
 
 	/**
+	 * Combines all fields and sorts 'em
+	 *
 	 * @return array
 	 */
 	public function get_current_user_fields() {
 		$default_fields = $this->get_current_user_default_fields();
 		$custom_fields = $this->get_current_user_custom_fields();
-		$meta = array_merge( $custom_fields, $default_fields );
+		$magic_fields = $this->get_magic_fields();
+
+		$meta = array_merge( $custom_fields, $default_fields, $magic_fields );
 		sort( $meta );
 		return $meta;
 	}
 
 	/**
+	 * An array of "magic" fields for which the value will be calculated by the plugin
+	 *
+	 * @return array
+	 */
+	protected function get_magic_fields() {
+		return array(
+			'role',
+		);
+	}
+
+	/**
+	 * Default fields, each user has these.
+	 *
 	 * @return array
 	 */
 	protected function get_current_user_default_fields() {
@@ -72,6 +89,8 @@ class FieldMapper {
 	}
 
 	/**
+	 * Gets all custom fields for the currently logged-in user.
+	 *
 	 * @return array
 	 */
 	protected function get_current_user_custom_fields() {
@@ -80,6 +99,8 @@ class FieldMapper {
 	}
 
 	/**
+	 * Guesses al custom fields for a given user
+	 *
 	 * @param WP_User $user
 	 *
 	 * @return array
@@ -110,6 +131,7 @@ class FieldMapper {
 			if( ! is_scalar( $value )
 			    || strpos( $key, 'wp_' ) === 0
 			    || strpos( $key, '_' ) === 0
+			    || strpos( $key, 'mailchimp_sync_' ) === 0
 			    || is_serialized( $value )
 				|| in_array( $key, $hidden_fields )) {
 				continue;
