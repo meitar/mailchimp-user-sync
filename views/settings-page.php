@@ -103,7 +103,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 					foreach( $field_mapper->map as $mapper ) {
 						?>
 						<div class="mc4wp-sync-field-map-row">
-							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>">
+							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>" class="user-field">
 								<option value="" readonly selected></option>
 								<?php foreach( $field_mapper->user_fields as $name ) { ?>
 									<option
@@ -116,7 +116,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 
 							&nbsp; to &nbsp;
 
-							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][mailchimp_field]' ); ?>">
+							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][mailchimp_field]' ); ?>" class="mailchimp-field">
 								<option value="" readonly selected></option>
 								<?php foreach( $field_mapper->mailchimp_fields as $field ) { ?>
 									<option
