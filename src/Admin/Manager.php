@@ -273,7 +273,7 @@ class Manager {
 			}
 
 			foreach( $clean['field_mappers'] as $key=> $mapper ) {
-				if( empty( $mapper['user_field'] ) ) {
+				if( empty( $mapper['user_field'] ) || empty( $mapper['mailchimp_field'] ) ) {
 					unset( $clean['field_mappers'][ $key ] );
 				}
 			}
