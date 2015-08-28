@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 1.0.2
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,9 +69,11 @@ Please report it on [GitHub issues](https://github.com/ibericode/mailchimp-sync/
 
 Please open a topic on the [WordPress.org plugin support forums](https://wordpress.org/support/plugin/mailchimp-sync).
 
-= Send additional user fields to MailChimp =
+= Send additional fields to MailChimp =
 
-You can send additional user data by hooking into the `mailchimp_sync_user_data` filter.
+Since version 1.1, you can specify which additional user fields to send to MailChimp by mapping your fields on the settings page of the plugin.
+
+If you need to send more complex data you can use the `mailchimp_sync_user_data` filter.
 
 `
 add_filter( 'mailchimp_sync_user_data', function( $data, $user ) {
@@ -79,6 +81,24 @@ add_filter( 'mailchimp_sync_user_data', function( $data, $user ) {
 	return $data;
 }, 10, 2 );
 `
+
+= Only synchronize users based on a custom criteria =
+
+You can set your own criteria for subscribing a user by hooking into the `mailchimp_sync_should_sync_user` filter.
+
+`
+add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
+
+	// check for custom user field
+	if( $user->subscribe_me ) {
+		return true;
+	}
+
+	// do not subscribe otherwise
+	return false;
+});
+`
+
 
 = Can I run this from the command-line? =
 
@@ -98,6 +118,13 @@ This is especially useful for synchronising a huge amount of users.
 2. Status overview
 
 == Changelog ==
+
+= 1.1 - August 28, 2015 =
+
+**Additions**
+
+- You can now send additional user fields.
+- You can now subscribe individual users from their "edit user" page.
 
 = 1.0.2 - August 18, 2015 =
 
