@@ -99,8 +99,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 						echo '<p>' . __( 'Please select a MailChimp list first.', 'mailchimp-sync' ) . '</p>';
 					} else {
 
-					$index = 0;
-					foreach( $field_mapper->map as $mapper ) {
+					foreach( $field_mapper->rules as $index => $rule ) {
 						?>
 						<div class="row">
 							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>" class="user-field">
@@ -108,7 +107,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 								<?php foreach( $field_mapper->user_fields as $name ) { ?>
 									<option
 										value="<?php echo esc_attr( $name ); ?>"
-										<?php selected( $name, $mapper['user_field'] ); ?>>
+										<?php selected( $name, $rule['user_field'] ); ?>>
 										<?php echo strip_tags( $name ); ?>
 									</option>
 								<?php } ?>
@@ -121,7 +120,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 								<?php foreach( $field_mapper->mailchimp_fields as $field ) { ?>
 									<option
 										value="<?php echo esc_attr( $field->tag ); ?>"
-										<?php selected( $field->tag, $mapper['mailchimp_field'] ); ?>>
+										<?php selected( $field->tag, $rule['mailchimp_field'] ); ?>>
 										<?php echo strip_tags( $field->name ); ?>
 									</option>
 								<?php } ?>
@@ -133,7 +132,6 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 							} ?>
 						</div>
 						<?php
-						$index++;
 					}
 					?>
 

@@ -9,7 +9,7 @@ class FieldMapper {
 	/**
 	 * @var array
 	 */
-	public $map = array();
+	public $rules = array();
 
 	/**
 	 * @var array
@@ -22,62 +22,30 @@ class FieldMapper {
 	public $user_fields = array();
 
 	/**
-	 * @var array
-	 */
-	public $available_mailchimp_fields = array();
-
-	/**
-	 * @param array $map
+	 * @param array $rules
 	 * @param array $mailchimp_fields
 	 */
-	public function __construct( array $map, array $mailchimp_fields = array() ) {
-		$this->map = $map;
+	public function __construct( array $rules, array $mailchimp_fields = array() ) {
+		// reset array index
+		$this->rules = array_values( $rules );
 
-		// add empty map to end of array
-		$this->map[] = array(
+		// add empty mapping rule to end of array
+		$this->rules[] = array(
 			'user_field' => '',
 			'mailchimp_field' => ''
 		);
 
 		$this->mailchimp_fields = $mailchimp_fields;
-		$this->available_mailchimp_fields = $this->check_available_mailchimp_fields();
 		$this->user_fields = $this->get_current_user_fields();
 	}
 
 	/**
 	 * @return array
 	 */
-	function check_available_mailchimp_fields() {
-		$available = array();
-
-		foreach( $this->mailchimp_fields as $field ) {
-
-			if( $field->tag === 'EMAIL' ) {
-				continue;
-			}
-
-			foreach( $this->map as $row ) {
-				if( $row['mailchimp_field'] === $field->tag ) {
-					continue 2;
-				}
-			}
-
-			$available[] = $field->tag;
-		}
-
-		return $available;
-	}
-
-	/**
-	 * @return array
-	 */
 	public function get_current_user_fields() {
-
 		$default_fields = $this->get_current_user_default_fields();
 		$custom_fields = $this->get_current_user_custom_fields();
-
 		$meta = array_merge( $custom_fields, $default_fields );
-
 		sort( $meta );
 		return $meta;
 	}
@@ -92,6 +60,7 @@ class FieldMapper {
 
 		foreach( $user->data as $field => $value ) {
 
+			// don't use fields which should be hidden
 			if( in_array( $field, $hidden_fields ) ) {
 				continue;
 			}
@@ -135,8 +104,10 @@ class FieldMapper {
 		$fields = array();
 
 		foreach( $meta as $key => $value ) {
-			// only use direct strings
-			if( ! is_string( $value )
+			// only use scalar values
+			// ignore fields starting with wp_ or _
+			// don't use fields which are in our array of hidden fields
+			if( ! is_scalar( $value )
 			    || strpos( $key, 'wp_' ) === 0
 			    || strpos( $key, '_' ) === 0
 			    || is_serialized( $value )
