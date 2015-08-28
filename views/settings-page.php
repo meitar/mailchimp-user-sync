@@ -102,7 +102,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 					$index = 0;
 					foreach( $field_mapper->map as $mapper ) {
 						?>
-						<div class="mc4wp-sync-field-map-row">
+						<div class="row">
 							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>" class="user-field">
 								<option value="" readonly selected></option>
 								<?php foreach( $field_mapper->user_fields as $name ) { ?>
@@ -129,7 +129,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 							<?php
 							// output button to remove this row
 							if( $index > 0 ) {
-								echo '<input type="button" value="&times;" class="button mc4wp-sync-field-map-remove-row" />';
+								echo '<input type="button" value="&times;" class="button remove-row" />';
 							} ?>
 						</div>
 						<?php
@@ -137,7 +137,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 					}
 					?>
 
-					<p><input type="button" class="button mc4wp-sync-field-map-add-row" value="&plus; Add line" /></p>
+					<p><input type="button" class="button add-row" value="&plus; Add line" /></p>
 
 					<?php } ?>
 				</td>

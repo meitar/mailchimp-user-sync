@@ -3,11 +3,27 @@ var Admin = (function() {
 	'use strict';
 
 	var Wizard = require('./Wizard.js');
+	var FieldMapper = require('./FieldMapper.js');
 	var $ = window.jQuery;
-	var wizardContainer = document.getElementById('wizard');
 
-	function addFieldMapRow() {
-		var $row = $(".mc4wp-sync-field-map-row").last();
+	// init wizard
+	var wizardContainer = document.getElementById('wizard');
+	if( wizardContainer ) {
+		m.module( wizardContainer , Wizard );
+	}
+
+	// init fieldmapper
+	new FieldMapper($('.mc4wp-sync-field-map'));
+})();
+
+module.exports = Admin;
+},{"./FieldMapper.js":2,"./Wizard.js":5}],2:[function(require,module,exports){
+var FieldMapper = function( $context ) {
+
+	var $ = window.jQuery;
+
+	function addRow() {
+		var $row = $(".row").last();
 		var $newRow = $row.clone();
 
 		// empty select boxes and set new `name` attribute
@@ -22,13 +38,13 @@ var Admin = (function() {
 		return false;
 	}
 
-	function removeFieldMapRow() {
-		$(this).parents('.mc4wp-sync-field-map-row').remove();
+	function removeRow() {
+		$(this).parents('.row').remove();
 		setAvailableFields();
 	}
 
 	function setAvailableFields() {
-		var selectBoxes = $('.mc4wp-sync-field-map .mailchimp-field');
+		var selectBoxes = $context.find('.mailchimp-field');
 		selectBoxes.each(function() {
 			var otherSelectBoxes = selectBoxes.not(this);
 			var chosenFields = $.map( otherSelectBoxes, function(a,i) { return $(a).val(); });
@@ -40,17 +56,13 @@ var Admin = (function() {
 	}
 
 
-	$('.mc4wp-sync-field-map .mailchimp-field').change(setAvailableFields).trigger('change');
-	$('.mc4wp-sync-field-map-add-row').click(addFieldMapRow);
-	$('.mc4wp-sync-field-map-remove-row').click(removeFieldMapRow);
+	$context.find('.mailchimp-field').change(setAvailableFields).trigger('change');
+	$context.find('.add-row').click(addRow);
+	$context.find('.remove-row').click(removeRow);
+};
 
-	if( wizardContainer ) {
-		m.module( wizardContainer , Wizard );
-	}
-})();
-
-module.exports = Admin;
-},{"./Wizard.js":4}],2:[function(require,module,exports){
+module.exports = FieldMapper;
+},{}],3:[function(require,module,exports){
 /**
  * Log model
  */
@@ -109,7 +121,7 @@ var Log = function() {
 };
 
 module.exports = Log;
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /**
  * User Model
  *
@@ -123,7 +135,7 @@ var User = function( data ) {
 };
 
 module.exports = User;
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 
 var Log = require('./Log.js');
 var User = require('./User.js');
@@ -318,4 +330,4 @@ var Wizard = (function() {
 
 
 module.exports = Wizard;
-},{"./Log.js":2,"./User.js":3}]},{},[1]);
+},{"./Log.js":3,"./User.js":4}]},{},[1]);
