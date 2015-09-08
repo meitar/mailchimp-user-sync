@@ -267,6 +267,12 @@ class Manager {
 		// todo: perform some actual sanitization
 		$clean = $dirty;
 
+		// empty field mappers if list changed
+		if( $this->options['list'] !== $clean['list'] ) {
+			unset( $clean['field_mappers'] );
+		}
+
+
 		if( isset( $clean['field_mappers'] ) ) {
 
 			if( ! is_array( $clean['field_mappers'] ) ) {

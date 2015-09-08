@@ -96,7 +96,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 					<?php
 
 					if( ! isset( $selected_list ) ) {
-						echo '<p>' . __( 'Please select a MailChimp list first.', 'mailchimp-sync' ) . '</p>';
+						echo '<p>' . __( 'Please select a MailChimp list first (and then save your settings).', 'mailchimp-sync' ) . '</p>';
 					} else {
 
 					foreach( $field_mapper->rules as $index => $rule ) {
