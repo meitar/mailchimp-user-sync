@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,17 @@ This is especially useful for synchronising a huge amount of users.
 2. Status overview
 
 == Changelog ==
+
+= 1.1.2 - September 8, 2015 =
+
+**Fixes**
+
+- Status indicator (in sync / out of sync) is now showing the correct # of users when a role is set.
+
+**Improvements**
+
+- Field rules will now clear when changing the MailChimp list to subscribe to.
+- Make it more clear that settings should be saved after choosing a MailChimp list.
 
 = 1.1.1 - August 28, 2015 =
 
