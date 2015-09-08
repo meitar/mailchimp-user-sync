@@ -4,6 +4,7 @@ namespace MailChimp\Sync\Admin;
 
 use MailChimp\Sync\Plugin;
 use MailChimp\Sync\ListSynchronizer;
+use MC4WP_MailChimp_Tools;
 use WP_User;
 
 class Manager {
@@ -36,6 +37,7 @@ class Manager {
 	public function add_hooks() {
 		add_action( 'admin_init', array( $this, 'init' ) );
 		add_filter( 'mc4wp_menu_items', array( $this, 'add_menu_items' ) );
+		add_action( 'admin_footer_text', array( $this, 'footer_text' ), 11 );
 	}
 
 	/**
@@ -299,8 +301,11 @@ class Manager {
 	 */
 	protected function get_mailchimp_lists() {
 
+		/**
+		 * @since 3.0
+		 */
 		if( class_exists( 'MC4WP_MailChimp_Tools' ) && method_exists( 'MC4WP_MailChimp_Tools', 'get_lists' ) ) {
-			return \MC4WP_MailChimp_Tools::get_lists();
+			return MC4WP_MailChimp_Tools::get_lists();
 		}
 
 		/** @deprecated MailChimp for WordPress v3.0  */
@@ -310,6 +315,22 @@ class Manager {
 		}
 
 		return array();
+	}
+
+	/**
+	 * Ask for a plugin review in the WP Admin footer, if this is one of the plugin pages.
+	 *
+	 * @param $text
+	 *
+	 * @return string
+	 */
+	public function footer_text( $text ) {
+
+		if( ( isset( $_GET['page'] ) && strpos( $_GET['page'], 'mailchimp-for-wp-sync' ) === 0 ) ) {
+			$text = sprintf( 'If you enjoy using <strong>MailChimp Sync</strong>, please leave us a <a href="%s" target="_blank">★★★★★</a> rating. A <strong style="text-decoration: underline;">huge</strong> thank you in advance!', 'https://wordpress.org/support/view/plugin-reviews/mailchimp-sync?rate=5#postform' );
+		}
+
+		return $text;
 	}
 
 
