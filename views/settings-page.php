@@ -207,7 +207,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 
 	<p><?php _e( 'Any errors that may occur trying to synchronize changes with MailChimp will show up here.', 'mailchimp-sync' ); ?></p>
 
-	<textarea class="widefat" rows="10" readonly><?php echo trim( $log->read() ); ?></textarea>
+	<textarea class="widefat" rows="6" readonly><?php echo trim( $log->read() ); ?></textarea>
 
 	<p>
 		<a class="button" href="<?php echo add_query_arg( array( 'mc4wp-sync-action' => 'clear-log' ) ); ?>"><?php _e( 'Clear Log', 'mailchimp-sync' ); ?></a>
