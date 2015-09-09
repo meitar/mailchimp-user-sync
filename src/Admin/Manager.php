@@ -233,7 +233,7 @@ class Manager {
 
 		$lists = $this->get_mailchimp_lists();
 		$log = new Log( WP_DEBUG );
-		
+
 		if( $this->options['list'] !== '' ) {
 			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
 			$status_indicator->check();

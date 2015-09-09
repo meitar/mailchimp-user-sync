@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,17 @@ This is especially useful for synchronising a huge amount of users.
 2. Status overview
 
 == Changelog ==
+
+= 1.1.3 - September 9, 2015 =
+
+**Fixes**
+
+- Status indicator was not working for installations with a custom database prefix.
+
+**Improvements**
+
+- You can now view & clear the log file from the settings page.
+- Nothing will be logged unless `WP_DEBUG` is enabled.
 
 = 1.1.2 - September 8, 2015 =
 
