@@ -205,7 +205,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 		<p><?php printf( __( 'Please enable %s to use logging. <a href="%s">Here\'s how</a>.', 'mailchimp-for-wp' ), '<code>WP_DEBUG</code>', 'https://codex.wordpress.org/WP_DEBUG' ); ?></p>
 	<?php } else { ?>
 
-	<p><?php _e( 'When an error occurs trying to synchronize changes with MailChimp, they will show up here.', 'mailchimp-sync' ); ?></p>
+	<p><?php _e( 'Any errors that may occur trying to synchronize changes with MailChimp will show up here.', 'mailchimp-sync' ); ?></p>
 
 	<textarea class="widefat" rows="10" readonly><?php echo trim( $log->read() ); ?></textarea>
 
