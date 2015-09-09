@@ -67,14 +67,14 @@ class StatusIndicator {
 
 		if( '' !== $this->user_role ) {
 			$sql .= " AND um1.meta_key = %s";
-			$sql .= " INNER JOIN $wpdb->usermeta um2 ON um2.user_id = um1.user_id WHERE um2.meta_key = 'wp_capabilities' AND um2.meta_value LIKE %s";
+			$sql .= " INNER JOIN $wpdb->usermeta um2 ON um2.user_id = um1.user_id WHERE um2.meta_key = %s AND um2.meta_value LIKE %s";
 
-			$query = $wpdb->prepare( $sql, 'mailchimp_sync_' . $this->list_id, '%%' . $this->user_role . '%%' );
+			$query = $wpdb->prepare( $sql, 'mailchimp_sync_' . $this->list_id, $wpdb->prefix . 'capabilities', '%%' . $this->user_role . '%%' );
 		} else {
 			$sql .= " WHERE um1.meta_key = %s";
 			$query = $wpdb->prepare( $sql, 'mailchimp_sync_' . $this->list_id );
 		}
-
+		
 		// now get number of users with meta key
 		$subscriber_count = $wpdb->get_var( $query );
 		return (int) $subscriber_count;
