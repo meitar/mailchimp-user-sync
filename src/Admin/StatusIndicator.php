@@ -74,7 +74,7 @@ class StatusIndicator {
 			$sql .= " WHERE um1.meta_key = %s";
 			$query = $wpdb->prepare( $sql, 'mailchimp_sync_' . $this->list_id );
 		}
-		
+
 		// now get number of users with meta key
 		$subscriber_count = $wpdb->get_var( $query );
 		return (int) $subscriber_count;

@@ -20,10 +20,32 @@ class Log {
 	protected $file_name = 'mailchimp-sync.log';
 
 	/**
-	 * Constructor
+	 * @var bool
 	 */
-	public function __construct() {
+	public $enabled = true;
+
+	/**
+	 * Constructor
+	 *
+	 * @param bool $enabled
+	 */
+	public function __construct( $enabled = true ) {
+		$this->enabled = $enabled;
 		$this->file_path = $this->determine_file_path();
+	}
+
+	/**
+	 * Enable logging
+	 */
+	public function enable() {
+		$this->enabled = true;
+	}
+
+	/**
+	 * Disable logging
+	 */
+	public function disable() {
+		$this->enabled = false;
 	}
 
 	/**
@@ -42,10 +64,27 @@ class Log {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function read() {
+		if( file_exists( $this->file_path ) ) {
+			return file_get_contents( $this->file_path );
+		}
+
+		return '';
+	}
+
+	/**
 	 * @param string $text
 	 */
 	public function write( $text ) {
-		error_log( $text, 3, $this->file_path );
+
+		if( $this->enabled ) {
+			// add timestamp to text
+			$text = sprintf( '[%s] %s', date( 'Y-m-d H:i:s' ), $text );
+			error_log( $text, 3, $this->file_path );
+		}
+
 	}
 
 	/**

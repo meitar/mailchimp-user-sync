@@ -23,6 +23,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 
 
 		<h2><?php _e( 'Settings' ); ?></h2>
+		<?php settings_errors(); ?>
 
 		<table class="form-table">
 
@@ -197,7 +198,20 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 
 		</table>
 
+	<?php } ?>
 
+	<h2 style="margin-top: 40px;"><?php _e( 'Log', 'mailchimp-sync' ); ?></h2>
+	<?php if( ! $log->enabled ) { ?>
+		<p><?php printf( __( 'Please enable %s to use logging. <a href="%s">Here\'s how</a>.', 'mailchimp-for-wp' ), '<code>WP_DEBUG</code>', 'https://codex.wordpress.org/WP_DEBUG' ); ?></p>
+	<?php } else { ?>
+
+	<p><?php _e( 'When an error occurs trying to synchronize changes with MailChimp, they will show up here.', 'mailchimp-sync' ); ?></p>
+
+	<textarea class="widefat" rows="10" readonly><?php echo trim( $log->read() ); ?></textarea>
+
+	<p>
+		<a class="button" href="<?php echo add_query_arg( array( 'mc4wp-sync-action' => 'clear-log' ) ); ?>"><?php _e( 'Clear Log', 'mailchimp-sync' ); ?></a>
+	</p>
 	<?php } ?>
 
 </div>
