@@ -112,6 +112,10 @@ wp mailchimp-sync sync-user $user_id	 			# synchronize the user specified by the
 
 This is especially useful for synchronising a huge amount of users.
 
+= Does this plugin synchronize data back from MailChimp? =
+
+Not by default, but you can enable this by [configuring a webhook in your MailChimp account](https://mc4wp.com/kb/configure-webhook-for-2-way-synchronizing/).
+
 == Screenshots ==
 
 1. Synchronization settings
