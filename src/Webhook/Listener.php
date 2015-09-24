@@ -8,7 +8,7 @@ use WP_User;
 /**
  * Class Listener
  *
- * This class listens on your-site.com/mc4wp-api/webhook for MailChimp webhook events.
+ * This class listens on your-site.com/mc4wp-sync-api/webhook-listener for MailChimp webhook events.
  *
  * Once triggered, it will look for the corresponding WP user and update it using the field map defined in the settings of the Sync plugin.
  *
@@ -25,7 +25,7 @@ class Listener {
 	/**
 	 * @var string
 	 */
-	public $url = '/mc4wp-api/webhook';
+	public $url = '/mc4wp-sync-api/webhook-listener';
 
 	/**
 	 * @param $options
