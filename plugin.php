@@ -3,6 +3,7 @@
 namespace MailChimp\Sync;
 
 use MailChimp\Sync\CLI\CommandProvider;
+use MailChimp\Sync\Webhook;
 
 // Prevent direct file access
 if ( ! defined( 'ABSPATH' ) ) {
@@ -49,6 +50,11 @@ final class Plugin {
 	public $list_synchronizer;
 
 	/**
+	 * @var Webhook\Listener;
+	 */
+	public $webhooks;
+
+	/**
 	 * Let's go...
 	 *
 	 * Runs at `plugins_loaded` priority 30.
@@ -71,6 +77,9 @@ final class Plugin {
 
 		// Load area-specific code
 		if( ! is_admin() ) {
+			// todo: make this optional (won't do much if users don't configure the webhook anyway)
+			$this->webhooks = new Webhook\Listener( $this->options );
+			$this->webhooks->add_hooks();
 
 		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			$ajax = new AjaxListener( $this->options );
