@@ -1,6 +1,7 @@
 <?php
 
 namespace MailChimp\Sync\Webhook;
+
 use MailChimp\Sync\UserRepository;
 use WP_User;
 
@@ -78,6 +79,12 @@ class Listener {
 			return false;
 		}
 
+		// update user email if it's given, valid and different
+		if( ! empty( $data['email'] ) && is_email( $data['email'] ) && $data['email'] !== $user->user_email ) {
+			$user->user_email = $data['email'];
+			$dirty = true;
+		}
+
 		// update WP user with data (use reversed field map)
 		if( ! empty( $this->options['field_mappers'] ) ) {
 
@@ -87,9 +94,17 @@ class Listener {
 				// is this field present in the request data?
 				if( isset( $data['merges'][ $rule['mailchimp_field'] ] ) ) {
 
-					// update user property
-					$user->{$rule['user_field']} = $data['merges'][ $rule['mailchimp_field'] ];
-					$dirty = true;
+					// is scalar value?
+					$value = $data['merges'][ $rule['mailchimp_field'] ];
+					if( ! is_scalar( $value ) ) {
+						continue;
+					}
+
+					// update user property if it changed
+					if( $user->{$rule['user_field']} !== $value ) {
+						$user->{$rule['user_field']} = $value;
+						$dirty = true;
+					}
 				}
 
 			}
