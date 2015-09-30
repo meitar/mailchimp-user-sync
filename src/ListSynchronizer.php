@@ -73,6 +73,9 @@ class ListSynchronizer {
 		add_action( 'user_register', array( $this, 'subscribe_user' ), 99 );
 		add_action( 'profile_update', array( $this, 'update_subscriber' ), 99 );
 		add_action( 'delete_user', array( $this, 'unsubscribe_user' ), 99 );
+
+		// hook into action that runs after updating WooCommerce order meta
+		add_action( 'woocommerce_checkout_update_user_meta', array( $this, 'update_subscriber' ) );
 	}
 
 	/**
