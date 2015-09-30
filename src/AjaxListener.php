@@ -37,6 +37,7 @@ class AjaxListener {
 	 */
 	public function add_hooks() {
 		add_action( 'wp_ajax_mcs_wizard', array( $this, 'route' ) );
+		add_action( 'wp_ajax_mcs_autocomplete_user_field', array( $this, 'autocomplete_user_field' ) );
 	}
 
 	/**
@@ -106,6 +107,27 @@ class AjaxListener {
 				'error' =>  $this->wizard->get_error()
 			)
 		);
+	}
+
+	/**
+	 * Autocomplete user meta key
+	 */
+	public function autocomplete_user_field() {
+		global $wpdb;
+		$query = sanitize_text_field( $_GET['q'] );
+
+		// query database
+		$sql = $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta um WHERE um.meta_key LIKE '%s' GROUP BY um.meta_key", '%' . $query . '%' );
+		$meta_key_values = $wpdb->get_col( $sql );
+
+		// query custom fields
+		$custom_values = array( 'role', 'user_login', 'ID' );
+		$custom_values = array_filter( $custom_values, function( $value ) use( $query ) { return strpos( $value, $query ) !== false; });
+
+		// combine sources
+		$values = $meta_key_values + $custom_values;
+
+		$this->respond( join( PHP_EOL, $values ) );
 	}
 
 	/**

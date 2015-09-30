@@ -100,26 +100,16 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 						echo '<p>' . __( 'Please select a MailChimp list first (and then save your settings).', 'mailchimp-sync' ) . '</p>';
 					} else {
 
-						$user_fields = $field_mapper->get_user_fields();
-						foreach( $field_mapper->rules as $index => $rule ) {
+						foreach( $this->options['field_mappers'] as $index => $rule ) {
 						?>
 						<div class="row">
-							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>" class="user-field">
-								<option value="" readonly selected></option>
-								<?php foreach( $user_fields as $name ) { ?>
-									<option
-										value="<?php echo esc_attr( $name ); ?>"
-										<?php selected( $name, $rule['user_field'] ); ?>>
-										<?php echo strip_tags( $name ); ?>
-									</option>
-								<?php } ?>
-							</select>
+							<input name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>" class="user-field regular-text" value="<?php echo esc_attr( $rule['user_field'] ); ?>" placeholder="<?php _e( 'Start typing user field name' ,'mailchimp-sync' ); ?>">
 
 							&nbsp; to &nbsp;
 
 							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][mailchimp_field]' ); ?>" class="mailchimp-field">
 								<option value="" readonly selected></option>
-								<?php foreach( $field_mapper->mailchimp_fields as $field ) { ?>
+								<?php foreach( $selected_list->merge_vars as $field ) { ?>
 									<option
 										value="<?php echo esc_attr( $field->tag ); ?>"
 										<?php selected( $field->tag, $rule['mailchimp_field'] ); ?>>
