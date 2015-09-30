@@ -100,12 +100,13 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 						echo '<p>' . __( 'Please select a MailChimp list first (and then save your settings).', 'mailchimp-sync' ) . '</p>';
 					} else {
 
-					foreach( $field_mapper->rules as $index => $rule ) {
+						$user_fields = $field_mapper->get_user_fields();
+						foreach( $field_mapper->rules as $index => $rule ) {
 						?>
 						<div class="row">
 							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>" class="user-field">
 								<option value="" readonly selected></option>
-								<?php foreach( $field_mapper->get_user_fields() as $name ) { ?>
+								<?php foreach( $user_fields as $name ) { ?>
 									<option
 										value="<?php echo esc_attr( $name ); ?>"
 										<?php selected( $name, $rule['user_field'] ); ?>>
@@ -133,10 +134,10 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 							} ?>
 						</div>
 						<?php
-					}
-					?>
+						}
+						?>
 
-					<p><input type="button" class="button add-row" value="&plus; Add line" /></p>
+						<p><input type="button" class="button add-row" value="&plus; Add line" /></p>
 
 					<?php } ?>
 				</td>
