@@ -238,9 +238,9 @@ class Manager {
 			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
 			$status_indicator->check();
 			$selected_list = isset( $lists[ $this->options['list'] ] ) ? $lists[ $this->options['list'] ] : null;
-			$field_mapper = new FieldMapper( $this->options['field_mappers'], $selected_list->merge_vars );
+			$field_mapper = new FieldMapper( $this->options['field_mappers'], $selected_list->merge_vars, $this->options['role'] );
 		} else {
-			$field_mapper = new FieldMapper( $this->options['field_mappers'] );
+			$field_mapper = new FieldMapper( $this->options['field_mappers'], null, $this->options['role'] );
 		}
 
 		require Plugin::DIR . '/views/settings-page.php';

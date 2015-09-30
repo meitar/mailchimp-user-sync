@@ -105,7 +105,7 @@ function map_row( $index, $user_field, $mailchimp_field ) {
 						<div class="row">
 							<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][user_field]' ); ?>" class="user-field">
 								<option value="" readonly selected></option>
-								<?php foreach( $field_mapper->user_fields as $name ) { ?>
+								<?php foreach( $field_mapper->get_user_fields() as $name ) { ?>
 									<option
 										value="<?php echo esc_attr( $name ); ?>"
 										<?php selected( $name, $rule['user_field'] ); ?>>

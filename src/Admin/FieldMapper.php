@@ -2,6 +2,7 @@
 
 namespace MailChimp\Sync\Admin;
 
+use MailChimp\Sync\UserRepository;
 use WP_User;
 
 class FieldMapper {
@@ -17,15 +18,15 @@ class FieldMapper {
 	public $mailchimp_fields = array();
 
 	/**
-	 * @var array
+	 * @var WP_User
 	 */
-	public $user_fields = array();
+	protected $user;
 
 	/**
 	 * @param array $rules
 	 * @param array $mailchimp_fields
 	 */
-	public function __construct( array $rules, array $mailchimp_fields = array() ) {
+	public function __construct( array $rules, array $mailchimp_fields = array(), $role ) {
 		// reset array index
 		$this->rules = array_values( $rules );
 
@@ -36,17 +37,28 @@ class FieldMapper {
 		);
 
 		$this->mailchimp_fields = $mailchimp_fields;
-		$this->user_fields = $this->get_current_user_fields();
+
+		$this->users = new UserRepository();
+		$this->user = $this->users->get_first_user_with_role( $role );
+		if( ! $this->user ) {
+			$this->user = $this->users->get_current_user();
+		}
 	}
 
 	/**
 	 * Combines all fields and sorts 'em
 	 *
+	 * @param WP_User $user
 	 * @return array
 	 */
-	public function get_current_user_fields() {
-		$default_fields = $this->get_current_user_default_fields();
-		$custom_fields = $this->get_current_user_custom_fields();
+	public function get_user_fields( WP_User $user = null ) {
+
+		if( ! $user ) {
+			$user = $this->user;
+		}
+
+		$default_fields = $this->get_user_default_fields( $user );
+		$custom_fields = $this->get_user_custom_fields( $user );
 		$magic_fields = $this->get_magic_fields();
 
 		$meta = array_merge( $custom_fields, $default_fields, $magic_fields );
@@ -70,15 +82,14 @@ class FieldMapper {
 	 *
 	 * @return array
 	 */
-	protected function get_current_user_default_fields() {
-		$user = wp_get_current_user();
+	protected function get_user_default_fields( WP_User $user ) {
 		$hidden_fields = array( 'user_pass', 'user_status', 'spam', 'deleted', 'user_activation_key' );
-		$fields = array();
+		$fields        = array();
 
-		foreach( $user->data as $field => $value ) {
+		foreach ( $user->data as $field => $value ) {
 
 			// don't use fields which should be hidden
-			if( in_array( $field, $hidden_fields ) ) {
+			if ( in_array( $field, $hidden_fields ) ) {
 				continue;
 			}
 
@@ -86,16 +97,6 @@ class FieldMapper {
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Gets all custom fields for the currently logged-in user.
-	 *
-	 * @return array
-	 */
-	protected function get_current_user_custom_fields() {
-		$user = wp_get_current_user();
-		return $this->get_user_custom_fields( $user );
 	}
 
 	/**
