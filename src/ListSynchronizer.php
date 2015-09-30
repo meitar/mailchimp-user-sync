@@ -76,6 +76,11 @@ class ListSynchronizer {
 
 		// hook into action that runs after updating WooCommerce order meta
 		add_action( 'woocommerce_checkout_update_user_meta', array( $this, 'update_subscriber' ) );
+
+		// custom actions for people to use if they want to call the class actions
+		add_action( 'mailchimp_sync_subscribe_user', array( $this, 'subscribe_user' ), 99 );
+		add_action( 'mailchimp_sync_update_subscriber', array( $this, 'update_subscriber' ), 99 );
+		add_action( 'mailchimp_sync_unsubscribe_user', array( $this, 'unsubscribe_user' ), 99 );
 	}
 
 	/**
