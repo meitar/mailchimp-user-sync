@@ -286,14 +286,23 @@ class Manager {
 
 		if( isset( $clean['field_mappers'] ) ) {
 
+			// make sure this is an array
 			if( ! is_array( $clean['field_mappers'] ) ) {
 				unset( $clean['field_mappers'] );
 			}
 
 			foreach( $clean['field_mappers'] as $key=> $mapper ) {
+
 				if( empty( $mapper['user_field'] ) || empty( $mapper['mailchimp_field'] ) ) {
 					unset( $clean['field_mappers'][ $key ] );
+					continue;
 				}
+
+				// trim values
+				$clean['field_mappers'][ $key ] = array(
+					'user_field' => trim( $mapper['user_field'] ),
+					'mailchimp_field' => trim( $mapper['mailchimp_field'] )
+				);
 			}
 
 		}
