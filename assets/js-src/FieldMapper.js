@@ -38,7 +38,7 @@ var FieldMapper = function( $context ) {
 	$context.find('.user-field').suggest( ajaxurl + "?action=mcs_autocomplete_user_field" );
 	$context.find('.mailchimp-field').change(setAvailableFields).trigger('change');
 	$context.find('.add-row').click(addRow);
-	$context.find('.remove-row').click(removeRow);
+	$context.on('click', '.remove-row', removeRow);
 };
 
 module.exports = FieldMapper;
