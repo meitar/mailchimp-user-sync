@@ -130,6 +130,10 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 - For mapping user fields, you can now manually type the "meta key" value of the field. Comes with autocomplete if you have users with that field already.
 - For WooCommerce checkout: run after custom fields have been added
 
+**Fixes**
+
+- Newly added rows could not be removed unless page was refreshed again.
+
 = 1.2 - September 24, 2015 =
 
 **Additions**
