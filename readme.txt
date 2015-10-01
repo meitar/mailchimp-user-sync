@@ -1,4 +1,4 @@
-=== MailChimp Sync ===
+=== MailChimp User Sync ===
 Contributors: Ibericode, DvanKooten, iMazed, hchouhan
 Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=donate-link
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
@@ -11,6 +11,8 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Synchronize your WordPress Users with a MailChimp list.
 
 == Description ==
+
+= MailChimp User Sync =
 
 Synchronize your registered WordPress users with a MailChimp list of your choice.
 
