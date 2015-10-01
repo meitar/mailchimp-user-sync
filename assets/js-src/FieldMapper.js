@@ -7,13 +7,15 @@ var FieldMapper = function( $context ) {
 		var $newRow = $row.clone();
 
 		// empty select boxes and set new `name` attribute
-		$newRow.find("select").val('').each(function () {
+		$newRow.find('.user-field').val('').suggest( ajaxurl + "?action=mcs_autocomplete_user_field" );
+		$newRow.find(".mailchimp-field").val('').each(function () {
 			this.name = this.name.replace(/\[(\d+)\]/, function (str, p1) {
 				return '[' + (parseInt(p1, 10) + 1) + ']';
 			});
 		});
 
 		$newRow.insertAfter($row);
+
 		setAvailableFields();
 		return false;
 	}
