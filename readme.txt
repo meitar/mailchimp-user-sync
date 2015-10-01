@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.3.1
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -122,6 +122,13 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+= 1.2.1 - October 1, 2015 =
+
+**Improvements**
+
+- For mapping user fields, you can now manually type the "meta key" value of the field. Comes with autocomplete if you have users with that field already.
+- For WooCommerce checkout: run after custom fields have been added
 
 = 1.2 - September 24, 2015 =
 
