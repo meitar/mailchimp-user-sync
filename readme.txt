@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.3.1
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,12 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+= 1.2.2 - October 7, 2015 =
+
+**Additions**
+
+- Introduced 2 new filters (`mailchimp_sync_webhook_user` and `mailchimp_sync_webhook_no_user`) which allow you to hook into the MailChimp webhook listener to specify the WP user or do something when there is no user for the MailChimp subscriber. [Here is a code example that creates a new user when the subscriber has no user account](https://gist.github.com/dannyvankooten/79fe429daaef611b6aa5).
 
 = 1.2.1 - October 1, 2015 =
 

@@ -3,8 +3,6 @@ MailChimp Sync
 
 A WordPress plugin that synchronizes your WordPress Users with a selected MailChimp list. 
 
-_This plugin is under active development and may be subject to changes breaking backwards compatibility._
-
 Installation
 ------------
 
