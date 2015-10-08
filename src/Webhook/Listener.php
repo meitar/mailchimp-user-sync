@@ -66,10 +66,11 @@ class Listener {
 	public function handle() {
 
 		$data = stripslashes_deep( $_REQUEST['data'] );
+		$type = ( ! empty( $_REQUEST['type'] ) ) ? $_REQUEST['type'] : '';
 		$dirty = false;
 
 		// do nothing if no "type" or "web_id" is given
-		if( empty( $data['type'] ) || empty( $data['web_id'] ) ) {
+		if( empty( $type ) || empty( $data['web_id'] ) ) {
 			return false;
 		}
 
@@ -129,7 +130,7 @@ class Listener {
 		do_action( 'mailchimp_sync_webhook', $data, $user );
 
 		// fire type specific event. Example: mailchimp_sync_webhook_unsubscribe
-		do_action( 'mailchimp_sync_webhook_' . $data['type'], $data, $user );
+		do_action( 'mailchimp_sync_webhook_' . $type, $data, $user );
 
 		echo 'OK';
 	}
