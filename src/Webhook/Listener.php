@@ -78,8 +78,8 @@ class Listener {
 		$user = $this->user_repository->get_user_by_mailchimp_id( $data['web_id'] );
 
 		// filter user
-		$user = apply_filters( 'mailchimp_sync_webhook_user', $data, $user );
-
+		$user = apply_filters( 'mailchimp_sync_webhook_user', $user, $data );
+		
 		if( ! $user instanceof WP_User ) {
 
 			// fire event when no user is found
