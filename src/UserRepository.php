@@ -19,7 +19,7 @@ class UserRepository {
 	 * @param $mailchimp_list_id
 	 */
 	public function __construct( $mailchimp_list_id = '' ) {
-		$this->list_id = $mailchimp_list_id;
+		$this->mailchimp_list_id = $mailchimp_list_id;
 	}
 
 	/**
