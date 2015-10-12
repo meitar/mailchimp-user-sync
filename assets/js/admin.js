@@ -23,16 +23,19 @@ var FieldMapper = function( $context ) {
 	var $ = window.jQuery;
 
 	function addRow() {
-		var $row = $(".row").last();
+		var $row = $context.find(".row").last();
 		var $newRow = $row.clone();
+		var $userField = $newRow.find('.user-field');
+		var $mailChimpField = $newRow.find('.mailchimp-field');
+
+		$userField.val('').suggest( ajaxurl + "?action=mcs_autocomplete_user_field").attr('name', $userField.attr('name').replace(/\[(\d+)\]/, function (str, p1) {
+			return '[' + (parseInt(p1, 10) + 1) + ']';
+		}));
 
 		// empty select boxes and set new `name` attribute
-		$newRow.find('.user-field').val('').suggest( ajaxurl + "?action=mcs_autocomplete_user_field" );
-		$newRow.find(".mailchimp-field").val('').each(function () {
-			this.name = this.name.replace(/\[(\d+)\]/, function (str, p1) {
-				return '[' + (parseInt(p1, 10) + 1) + ']';
-			});
-		});
+		$mailChimpField.val('').attr('name', $mailChimpField.attr('name').replace(/\[(\d+)\]/, function (str, p1) {
+			return '[' + (parseInt(p1, 10) + 1) + ']';
+		}));
 
 		$newRow.insertAfter($row);
 
