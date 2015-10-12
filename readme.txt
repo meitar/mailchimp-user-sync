@@ -130,6 +130,7 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 **Fixes**
 
 - Webhook listener not working since version 1.2.2.
+- Fields in additional fields section were stripped on settings save (when using "+ Add Line" button).
 
 **Improvements**
 
