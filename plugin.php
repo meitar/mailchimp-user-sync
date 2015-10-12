@@ -17,7 +17,7 @@ final class Plugin {
 	/**
 	 * @const VERSION
 	 */
-	const VERSION = '1.2.2';
+	const VERSION = '1.2.3';
 
 	/**
 	 * @const FILE
@@ -77,10 +77,9 @@ final class Plugin {
 
 		// Load area-specific code
 		if( ! is_admin() ) {
-			// todo: make this optional (won't do much if users don't configure the webhook anyway)
+			// @todo make this optional
 			$this->webhooks = new Webhook\Listener( $this->options );
 			$this->webhooks->add_hooks();
-
 		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			$ajax = new AjaxListener( $this->options );
 			$ajax->add_hooks();
