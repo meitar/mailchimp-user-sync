@@ -22,9 +22,10 @@ class Scheduler {
 	 */
 	public function add_hooks() {
 		// hook into the various user related actions
-		add_action( 'user_register', array( $this, 'schedule_subscribe' ) );
-		add_action( 'profile_update', array( $this, 'schedule_update' ) );
-		add_action( 'delete_user', array( $this, 'schedule_unsubscribe' ) );
+		add_action( 'user_register', array( $this, 'schedule_subscribe' ), 99 );
+		add_action( 'profile_update', array( $this, 'schedule_update' ), 99 );
+		add_action( 'delete_user', array( $this, 'schedule_unsubscribe' ), 99 );
+		add_action( 'updated_user_meta', array( $this, 'schedule_update_from_meta' ), 99, 2 );
 	}
 
 	/**
@@ -72,4 +73,13 @@ class Scheduler {
 		$this->schedule( 'unsubscribe_user', $user_id );
 	}
 
+	/**
+	 * @param $meta_id
+	 * @param $user_id
+	 */
+	public function schedule_update_from_meta( $meta_id, $user_id ) {
+		$this->schedule( 'update_subscriber', $user_id );
+	}
+
 }
+
