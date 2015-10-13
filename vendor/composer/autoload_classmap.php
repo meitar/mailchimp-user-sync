@@ -13,6 +13,7 @@ return array(
     'MailChimp\\Sync\\CLI\\SyncCommand' => $baseDir . '/src/CLI/SyncCommand.php',
     'MailChimp\\Sync\\ListSynchronizer' => $baseDir . '/src/ListSynchronizer.php',
     'MailChimp\\Sync\\Log' => $baseDir . '/src/Log.php',
+    'MailChimp\\Sync\\Scheduler' => $baseDir . '/src/Scheduler.php',
     'MailChimp\\Sync\\Tools' => $baseDir . '/src/Tools.php',
     'MailChimp\\Sync\\UserRepository' => $baseDir . '/src/UserRepository.php',
     'MailChimp\\Sync\\Webhook\\Listener' => $baseDir . '/src/Webhook/Listener.php',

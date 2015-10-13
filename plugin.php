@@ -66,6 +66,9 @@ final class Plugin {
 
 		// if a list was selected, initialise the ListSynchronizer class
 		if( $this->options['list'] != '' && $this->options['enabled'] ) {
+			$scheduler = new Scheduler();
+			$scheduler->add_hooks();
+
 			$this->list_synchronizer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
 			$this->list_synchronizer->add_hooks();
 		}
