@@ -65,6 +65,8 @@ class Listener {
 	 */
 	public function handle() {
 
+		define( 'MC4WP_SYNC_DOING_WEBHOOK', true );
+
 		$data = stripslashes_deep( $_REQUEST['data'] );
 		$type = ( ! empty( $_REQUEST['type'] ) ) ? $_REQUEST['type'] : '';
 

@@ -21,17 +21,25 @@ class Scheduler {
 	/**
 	 * @param string $event
 	 * @param WP_User|int $user
+	 * @return bool
 	 */
 	public function schedule( $event, $user ) {
+
+		// do not schedule event if this change was causd by MailChimp in the first place
+		if( defined( 'MC4WP_SYNC_DOING_WEBHOOK' ) && MC4WP_SYNC_DOING_WEBHOOK ) {
+			return false;
+		}
+
 		$event_name = ListSynchronizer::EVENT_PREFIX . $event;
 		$args = array( $user );
 
 		// we've already scheduled this
 		if( wp_next_scheduled( $event_name, $args ) !== false ) {
-			return;
+			return false;
 		}
 
 		wp_schedule_single_event( time() + 1, $event_name, $args );
+		return true;
 	}
 
 	/**
