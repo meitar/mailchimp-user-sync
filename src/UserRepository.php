@@ -1,6 +1,6 @@
 <?php
 
-namespace MailChimp\Sync;
+namespace MC4WP\Sync;
 
 use WP_User;
 use WP_User_Query;
@@ -8,7 +8,7 @@ use WP_User_Query;
 /**
  * Class UserRepository
  *
- * @package MailChimp\Sync
+ * @package MC4WP\Sync
  * @property ListSynchronizer $synchronizer
  */
 class UserRepository {

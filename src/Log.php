@@ -1,11 +1,11 @@
 <?php
 
-namespace MailChimp\Sync;
+namespace MC4WP\Sync;
 
 /**
  * Class Log
  *
- * @package MailChimp\Sync
+ * @package MC4WP\Sync
  */
 class Log {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace MailChimp\Sync;
+namespace MC4WP\Sync;
 
 class AjaxListener {
 

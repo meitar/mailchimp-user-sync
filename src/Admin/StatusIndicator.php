@@ -1,8 +1,8 @@
 <?php
 
-namespace MailChimp\Sync\Admin;
+namespace MC4WP\Sync\Admin;
 
-use MailChimp\Sync\Wizard;
+use MC4WP\Sync\Wizard;
 
 class StatusIndicator {
 

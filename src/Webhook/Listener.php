@@ -1,8 +1,8 @@
 <?php
 
-namespace MailChimp\Sync\Webhook;
+namespace MC4WP\Sync\Webhook;
 
-use MailChimp\Sync\UserRepository;
+use MC4WP\Sync\UserRepository;
 use WP_User;
 
 /**
@@ -12,13 +12,13 @@ use WP_User;
  *
  * Once triggered, it will look for the corresponding WP user and update it using the field map defined in the settings of the Sync plugin.
  *
- * @package MailChimp\Sync\Webhook
+ * @package MC4WP\Sync\Webhook
  * @property UserRepository $user_repository
  */
 class Listener {
 
 	/**
-	 * @var
+	 * @var array
 	 */
 	public $options;
 

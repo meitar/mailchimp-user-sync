@@ -1,6 +1,6 @@
 <?php
 
-namespace MailChimp\Sync\CLI;
+namespace MC4WP\Sync\CLI;
 
 use WP_CLI;
 

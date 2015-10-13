@@ -1,10 +1,10 @@
 <?php
 
-namespace MailChimp\Sync\Admin;
+namespace MC4WP\Sync\Admin;
 
-use MailChimp\Sync\Log;
-use MailChimp\Sync\Plugin;
-use MailChimp\Sync\ListSynchronizer;
+use MC4WP\Sync\Log;
+use MC4WP\Sync\Plugin;
+use MC4WP\Sync\ListSynchronizer;
 use MC4WP_MailChimp_Tools;
 use WP_User;
 

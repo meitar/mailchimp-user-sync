@@ -1,10 +1,10 @@
 <?php
 
-namespace MailChimp\Sync\CLI;
+namespace MC4WP\Sync\CLI;
 
-use MailChimp\Sync\Wizard;
+use MC4WP\Sync\Wizard;
 use WP_CLI, WP_CLI_Command;
-use MailChimp\Sync\ListSynchronizer;
+use MC4WP\Sync\ListSynchronizer;
 
 class SyncCommand extends WP_CLI_Command {
 

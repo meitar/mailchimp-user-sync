@@ -1,9 +1,9 @@
 <?php
 
-namespace MailChimp\Sync;
+namespace MC4WP\Sync;
 
-use MailChimp\Sync\CLI\CommandProvider;
-use MailChimp\Sync\Webhook;
+use MC4WP\Sync\CLI\CommandProvider;
+use MC4WP\Sync\Webhook;
 
 // Prevent direct file access
 if ( ! defined( 'ABSPATH' ) ) {
@@ -64,6 +64,19 @@ final class Plugin {
 		// load plugin options
 		$this->options = $this->load_options();
 
+		// Load area-specific code
+		if( ! is_admin() ) {
+			// @todo make this optional
+			$this->webhooks = new Webhook\Listener( $this->options );
+			$this->webhooks->add_hooks();
+		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			$ajax = new AjaxListener( $this->options );
+			$ajax->add_hooks();
+		} else {
+			$admin = new Admin\Manager( $this->options, $this->list_synchronizer );
+			$admin->add_hooks();
+		}
+
 		// if a list was selected, initialise the ListSynchronizer class
 		if( $this->options['list'] != '' && $this->options['enabled'] ) {
 			$scheduler = new Scheduler();
@@ -76,19 +89,6 @@ final class Plugin {
 		if( defined( 'WP_CLI' ) && WP_CLI ) {
 			$commands = new CommandProvider();
 			$commands->register();
-		}
-
-		// Load area-specific code
-		if( ! is_admin() ) {
-			// @todo make this optional
-			$this->webhooks = new Webhook\Listener( $this->options );
-			$this->webhooks->add_hooks();
-		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			$ajax = new AjaxListener( $this->options );
-			$ajax->add_hooks();
-		} else {
-			$admin = new Admin\Manager( $this->options, $this->list_synchronizer );
-			$admin->add_hooks();
 		}
 	}
 

@@ -6,16 +6,16 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'MailChimp\\Sync\\Admin\\Manager' => $baseDir . '/src/Admin/Manager.php',
-    'MailChimp\\Sync\\Admin\\StatusIndicator' => $baseDir . '/src/Admin/StatusIndicator.php',
-    'MailChimp\\Sync\\AjaxListener' => $baseDir . '/src/AjaxListener.php',
-    'MailChimp\\Sync\\CLI\\CommandProvider' => $baseDir . '/src/CLI/CommandProvider.php',
-    'MailChimp\\Sync\\CLI\\SyncCommand' => $baseDir . '/src/CLI/SyncCommand.php',
-    'MailChimp\\Sync\\ListSynchronizer' => $baseDir . '/src/ListSynchronizer.php',
-    'MailChimp\\Sync\\Log' => $baseDir . '/src/Log.php',
-    'MailChimp\\Sync\\Scheduler' => $baseDir . '/src/Scheduler.php',
-    'MailChimp\\Sync\\Tools' => $baseDir . '/src/Tools.php',
-    'MailChimp\\Sync\\UserRepository' => $baseDir . '/src/UserRepository.php',
-    'MailChimp\\Sync\\Webhook\\Listener' => $baseDir . '/src/Webhook/Listener.php',
-    'MailChimp\\Sync\\Wizard' => $baseDir . '/src/Wizard.php',
+    'MC4WP\\Sync\\Admin\\Manager' => $baseDir . '/src/Admin/Manager.php',
+    'MC4WP\\Sync\\Admin\\StatusIndicator' => $baseDir . '/src/Admin/StatusIndicator.php',
+    'MC4WP\\Sync\\AjaxListener' => $baseDir . '/src/AjaxListener.php',
+    'MC4WP\\Sync\\CLI\\CommandProvider' => $baseDir . '/src/CLI/CommandProvider.php',
+    'MC4WP\\Sync\\CLI\\SyncCommand' => $baseDir . '/src/CLI/SyncCommand.php',
+    'MC4WP\\Sync\\ListSynchronizer' => $baseDir . '/src/ListSynchronizer.php',
+    'MC4WP\\Sync\\Log' => $baseDir . '/src/Log.php',
+    'MC4WP\\Sync\\Scheduler' => $baseDir . '/src/Scheduler.php',
+    'MC4WP\\Sync\\Tools' => $baseDir . '/src/Tools.php',
+    'MC4WP\\Sync\\UserRepository' => $baseDir . '/src/UserRepository.php',
+    'MC4WP\\Sync\\Webhook\\Listener' => $baseDir . '/src/Webhook/Listener.php',
+    'MC4WP\\Sync\\Wizard' => $baseDir . '/src/Wizard.php',
 );

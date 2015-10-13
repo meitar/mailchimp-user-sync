@@ -40,6 +40,7 @@ if( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
 	define( 'MAILCHIMP_SYNC_FILE', __FILE__ );
 	require __DIR__ . '/vendor/autoload.php';
 	require __DIR__ . '/plugin.php';
+
 } else {
 	require dirname( __FILE__ ) . '/php-backwards-compatibility.php';
 }

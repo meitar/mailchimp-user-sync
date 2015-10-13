@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MailChimp\Sync;
+namespace MC4WP\Sync;
 
 use WP_User_Query;
 

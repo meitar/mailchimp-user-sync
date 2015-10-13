@@ -1,17 +1,10 @@
 <?php
-namespace MailChimp\Sync\Admin;
+namespace MC4WP\Sync\Admin;
 
-use MailChimp\Sync\Plugin;
+use MC4WP\Sync\Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
-function map_row( $index, $user_field, $mailchimp_field ) {
-
-}
-
-/**
- * @var FieldMapper $field_mapper
- */
 ?>
 <div class="wrap" id="mc4wp-admin">
 
