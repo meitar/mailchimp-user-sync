@@ -112,7 +112,7 @@ final class Plugin {
 
 		$options = array_merge( $defaults, $options );
 
-		return $options;
+		return (array) apply_filters( 'mailchimp_sync_options', $options );
 	}
 
 	/**
