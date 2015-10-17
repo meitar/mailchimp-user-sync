@@ -31,7 +31,7 @@ class ShutdownWorker implements Worker {
 
 		$task = array_merge( array( $event ), $args );
 
-		if( in_array( $this->tasks, $task ) ) {
+		if( in_array( $task, $this->tasks ) ) {
 			return false;
 		}
 
