@@ -62,7 +62,7 @@ final class Plugin {
 	public function init() {
 
 		// load plugin options
-		$this->options = $this->load_options();
+		$this->options = $options = $this->load_options();
 
 		// Load area-specific code
 		if( ! is_admin() ) {
@@ -81,7 +81,8 @@ final class Plugin {
 		if( $this->options['list'] != '' && $this->options['enabled'] ) {
 
 			// @todo make this filterable (wait for DI container in core?)
-			$scheduler = new Producer( new ShutdownWorker() );
+			$worker = ( $options['worker_type'] === 'shutdown' ) ? new ShutdownWorker() : new CronWorker();
+			$scheduler = new Producer( $worker );
 			$scheduler->add_hooks();
 
 			$this->list_synchronizer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
@@ -107,7 +108,8 @@ final class Plugin {
 			'send_welcome' => 0,
 			'role' => '',
 			'enabled' => 1,
-			'field_mappers' => array()
+			'field_mappers' => array(),
+			'worker_type' => 'shutdown'
 		);
 
 		$options = array_merge( $defaults, $options );
