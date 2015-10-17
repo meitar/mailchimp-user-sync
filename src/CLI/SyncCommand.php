@@ -23,7 +23,7 @@ class SyncCommand extends WP_CLI_Command {
 	}
 
 	/**
-	 * Check the VAT on all payments
+	 * SYnchronize all users with the given role
 	 *
 	 * @param $args
 	 * @param $assoc_args

@@ -10,7 +10,7 @@ class CommandProvider {
 	 * Register commands
 	 */
 	public function register() {
-		WP_CLI::add_command( 'mailchimp-sync', 'MailChimp\\Sync\\CLI\\SyncCommand' );
+		WP_CLI::add_command( 'mailchimp-sync', 'MC4WP\\Sync\\CLI\\SyncCommand' );
 	}
 
 }
