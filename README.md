@@ -15,7 +15,7 @@ If you want to run the latest development version, you have two options:
 This will download the latest development version of the MailChimp Sync plugin. While this version is usually stable,
 it is not recommended for use in a production environment.
 
-Note that this plugin depends on [MailChimp for WordPress](https://mc4wp.com/) to work, so you will need to install that plugin first.
+Note that this plugin depends on [MailChimp for WordPress](https://mc4wp.com/) (free or premium) to work, so you will need to install that plugin first.
 
 
 Bugs

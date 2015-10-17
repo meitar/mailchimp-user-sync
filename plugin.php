@@ -17,7 +17,7 @@ final class Plugin {
 	/**
 	 * @const VERSION
 	 */
-	const VERSION = '1.2.3';
+	const VERSION = '1.3';
 
 	/**
 	 * @const FILE
@@ -133,7 +133,7 @@ add_action( 'plugins_loaded', function() {
 	if( $ready ) {
 		$plugin = new Plugin();
 		$plugin->init();
-		$GLOBALS['MailChimp_Sync'] = $plugin;
+		$GLOBALS['mailchimp_sync'] = $plugin;
 	}
 
 }, 20 );
