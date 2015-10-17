@@ -90,9 +90,7 @@ class Listener {
 			// exit early
 			return false;
 		}
-
-		$new_user_data = array();
-
+		
 		// if user was supplied by filter, it might not have a sync key.
 		// add it, just in case.
 		// @todo: DRY meta key prefix
@@ -103,14 +101,14 @@ class Listener {
 
 		// update user email if it's given, valid and different
 		if( ! empty( $data['email'] ) && is_email( $data['email'] ) && $data['email'] !== $user->user_email ) {
-			$new_user_data['user_email'] = $data['email'];
+			update_user_meta( $user->ID, 'user_email', $data['email'] );
 		}
 
 		// update WP user with data (use reversed field map)
 		// loop through mapping rules
 		foreach( $this->options['field_mappers'] as $rule ) {
 
-			// is this field present in the request data?
+			// is this field present in the request data? do not use empty here
 			if( isset( $data['merges'][ $rule['mailchimp_field'] ] ) ) {
 
 				// is scalar value?
@@ -120,17 +118,12 @@ class Listener {
 				}
 
 				// update user property if it changed
+				// @todo Default user properties can be combined into single `wp_update_user` call for performance improvement
 				if( $user->{$rule['user_field']} !== $value ) {
-					$new_user_data[ $rule['user_field'] ] = $value;
+					update_user_meta( $user->ID, $rule['user_field'], $value );
 				}
 			}
 
-		}
-
-		// update user if something changed
-		if( count( $new_user_data ) > 0 ) {
-			$new_user_data['ID'] = $user->ID;
-			wp_update_user( $new_user_data );
 		}
 
 		// fire event to allow custom actions (like deleting the user)
