@@ -9,6 +9,20 @@ use MC4WP\Sync\ListSynchronizer;
 class SyncCommand extends WP_CLI_Command {
 
 	/**
+	 * @var array
+	 */
+	protected $options;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->options = $GLOBALS['mailchimp_sync']->options;
+
+		parent::__construct();
+	}
+
+	/**
 	 * Check the VAT on all payments
 	 *
 	 * @param $args
@@ -20,7 +34,7 @@ class SyncCommand extends WP_CLI_Command {
 
 		global $wpdb;
 
-		$wizard = new Wizard( $GLOBALS['MailChimp_Sync']->options['list'], $GLOBALS['MailChimp_Sync']->options );
+		$wizard = new Wizard( $this->options['list'],  $this->options );
 		$user_role = ( isset( $assoc_args['role'] ) ) ? $assoc_args['role'] : '';
 
 		// start by counting all users
@@ -52,10 +66,10 @@ class SyncCommand extends WP_CLI_Command {
 	 */
 	public function synchronize_user( $args, $assoc_args ) {
 
-		$opts = $GLOBALS['MailChimp_Sync']->options;
+		$opts =  $this->options;
 		$user_id = absint( $args[0] );
 
-		$wizard = new Wizard( $GLOBALS['MailChimp_Sync']->options['list'], $GLOBALS['MailChimp_Sync']->options );
+		$wizard = new Wizard(  $this->options['list'],  $this->options );
 		$result = $wizard->subscribe_users( array( $user_id ) );
 
 		if( $result ) {
