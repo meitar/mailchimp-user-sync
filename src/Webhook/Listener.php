@@ -90,7 +90,7 @@ class Listener {
 			// exit early
 			return false;
 		}
-		
+
 		// if user was supplied by filter, it might not have a sync key.
 		// add it, just in case.
 		// @todo: DRY meta key prefix

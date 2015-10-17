@@ -10,18 +10,22 @@ use WP_User;
  *
  * @todo This is just WP_CRON adaptation, hooks should be moved into other class which can use several adapters (WP CRON, custom scheduler, etc.)
  */
-class Scheduler {
+class Producer {
 
 	/**
 	 * Constructor
+	 * @param Worker $worker
 	 */
-	public function __construct() {}
+	public function __construct( Worker $worker ) {
+		$this->worker = $worker;
+	}
 
 	/**
 	 * Add hooks
 	 */
 	public function add_hooks() {
-		// hook into the various user related actions
+		$this->worker->add_hooks();
+
 		add_action( 'user_register', array( $this, 'schedule_subscribe' ), 99 );
 		add_action( 'profile_update', array( $this, 'schedule_update' ), 99 );
 		add_action( 'delete_user', array( $this, 'schedule_unsubscribe' ), 99 );
@@ -42,13 +46,8 @@ class Scheduler {
 
 		$event_name = ListSynchronizer::EVENT_PREFIX . $event;
 		$args = array( $user );
+		$this->worker->assign( $event_name, $args );
 
-		// we've already scheduled this
-		if( wp_next_scheduled( $event_name, $args ) !== false ) {
-			return false;
-		}
-
-		wp_schedule_single_event( time() + 1, $event_name, $args );
 		return true;
 	}
 
