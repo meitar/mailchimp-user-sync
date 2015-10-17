@@ -93,6 +93,14 @@ class Listener {
 
 		$new_user_data = array();
 
+		// if user was supplied by filter, it might not have a sync key.
+		// add it, just in case.
+		// @todo: DRY meta key prefix
+		$sync_key = 'mailchimp_sync_' . $data['list_id'];
+		if( empty( $user->{$sync_key} ) ) {
+			update_user_meta( $user->ID, $sync_key, $data['web_id'] );
+		}
+
 		// update user email if it's given, valid and different
 		if( ! empty( $data['email'] ) && is_email( $data['email'] ) && $data['email'] !== $user->user_email ) {
 			$new_user_data['user_email'] = $data['email'];
