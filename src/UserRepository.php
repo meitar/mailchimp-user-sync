@@ -13,6 +13,9 @@ use WP_User_Query;
  */
 class UserRepository {
 
+	/**
+	 * @var string
+	 */
 	protected $mailchimp_list_id = '';
 
 	/**
