@@ -125,6 +125,16 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 
 == Changelog ==
 
+= 1.3.1 - November 13, 2015 =
+
+**Improvements**
+
+- Compatibility fixes for [the upcoming MailChimp for WordPress 3.0 release](https://mc4wp.com/blog/breaking-backwards-compatibility-in-version-3-0/).
+
+**Additions**
+
+- Added `mailchimp_sync_get_user_field` filter to get user fields from a custom source and sync those to MailChimp.
+
 = 1.3 - October 17, 2015 =
 
 **Fixes**
