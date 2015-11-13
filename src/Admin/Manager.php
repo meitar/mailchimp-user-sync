@@ -37,8 +37,11 @@ class Manager {
 	 */
 	public function add_hooks() {
 		add_action( 'admin_init', array( $this, 'init' ) );
-		add_filter( 'mc4wp_menu_items', array( $this, 'add_menu_items' ) );
+		add_filter( 'mc4wp_admin_menu_items', array( $this, 'add_menu_items' ) );
 		add_action( 'admin_footer_text', array( $this, 'footer_text' ), 11 );
+
+		// for BC with MailChimp for WP < 3.0
+		add_filter( 'mc4wp_menu_items', array( $this, 'add_menu_items' ) );
 	}
 
 	/**
