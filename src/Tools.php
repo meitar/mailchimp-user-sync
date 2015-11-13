@@ -21,22 +21,22 @@ class Tools {
 
 	/**
 	 * @param WP_User $user
-	 * @param         $field_name
+	 * @param string $name
 	 *
 	 * @return string|bool
 	 */
-	public function get_user_field( WP_User $user, $field_name) {
+	public function get_user_field( WP_User $user, $name) {
 
 		$magic_fields = array( 'role' );
 
-		if( in_array( $field_name, $magic_fields ) ) {
-			return $this->get_user_magic_field( $user, $field_name );
+		if( in_array( $name, $magic_fields ) ) {
+			return $this->get_user_magic_field( $user, $name );
 		}
 
 		// does user have this property?
-		if( $user->has_prop( $field_name ) ) {
+		if( $user->has_prop( $name ) ) {
 			// get value and check if it's usable
-			$value = $user->get( $field_name );
+			$value = $user->get( $name );
 			if( ! is_scalar( $value ) || strlen( $value ) === 0 ) {
 				return false;
 			}
@@ -44,7 +44,16 @@ class Tools {
 			return $value;
 		}
 
-		return false;
+		$value = false;
+
+		/**
+		 * Filters the field value that is returned for unknown fields
+		 *
+		 * @param bool $value
+		 * @param string $name
+		 * @param WP_User $user
+		 */
+		return apply_filters( 'mailchimp_sync_get_user_field', $value, $name, $user );
 	}
 
 	/**
