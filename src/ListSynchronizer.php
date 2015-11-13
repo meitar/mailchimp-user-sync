@@ -265,7 +265,7 @@ class ListSynchronizer {
 	 *
 	 * @return array
 	 */
-	private function extract_merge_vars_from_user( WP_User $user ) {
+	protected function extract_merge_vars_from_user( WP_User $user ) {
 
 		$data = array();
 
@@ -303,3 +303,5 @@ class ListSynchronizer {
 
 
 }
+
+

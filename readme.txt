@@ -3,8 +3,8 @@ Contributors: Ibericode, DvanKooten, iMazed, hchouhan
 Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=donate-link
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
-Tested up to: 4.3.1
-Stable tag: 1.3
+Tested up to: 4.4
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

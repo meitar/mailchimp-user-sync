@@ -127,6 +127,8 @@ class AjaxListener {
 		// combine sources
 		$values = $meta_key_values + $custom_values;
 
+		// TODO: filter response
+
 		$this->respond( join( PHP_EOL, $values ) );
 	}
 

@@ -5,19 +5,12 @@ namespace MC4WP\Sync;
 use MC4WP\Sync\CLI\CommandProvider;
 use MC4WP\Sync\Webhook;
 
-// Prevent direct file access
-if ( ! defined( 'ABSPATH' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit;
-}
-
 final class Plugin {
 
 	/**
 	 * @const VERSION
 	 */
-	const VERSION = '1.3';
+	const VERSION = MAILCHIMP_SYNC_VERSION;
 
 	/**
 	 * @const FILE
@@ -27,7 +20,7 @@ final class Plugin {
 	/**
 	 * @const DIR
 	 */
-	const DIR = __DIR__;
+	const DIR = MAILCHIMP_SYNC_DIR;
 
 	/**
 	 * @const OPTION_NAME Option name
@@ -114,6 +107,11 @@ final class Plugin {
 
 		$options = array_merge( $defaults, $options );
 
+		/**
+		 * Filters MailChimp Sync options
+		 *
+		 * @param array $options
+		 */
 		return (array) apply_filters( 'mailchimp_sync_options', $options );
 	}
 
@@ -125,15 +123,3 @@ final class Plugin {
 	}
 
 }
-
-// Instantiate plugin on a later hook.
-add_action( 'plugins_loaded', function() {
-
-	$ready = include __DIR__  .'/dependencies.php';
-	if( $ready ) {
-		$plugin = new Plugin();
-		$plugin->init();
-		$GLOBALS['mailchimp_sync'] = $plugin;
-	}
-
-}, 20 );

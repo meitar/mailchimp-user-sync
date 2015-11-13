@@ -15,7 +15,6 @@ if( defined( 'MC4WP_VERSION' ) && version_compare( MC4WP_VERSION, '3.0', '>=' ) 
 	return true;
 }
 
-// Show notice to user
 add_action( 'admin_notices', function() {
 	?>
 	<div class="updated">

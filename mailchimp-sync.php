@@ -3,7 +3,7 @@
 Plugin Name: MailChimp User Sync
 Plugin URI: https://mc4wp.com/#utm_source=wp-plugin&utm_medium=mailchimp-sync&utm_campaign=plugins-page
 Description: Synchronize your WordPress Users with a MailChimp list.
-Version: 1.3
+Version: 1.3.1
 Author: ibericode
 Author URI: https://ibericode.com/
 Text Domain: mailchimp-sync
@@ -34,14 +34,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Check if PHP is at the minimum required version
-if( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
+/**
+ * Load the MailChimp Sync plugin
+ *
+ * Only runs when PHP is at version 5.3 or higher
+ */
+function load_mailchimp_sync() {
+	global $mailchimp_sync;
 
 	define( 'MAILCHIMP_SYNC_FILE', __FILE__ );
-	require __DIR__ . '/vendor/autoload.php';
-	require __DIR__ . '/plugin.php';
+	define( 'MAILCHIMP_SYNC_DIR', __DIR__ );
+	define( 'MAILCHIMP_SYNC_VERSION', '1.3.1' );
+	$ready = include dirname( __FILE__ )  .'/dependencies.php';
 
-} else {
-	require dirname( __FILE__ ) . '/php-backwards-compatibility.php';
+	if( $ready ) {
+		// load autoloader
+		require dirname( __FILE__ ) . '/vendor/autoload.php';
+
+		// instantiate plugin
+		$classname = 'MC4WP\\Sync\\Plugin';
+		$mailchimp_sync = new $classname();
+		$mailchimp_sync->init();
+	}
 }
+
+// start with PHP, which should be at least v5.3
+if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+	require_once dirname( __FILE__ ) . '/php-backwards-compatibility.php';
+} else {
+	add_action( 'plugins_loaded', 'load_mailchimp_sync', 30 );
+}
+
+
+
 

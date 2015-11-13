@@ -14,6 +14,7 @@ return array(
     'MC4WP\\Sync\\CronWorker' => $baseDir . '/src/Tasks/CronWorker.php',
     'MC4WP\\Sync\\ListSynchronizer' => $baseDir . '/src/ListSynchronizer.php',
     'MC4WP\\Sync\\Log' => $baseDir . '/src/Log.php',
+    'MC4WP\\Sync\\Plugin' => $baseDir . '/src/Plugin.php',
     'MC4WP\\Sync\\Producer' => $baseDir . '/src/Tasks/Producer.php',
     'MC4WP\\Sync\\ShutdownWorker' => $baseDir . '/src/Tasks/ShutdownWorker.php',
     'MC4WP\\Sync\\Tools' => $baseDir . '/src/Tools.php',
