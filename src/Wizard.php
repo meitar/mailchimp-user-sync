@@ -73,11 +73,11 @@ class Wizard {
 			array(
 				'meta_query' => array(
 					'relation' => 'OR',
-					array( //if no date has been added show these posts too
+					array(
 						'key' => $this->sync->meta_key,
 						'compare' => 'NOT EXISTS'
 					),
-					array( //check to see if date has been filled out
+					array( 
 						'key' => $this->sync->meta_key,
 						'compare' => 'EXISTS'
 					)
