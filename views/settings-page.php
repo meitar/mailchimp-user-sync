@@ -191,11 +191,19 @@ defined( 'ABSPATH' ) or exit;
 
 	<p><?php _e( 'Any errors that may occur trying to synchronize changes with MailChimp will show up here.', 'mailchimp-sync' ); ?></p>
 
-	<textarea class="widefat" rows="6" readonly><?php echo trim( $log->read() ); ?></textarea>
+	<label for="mc4wp-sync-log" class="screen-reader-text"><?php_e( "Log", 'mailchimp-sync' ); ?></label>
+	<textarea id="mc4wp-sync-log" class="widefat" rows="6" readonly><?php echo trim( $log->read() ); ?></textarea>
 
 	<p>
 		<a class="button" href="<?php echo add_query_arg( array( 'mc4wp-sync-action' => 'clear-log' ) ); ?>"><?php _e( 'Clear Log', 'mailchimp-sync' ); ?></a>
 	</p>
 	<?php } ?>
+
+	<?php
+	/**
+	 * @ignore
+	 */
+	do_action( 'mc4wp_admin_footer' );
+	?>
 
 </div>
