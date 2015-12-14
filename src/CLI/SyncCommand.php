@@ -23,10 +23,21 @@ class SyncCommand extends WP_CLI_Command {
 	}
 
 	/**
-	 * SYnchronize all users with the given role
+	 * Synchronize all users (with a given role)
 	 *
 	 * @param $args
 	 * @param $assoc_args
+	 *
+	 * ## OPTIONS
+	 *
+	 * <role>
+	 * : User role to synchronize
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp sync --role=administrator
+	 *
+	 * @synopsis [--role=<role>]
 	 *
 	 * @subcommand sync-all
 	 */
@@ -60,13 +71,26 @@ class SyncCommand extends WP_CLI_Command {
 	}
 
 	/**
+	 * Synchronize a single user
+	 *
 	 * @param $args
 	 * @param $assoc_args
+	 *
+	 * ## OPTIONS
+	 *
+	 * <user_id>
+	 * : ID of the user to synchronize
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp sync-user 5
+	 *
+	 * @synopsis <user_id>
+	 *
 	 * @subcommand sync-user
 	 */
 	public function synchronize_user( $args, $assoc_args ) {
 
-		$opts =  $this->options;
 		$user_id = absint( $args[0] );
 
 		$wizard = new Wizard(  $this->options['list'],  $this->options );
@@ -75,7 +99,7 @@ class SyncCommand extends WP_CLI_Command {
 		if( $result ) {
 			WP_CLI::line( "User successfully synced!" );
 		} else {
-			WP_CLI::line( "Error while syncing user #" . $user_id );
+			WP_CLI::error( "Error while syncing user #" . $user_id );
 		}
 
 	}
