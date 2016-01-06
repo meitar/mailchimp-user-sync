@@ -67,13 +67,13 @@ class Listener {
 
 		define( 'MC4WP_SYNC_DOING_WEBHOOK', true );
 
-		$data = stripslashes_deep( $_REQUEST['data'] );
-		$type = ( ! empty( $_REQUEST['type'] ) ) ? $_REQUEST['type'] : '';
-
-		// do nothing if no "type" or "web_id" is given
-		if( empty( $type ) || empty( $data['web_id'] ) ) {
+		// check if data & type was given
+		if( empty( $_REQUEST['data'] ) || empty( $_REQUEST['type'] ) ) {
 			return false;
 		}
+
+		$data = stripslashes_deep( $_REQUEST['data'] );
+		$type = $_REQUEST['type'];
 
 		// find WP user by List_ID + MailChimp ID
 		$user = $this->user_repository->get_user_by_mailchimp_id( $data['web_id'] );
