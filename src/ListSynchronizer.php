@@ -75,9 +75,9 @@ class ListSynchronizer {
 	public function add_hooks() {
 		// custom actions for people to use if they want to call the class actions
 		// @todo If we ever allow multiple instances of this class, these actions need the list_id property
-		add_action( self::EVENT_PREFIX . 'subscribe_user', array( $this, 'subscribe_user' ), 99 );
-		add_action( self::EVENT_PREFIX . 'update_subscriber', array( $this, 'update_subscriber' ), 99 );
-		add_action( self::EVENT_PREFIX . 'unsubscribe_user', array( $this, 'unsubscribe_user' ), 99 );
+		add_action( self::EVENT_PREFIX . 'subscribe_user', array( $this, 'subscribe_user' ) );
+		add_action( self::EVENT_PREFIX . 'update_subscriber', array( $this, 'update_subscriber' ) );
+		add_action( self::EVENT_PREFIX . 'unsubscribe_user', array( $this, 'unsubscribe_user' ) );
 	}
 
 	/**
@@ -189,6 +189,7 @@ class ListSynchronizer {
 		// get subscriber uid from user meta
 		$user = $this->get_user( $user_id );
 		$subscriber_uid = $this->get_user_subscriber_uid( $user );
+
 		if( $subscriber_uid ) {
 
 			// unsubscribe user email from the selected list
