@@ -35,8 +35,8 @@ defined( 'ABSPATH' ) or exit;
 					</select>
 					<?php } ?>
 
+					<p class="help"><?php _e( 'Select the list to synchronize your WordPress user base with.' ,'mailchimp-sync' ); ?></p>
 				</td>
-				<td class="desc"><?php _e( 'Select the list to synchronize your WordPress user base with.' ,'mailchimp-sync' ); ?></td>
 			</tr>
 
 			<tr valign="top">
@@ -50,8 +50,9 @@ defined( 'ABSPATH' ) or exit;
 						<input type="radio" id="mc4wp_checkbox_double_optin_0" name="<?php echo $this->name_attr( 'double_optin' ); ?>" value="0" <?php checked( $this->options['double_optin'], 0 ); ?> />
 						<?php _e( 'No', 'mailchimp-for-wp' ); ?>
 					</label>
+
+					<p class="help"><?php _e( 'Select "yes" if you want people to confirm their email address before being subscribed (recommended)', 'mailchimp-for-wp' ); ?></p>
 				</td>
-				<td class="desc"><?php _e( 'Select "yes" if you want people to confirm their email address before being subscribed (recommended)', 'mailchimp-for-wp' ); ?></td>
 			</tr>
 
 			<?php $enabled = !$this->options['double_optin']; ?>
@@ -62,15 +63,18 @@ defined( 'ABSPATH' ) or exit;
 					<label for="mc4wp_checkbox_send_welcome_1"><?php _e( 'Yes', 'mailchimp-for-wp' ); ?></label> &nbsp;
 					<input type="radio" id="mc4wp_checkbox_send_welcome_0" name="<?php echo $this->name_attr( 'send_welcome' ); ?>" value="0" <?php if($enabled) { checked( $this->options['send_welcome'], 0 ); } else { echo 'disabled'; } ?> />
 					<label for="mc4wp_checkbox_send_welcome_0"><?php _e( 'No', 'mailchimp-for-wp' ); ?></label> &nbsp;
+
+					<p class="help">
+						<?php _e( 'Select "yes" if you want to send your lists Welcome Email if a subscribe succeeds (only when double opt-in is disabled).', 'mailchimp-for-wp' ); ?>
+					</p>
 				</td>
-				<td class="desc"><?php _e( 'Select "yes" if you want to send your lists Welcome Email if a subscribe succeeds (only when double opt-in is disabled).', 'mailchimp-for-wp' ); ?></td>
 			</tr>
 
 			<tr valign="top">
 				<th scope="row"><?php _e( 'Role to sync', 'mailchimp-sync' ); ?></th>
-				<td class="nowrap">
+				<td>
 					<select name="<?php echo $this->name_attr('role'); ?>" id="role-select">
-						<option value="" <?php selected( $this->options['role'], '' ); ?>>All roles</option>
+						<option value="" <?php selected( $this->options['role'], '' ); ?>><?php _e( 'All roles', 'mailchimp-sync' ); ?></option>
 						<?php
 						$roles = get_editable_roles();
 						foreach( $roles as $key => $role ) {
@@ -78,19 +82,20 @@ defined( 'ABSPATH' ) or exit;
 						}
 						?>
 					</select>
+
+					<p class="help"><?php _e( 'Select a specific role to synchronize.', 'mailchimp-sync' ); ?></p>
 				</td>
-				<td class="desc"><?php _e( 'Select a specific role to synchronize.', 'mailchimp-sync' ); ?></td>
 			</tr>
 
 			<tr valign="top">
 				<th scope="row">
 					<label><?php _e( 'Send Additional Fields', 'mailchimp-sync' ); ?></label>
 				</th>
-				<td colspan="2" class="mc4wp-sync-field-map">
+				<td class="mc4wp-sync-field-map">
 					<?php
 
 					if( ! isset( $selected_list ) ) {
-						echo '<p>' . __( 'Please select a MailChimp list first (and then save your settings).', 'mailchimp-sync' ) . '</p>';
+						echo '<p class="help">' . __( 'Please select a MailChimp list first (and then save your settings).', 'mailchimp-sync' ) . '</p>';
 					} else {
 
 						foreach( $this->options['field_mappers'] as $index => $rule ) {
@@ -131,8 +136,8 @@ defined( 'ABSPATH' ) or exit;
 				<td class="nowrap">
 					<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="1" <?php checked( $this->options['enabled'], 1 ); ?> /> <?php _e( 'Yes' ); ?></label>
 					<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="0" <?php checked( $this->options['enabled'], 0 ); ?> /> <?php _e( 'No' ); ?></label>
+					<p  class="help"><?php _e( 'Select "yes" if you want the plugin to "listen" to all changes in your WordPress user base and auto-sync them with the selected MailChimp list.', 'mailchimp-sync' ); ?></p>
 				</td>
-				<td class="desc"><?php _e( 'Select "yes" if you want the plugin to "listen" to all changes in your WordPress user base and auto-sync them with the selected MailChimp list.', 'mailchimp-sync' ); ?></td>
 			</tr>
 
 		</table>
