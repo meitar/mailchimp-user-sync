@@ -7,17 +7,14 @@ use WP_User;
 /**
  * Class Scheduler
  * @package MC4WP\Sync
- *
- * @todo This is just WP_CRON adaptation, hooks should be moved into other class which can use several adapters (WP CRON, custom scheduler, etc.)
  */
 class Producer {
 
 	/**
 	 * Constructor
-	 * @param Worker $worker
 	 */
-	public function __construct( Worker $worker ) {
-		$this->worker = $worker;
+	public function __construct() {
+		$this->worker = new ShutdownWorker();
 	}
 
 	/**

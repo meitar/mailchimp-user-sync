@@ -59,10 +59,7 @@ final class Plugin {
 
 		// if a list was selected, initialise the ListSynchronizer class
 		if( $this->options['list'] != '' && $this->options['enabled'] ) {
-
-			// @todo make this filterable (wait for DI container in core?)
-			$worker = ( $options['worker_type'] === 'shutdown' ) ? new ShutdownWorker() : new CronWorker();
-			$scheduler = new Producer( $worker );
+			$scheduler = new Producer();
 			$scheduler->add_hooks();
 
 			$this->list_synchronizer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
