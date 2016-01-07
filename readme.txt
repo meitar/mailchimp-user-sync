@@ -16,11 +16,11 @@ Synchronize your WordPress Users with a MailChimp list.
 
 Synchronize your registered WordPress users with a MailChimp list of your choice.
 
-> To use MailChimp Sync, please install either the free or the premium version of the [MailChimp for WordPress plugin](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info).
+> To use MailChimp User Sync, please install either the free or the premium version of the [MailChimp for WordPress plugin](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info).
 
-= MailChimp Sync, at a glance.. =
+= MailChimp User Sync, at a glance.. =
 
-MailChimp Sync will watch for changes in your WordPress user base and automatically synchronize any changes with a selected MailChimp list.
+MailChimp User Sync will watch for changes in your WordPress user base and automatically synchronize any changes with a selected MailChimp list.
 
 - Automatically subscribe new users to your MailChimp list.
 - Sync all profile changes with MailChimp, even when a user's email address changes.
@@ -32,15 +32,15 @@ MailChimp Sync will watch for changes in your WordPress user base and automatica
 
 After activation, the plugin will listen to all changes in your WordPress users and make sure everything stays in sync with the selected MailChimp list.
 
-= Development of MailChimp Sync =
+= Development of MailChimp User Sync =
 
-Bug reports (and Pull Requests) for [MailChimp Sync are welcomed on GitHub](https://github.com/ibericode/mailchimp-sync). Please note that GitHub is _not_ a support forum.
+Bug reports (and Pull Requests) for [MailChimp User Sync are welcomed on GitHub](https://github.com/ibericode/mailchimp-sync). Please note that GitHub is _not_ a support forum.
 
 **More information**
 
 - [MailChimp for WordPress](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=more-info-link)
 - Other [add-ons for MailChimp for WordPress](https://mc4wp.com/add-ons/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=more-info-link)
-- Developers; follow or contribute to the [MailChimp Sync plugin on GitHub](https://github.com/ibericode/mailchimp-sync)
+- Developers; follow or contribute to the [MailChimp User Sync plugin on GitHub](https://github.com/ibericode/mailchimp-sync)
 - Other [WordPress plugins](https://dannyvankooten.com/wordpress-plugins/#utm_source=wp-plugin-repo&utm_medium=link&utm_campaign=more-info-link) by [Danny van Kooten](https://dannyvankooten.com#utm_source=wp-plugin-repo&utm_medium=link&utm_campaign=more-info-link)
 - [@DannyvanKooten](https://twitter.com/dannyvankooten) on Twitter
 
@@ -50,10 +50,10 @@ Bug reports (and Pull Requests) for [MailChimp Sync are welcomed on GitHub](http
 
 Since this plugin depends on the [MailChimp for WordPress plugin](https://wordpress.org/plugins/mailchimp-for-wp/), you will need to install that first.
 
-= Installing MailChimp Sync =
+= Installing MailChimp User Sync =
 
 1. Make sure [MailChimp for WordPress](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info/) is installed (free or premium).
-1. In your WordPress admin panel, go to *Plugins > New Plugin*, search for **MailChimp Sync** and click "*Install now*"
+1. In your WordPress admin panel, go to *Plugins > New Plugin*, search for **MailChimp User Sync** and click "*Install now*"
 1. Alternatively, download the plugin and upload the contents of `mailchimp-sync.zip` to your plugins directory, which usually is `/wp-content/plugins/`.
 1. Activate the plugin
 1. Set [your MailChimp API key](https://admin.mailchimp.com/account/api) in **MailChimp for WP > MailChimp Settings**.
@@ -248,7 +248,7 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 - [WP CLI](http://wp-cli.org/) commands: `wp mailchimp-sync sync-all` and `wp mailchimp-sync sync-user $user_id`.
 - Filter: `mailchimp_sync_user_data` to modify user data before it's sent to MailChimp.
 
-For more detailed usage info on the introduced features, have a look at the [MailChimp Sync FAQ](https://wordpress.org/plugins/mailchimp-sync/faq/).
+For more detailed usage info on the introduced features, have a look at the [MailChimp User Sync FAQ](https://wordpress.org/plugins/mailchimp-sync/faq/).
 
 = 0.1.2 - March 17, 2015 =
 
