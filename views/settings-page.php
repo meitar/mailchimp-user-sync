@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) or exit;
 ?>
 <div class="wrap" id="mc4wp-admin">
 
-	<h1 style="line-height: 48px;">MailChimp Sync</h1>
+	<h1 class="page-title">MailChimp User Sync</h1>
 
 	<form method="post" action="<?php echo admin_url( 'options.php' ); ?>">
 
