@@ -18,8 +18,7 @@ class ShutdownWorker implements Worker {
 	 * Add hooks
 	 */
 	public function add_hooks() {
-		// hook into the various user related actions
-		add_action( 'shutdown', array( $this, 'work' ) );
+		register_shutdown_function( array( $this, 'work' ) );
 	}
 
 	/**
@@ -31,6 +30,7 @@ class ShutdownWorker implements Worker {
 
 		$task = array_merge( array( $event ), $args );
 
+		// only add each task once
 		if( in_array( $task, $this->tasks ) ) {
 			return false;
 		}
@@ -43,7 +43,8 @@ class ShutdownWorker implements Worker {
 	 * Fire a `do_action` for each task
 	 */
 	public function work() {
-		foreach( $this->tasks as $task ) {
+		while( ! empty( $this->tasks ) ) {
+			$task = array_shift( $this->tasks );
 			call_user_func_array( 'do_action', $task );
 		}
 	}
