@@ -5,11 +5,14 @@ namespace MC4WP\Sync\Admin;
 use MC4WP\Sync\Log;
 use MC4WP\Sync\Plugin;
 use MC4WP\Sync\ListSynchronizer;
-use MC4WP_MailChimp_Tools;
+use MC4WP_MailChimp;
 use WP_User;
 
 class Manager {
 
+	/**
+	 * @const string
+	 */
 	const SETTINGS_CAP = 'manage_options';
 
 	/**
@@ -131,14 +134,13 @@ class Manager {
 	public function add_menu_items( $items ) {
 
 		$item = array(
-			'title' => __( 'MailChimp Sync', 'mailchimp-sync' ),
-			'text' => __( 'Sync', 'mailchimp-sync' ),
+			'title' => __( 'MailChimp User Sync', 'mailchimp-sync' ),
+			'text' => __( 'User Sync', 'mailchimp-sync' ),
 			'slug' => 'sync',
 			'callback' => array( $this, 'show_settings_page' )
 		);
 
-		// insert item before the last menu item
-		array_splice( $items, count( $items ) - 1, 0, array( $item ) );
+		$items[] = $item;
 
 		return $items;
 	}
@@ -243,6 +245,8 @@ class Manager {
 		}
 
 		$this->options['field_mappers'] = array_values( $this->options['field_mappers'] );
+
+		// add empty field so we can add more rules
 		$this->options['field_mappers'][] = array( 'user_field' => '', 'mailchimp_field' => '' );
 
 		require Plugin::DIR . '/views/settings-page.php';
@@ -278,7 +282,6 @@ class Manager {
 	 */
 	public function sanitize_settings( array $dirty ) {
 
-		// todo: perform some actual sanitization
 		$clean = $dirty;
 
 		// empty field mappers if list changed
@@ -321,21 +324,9 @@ class Manager {
 	 * @return array
 	 */
 	protected function get_mailchimp_lists() {
+		$mailchimp = new MC4WP_MailChimp();
+		return $mailchimp->get_lists();
 
-		/**
-		 * @since 3.0
-		 */
-		if( class_exists( 'MC4WP_MailChimp_Tools' ) && method_exists( 'MC4WP_MailChimp_Tools', 'get_lists' ) ) {
-			return MC4WP_MailChimp_Tools::get_lists();
-		}
-
-		/** @deprecated MailChimp for WordPress v3.0  */
-		if( class_exists( 'MC4WP_MailChimp' ) ) {
-			$mailchimp = new \MC4WP_MailChimp();
-			return $mailchimp->get_lists();
-		}
-
-		return array();
 	}
 
 	/**
