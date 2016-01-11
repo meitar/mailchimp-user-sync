@@ -296,7 +296,12 @@ class ListSynchronizer {
 			}
 		}
 
-		// Allow other WP extensions to set other list fields (merge variables).
+		/**
+		 * Filters the merge vars which are sent to MailChimp
+		 *
+		 * @param array $data The data that is sent.
+		 * @param WP_User $user The user which is synchronized
+		 */
 		$data = apply_filters( 'mailchimp_sync_user_data', $data, $user );
 
 		return $data;
