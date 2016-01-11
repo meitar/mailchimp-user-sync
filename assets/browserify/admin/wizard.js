@@ -1,6 +1,6 @@
 
-var Log = require('./Log.js');
-var User = require('./User.js');
+var Log = require('./log.js');
+var User = require('./user.js');
 
 var Wizard = (function() {
 
