@@ -30,7 +30,7 @@ class Manager {
 	 * @param array $options
 	 * @param ListSynchronizer $list_synchronizer
 	 */
-	public function __construct( array $options, ListSynchronizer $list_synchronizer ) {
+	public function __construct( array $options, $list_synchronizer ) {
 		$this->options = $options;
 		$this->plugin_slug = basename( Plugin::DIR ) . '/mailchimp-sync.php';
 		$this->list_synchronizer = $list_synchronizer;
