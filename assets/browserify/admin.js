@@ -11,7 +11,5 @@ if( wizardContainer ) {
 	m.module( wizardContainer , Wizard );
 }
 
-console.log('hoi');
-
 // init fieldmapper
 new FieldMapper($('.mc4wp-sync-field-map'));
