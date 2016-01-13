@@ -3,7 +3,7 @@ var FieldMapper = function( $context ) {
 	var $ = window.jQuery;
 
 	function addRow() {
-		var $row = $context.find(".row").last();
+		var $row = $context.find(".field-map-row").last();
 		var $newRow = $row.clone();
 		var $userField = $newRow.find('.user-field');
 		var $mailChimpField = $newRow.find('.mailchimp-field');
@@ -24,7 +24,7 @@ var FieldMapper = function( $context ) {
 	}
 
 	function removeRow() {
-		$(this).parents('.row').remove();
+		$(this).parents('.field-map-row').remove();
 		setAvailableFields();
 	}
 
@@ -35,7 +35,9 @@ var FieldMapper = function( $context ) {
 			var chosenFields = $.map( otherSelectBoxes, function(a,i) { return $(a).val(); });
 
 			$(this).find('option').each(function() {
-				$(this).prop('disabled', ( $.inArray($(this).val(), chosenFields) > -1 ));
+				var value = $(this).val();
+				var alreadyChosen = $.inArray( value, chosenFields) > -1;
+				$(this).prop('disabled', ( value === '' || alreadyChosen ) );
 			});
 		});
 	}
