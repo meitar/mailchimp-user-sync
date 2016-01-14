@@ -204,7 +204,7 @@ defined( 'ABSPATH' ) or exit;
 
 			<p><?php _e( 'Any errors that may occur trying to synchronize changes with MailChimp will show up here.', 'mailchimp-sync' ); ?></p>
 
-			<label for="mc4wp-sync-log" class="screen-reader-text"><?php_e( "Log", 'mailchimp-sync' ); ?></label>
+			<label for="mc4wp-sync-log" class="screen-reader-text"><?php _e( "Log", 'mailchimp-sync' ); ?></label>
 			<textarea id="mc4wp-sync-log" class="widefat" rows="6" readonly><?php echo trim( $log->read() ); ?></textarea>
 
 			<p>
