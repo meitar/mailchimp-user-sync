@@ -1,3 +1,9 @@
+#### 1.3.3 - January 14, 2016
+
+**Fixes**
+
+- Fatal error on settings page on lower PHP versions because of missing space between `<?php` and translation call. This gets Forced Sync to work again.
+
 #### 1.3.2 - January 13, 2016
 
 **Fixes**
