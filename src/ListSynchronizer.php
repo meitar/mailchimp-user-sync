@@ -310,15 +310,15 @@ class ListSynchronizer {
 
 		$data = array();
 
-		if( '' !== $user->first_name ) {
+		if( ! empty( $user->first_name ) ) {
 			$data['FNAME'] = $user->first_name;
 		}
 
-		if( '' !== $user->last_name ) {
+		if( ! empty( $user->last_name ) ) {
 			$data['LNAME'] = $user->last_name;
 		}
 
-		if( '' !== $user->first_name  && '' !== $user->last_name ) {
+		if( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
 			$data['NAME'] = sprintf( '%s %s', $user->first_name, $user->last_name );
 		}
 
@@ -331,7 +331,13 @@ class ListSynchronizer {
 				// get field value
 				$value = $this->tools->get_user_field( $user, $rule['user_field'] );
 				if( is_string( $value ) ) {
-					$data[ $rule['mailchimp_field'] ] = $value;
+
+					// If target index does not exist yet, just add.
+					// Otherwise, only overwrite if value not empty
+					if( ! isset( $data[ $rule['mailchimp_field'] ] ) || ! empty( $value ) ) {
+						$data[ $rule['mailchimp_field'] ] = $value;
+					}
+
 				}
 			}
 		}
