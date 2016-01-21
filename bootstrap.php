@@ -3,7 +3,7 @@
 namespace MC4WP\Sync;
 
 use MC4WP\Sync\CLI\CommandProvider;
-use MC4WP_Queue;
+use MC4WP_Queue as Queue;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -22,7 +22,7 @@ if( ! empty( $plugin->options['list'] ) && $plugin->options['enabled'] ) {
 	$list_synchronizer->add_hooks();
 
 	// create a job queue
-	$queue = new MC4WP_Queue( 'mc4wp_sync_queue' );
+	$queue = new Queue( 'mc4wp_sync_queue' );
 
 	// create a worker and have it work on "init" when doing CRON
 	$worker = new Worker( $queue, $list_synchronizer );
