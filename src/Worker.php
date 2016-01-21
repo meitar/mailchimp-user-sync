@@ -32,27 +32,53 @@ class Worker {
 	 * Add hooks
 	 */
 	public function add_hooks() {
-		$queue = $this->queue;
 		$synchronizer = $this->synchronizer;
+		$worker = $this;
 
-		add_action( 'user_register', function( $user_id ) use( $queue ) {
-			$queue->put( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
+		add_action( 'user_register', function( $user_id ) use( $worker ) {
+			$worker->schedule( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
 		});
 
-		add_action( 'profile_update', function( $user_id ) use( $queue ) {
-			$queue->put( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
+		add_action( 'profile_update', function( $user_id ) use( $worker ) {
+			$worker->schedule( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
 		});
 
-		add_action( 'updated_user_meta', function( $meta_id, $user_id ) use( $queue ) {
-			$queue->put( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
-		}, 10, 2 );
+		add_action( 'updated_user_meta', function( $meta_id, $user_id, $meta_key  ) use( $worker, $synchronizer ) {
 
-		add_action( 'delete_user', function( $user_id ) use( $queue, $synchronizer ) {
+			/*
+			 * Don't act on our own actions or insignificant meta values
+			 *
+			 * @see https://wordpress.org/plugins/user-last-login/
+			 * @see https://wordpress.org/plugins/wp-last-login/
+			 */
+			if( in_array( $meta_key, array( $synchronizer->meta_key, 'wp-last-login' ) ) ) {
+				return;
+			}
+
+			$worker->schedule( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
+		}, 10, 3 );
+
+		add_action( 'delete_user', function( $user_id ) use( $worker, $synchronizer ) {
 			// fetch meta value now, because user is about to be deleted
 			$subscriber_uid = get_user_meta( $user_id, $synchronizer->meta_key, true );
-			$queue->put( array( 'type' => 'unsubscribe', 'user_id' => $user_id, 'subscriber_uid' => $subscriber_uid ) );
+			$worker->schedule( array( 'type' => 'unsubscribe', 'user_id' => $user_id, 'subscriber_uid' => $subscriber_uid ) );
 		});
 
+	}
+
+	/**
+	 * Adds a task to the queue
+	 *
+	 * @param array $job_data
+	 */
+	public function schedule( $job_data ) {
+
+		// Don't schedule anything when doing webhook
+		if( defined( 'MC4WP_SYNC_DOING_WEBHOOK' ) && MC4WP_SYNC_DOING_WEBHOOK ) {
+			return;
+		}
+
+		$this->queue->put( $job_data );
 	}
 
 
