@@ -33,11 +33,6 @@ final class Plugin {
 	public $options = array();
 
 	/**
-	 * Constructor
-	 */
-	public function __construct() {	}
-
-	/**
 	 * @var ListSynchronizer
 	 */
 	public $list_synchronizer;
@@ -47,42 +42,8 @@ final class Plugin {
 	 */
 	public $webhooks;
 
-	/**
-	 * Let's go...
-	 *
-	 * Runs at `plugins_loaded` priority 30.
-	 */
-	public function init() {
-
-		// load plugin options
-		$this->options = $options = $this->load_options();
-
-		// if a list was selected, initialise the ListSynchronizer class
-		if( $this->options['list'] != '' && $this->options['enabled'] ) {
-			$scheduler = new Producer();
-			$scheduler->add_hooks();
-
-			$this->list_synchronizer = new ListSynchronizer( $this->options['list'], $this->options['role'], $this->options );
-			$this->list_synchronizer->add_hooks();
-		}
-
-		if( defined( 'WP_CLI' ) && WP_CLI ) {
-			$commands = new CommandProvider();
-			$commands->register();
-		}
-
-		// Load area-specific code
-		if( ! is_admin() ) {
-			// @todo make this optional
-			$this->webhooks = new Webhook\Listener( $this->options );
-			$this->webhooks->add_hooks();
-		} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			$ajax = new AjaxListener( $this->options );
-			$ajax->add_hooks();
-		} else {
-			$admin = new Admin\Manager( $this->options, $this->list_synchronizer );
-			$admin->add_hooks();
-		}
+	public function __construct() {
+		$this->options = $this->load_options();
 	}
 
 	/**
@@ -99,7 +60,6 @@ final class Plugin {
 			'role' => '',
 			'enabled' => 1,
 			'field_mappers' => array(),
-			'worker_type' => 'shutdown'
 		);
 
 		$options = array_merge( $defaults, $options );
@@ -110,13 +70,6 @@ final class Plugin {
 		 * @param array $options
 		 */
 		return (array) apply_filters( 'mailchimp_sync_options', $options );
-	}
-
-	/**
-	 * @return array
-	 */
-	public function get_options() {
-		return $this->options;
 	}
 
 }

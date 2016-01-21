@@ -38,31 +38,30 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Load the MailChimp Sync plugin
  *
  * Only runs when PHP is at version 5.3 or higher
+ *
+ * @ignore
  */
-function load_mailchimp_sync() {
-	global $mailchimp_sync;
+function __load_mailchimp_sync() {
 
 	define( 'MAILCHIMP_SYNC_FILE', __FILE__ );
 	define( 'MAILCHIMP_SYNC_DIR', __DIR__ );
 	define( 'MAILCHIMP_SYNC_VERSION', '1.3.3' );
+
+	// Test whether dependencies were met
 	$ready = include dirname( __FILE__ )  .'/dependencies.php';
-
-	if( $ready ) {
-		// load autoloader
-		require dirname( __FILE__ ) . '/vendor/autoload.php';
-
-		// instantiate plugin
-		$classname = 'MC4WP\\Sync\\Plugin';
-		$mailchimp_sync = new $classname();
-		$mailchimp_sync->init();
+	if( ! $ready ) {
+		return;
 	}
+
+	// Load PHP 5.3+ bootstrapper
+	include dirname( __FILE__ ) . '/bootstrap.php';
 }
 
 // start with PHP, which should be at least v5.3
 if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	require_once dirname( __FILE__ ) . '/php-backwards-compatibility.php';
 } else {
-	add_action( 'plugins_loaded', 'load_mailchimp_sync', 30 );
+	add_action( 'plugins_loaded', '__load_mailchimp_sync', 30 );
 }
 
 
