@@ -3,6 +3,7 @@
 namespace MC4WP\Sync;
 
 use MC4WP\Sync\CLI\CommandProvider;
+use MC4WP_Queue;
 
 defined( 'ABSPATH' ) or exit;
 
@@ -11,14 +12,25 @@ require dirname( __FILE__ ) . '/vendor/autoload.php';
 
 // instantiate plugin
 $plugin = new Plugin();
+$list_synchronizer = null;
 
 // if a list was selected, initialise the ListSynchronizer class
-if( $plugin->options['list'] != '' && $plugin->options['enabled'] ) {
-	$scheduler = new Producer();
-	$scheduler->add_hooks();
+if( ! empty( $plugin->options['list'] ) && $plugin->options['enabled'] ) {
 
+	// instantiate synchronizer
 	$list_synchronizer = new ListSynchronizer( $plugin->options['list'], $plugin->options['role'], $plugin->options );
 	$list_synchronizer->add_hooks();
+
+	// create a job queue
+	$queue = new MC4WP_Queue( 'mc4wp_sync_queue' );
+
+	// create a worker and have it work on "init" when doing CRON
+	$worker = new Worker( $queue, $list_synchronizer );
+	$worker->add_hooks();
+
+	if( defined( 'DOING_CRON' ) && DOING_CRON ) {
+		add_action( 'init', array( $worker, 'work' ) );
+	}
 }
 
 // Load area-specific code

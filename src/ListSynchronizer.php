@@ -78,7 +78,7 @@ class ListSynchronizer {
 		// custom actions for people to use if they want to call the class actions
 		// @todo If we ever allow multiple instances of this class, these actions need the list_id property
 		add_action( self::EVENT_PREFIX . 'subscribe_user', array( $this, 'subscribe_user' ) );
-		add_action( self::EVENT_PREFIX . 'update_subscriber', array( $this, 'update_subscriber' ) );
+		add_action( self::EVENT_PREFIX . 'update_subscriber', array( $this, 'subscribe_user' ) );
 		add_action( self::EVENT_PREFIX . 'unsubscribe_user', array( $this, 'unsubscribe_user' ) );
 	}
 
@@ -102,18 +102,18 @@ class ListSynchronizer {
 	}
 
 	/**
-	 * @param WP_User $user
+	 * @param int $user_id
 	 *
 	 * @return string
 	 */
-	public function get_user_subscriber_uid( WP_User $user ) {
-		$subscriber_uid = get_user_meta( $user->ID, $this->meta_key, true );
+	public function get_user_subscriber_uid( $user_id ) {
+		$subscriber_uid = get_user_meta( $user_id, $this->meta_key, true );
 
-		if( is_string( $subscriber_uid ) && '' !== $subscriber_uid ) {
+		if( is_string( $subscriber_uid ) ) {
 			return $subscriber_uid;
 		}
 
-		return null;
+		return '';
 	}
 
 	/**
@@ -167,6 +167,12 @@ class ListSynchronizer {
 			return false;
 		}
 
+		// If this user has a subscriber_uid, try to update the user in MailChimp.
+		$subscriber_uid = $this->get_user_subscriber_uid( $user->ID );
+		if( ! empty( $subscriber_uid ) ) {
+			return $this->update_subscriber( $subscriber_uid, $user );
+		}
+
 		$api = $this->get_api();
 		$merge_vars = $this->extract_merge_vars_from_user( $user );
 
@@ -204,15 +210,18 @@ class ListSynchronizer {
 	 * Delete the subscriber uid from the MailChimp list
 	 *
 	 * @param int $user_id
+	 * @param string $subscriber_uid (optional)
+	 *
 	 * @return bool
 	 */
-	public function unsubscribe_user( $user_id ) {
+	public function unsubscribe_user( $user_id, $subscriber_uid = '' ) {
 
-		// get subscriber uid from user meta
-		$user = $this->get_user( $user_id );
-		$subscriber_uid = $this->get_user_subscriber_uid( $user );
+		// If $subscriber_uid parameter not given, fetch from user meta
+		if( empty( $subscriber_uid ) ) {
+			$subscriber_uid = $this->get_user_subscriber_uid( $user_id );
+		}
 
-		// user isn't subscribed, simply return true then..
+		// By now, we should have a subscriber uid. If not, user is not subscribed. Means we're free from work!
 		if( empty( $subscriber_uid ) ) {
 			return true;
 		}
@@ -225,7 +234,7 @@ class ListSynchronizer {
 		if( ! $success ) {
 
 			if( $this->log ) {
-				$this->log->error( sprintf( 'User Sync > Error unsubscribing user %d: %s', $user->ID, $api->get_error_message() ) );
+				$this->log->error( sprintf( 'User Sync > Error unsubscribing user %d: %s', $user_id, $api->get_error_message() ) );
 			}
 
 			return false;
@@ -235,47 +244,21 @@ class ListSynchronizer {
 		delete_user_meta( $user_id, $this->meta_key );
 
 		if( $this->log ) {
-			$this->log->info( sprintf( 'User Sync > Successfully unsubscribed user %d', $user->ID ) );
+			$this->log->info( sprintf( 'User Sync > Successfully unsubscribed user %d', $user_id ) );
 		}
 
 		return true;
 	}
 
 	/**
-	 * Update the subscriber uid with the new user data
+	 * Update a subscriber with new user data
 	 *
-	 * @param int $user_id
+	 * @param string $subscriber_uid
+	 * @param WP_User $user
+	 *
 	 * @return bool
 	 */
-	public function update_subscriber( $user_id ) {
-
-		// get user
-		$user = $this->get_user( $user_id );
-		if( ! $user ) {
-			return false;
-		}
-
-		// get subscriber uid
-		$subscriber_uid = $this->get_user_subscriber_uid( $user );
-		if( ! $subscriber_uid ) {
-			return $this->subscribe_user( $user_id );
-		}
-
-		// check if user should be synced
-		if( ! $this->should_sync_user( $user ) ) {
-			return false;
-		}
-
-		// check email address
-		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
-			$this->error = 'Invalid email.';
-
-			if( $this->log ) {
-				$this->log->warning( sprintf( 'User Sync > %s is an invalid email address.', $user->user_email ) );
-			}
-
-			return false;
-		}
+	private function update_subscriber( $subscriber_uid, WP_User $user ) {
 
 		$merge_vars = $this->extract_merge_vars_from_user( $user );
 		$merge_vars['new-email'] = $user->user_email;
@@ -293,17 +276,17 @@ class ListSynchronizer {
 			if( $api->get_error_code() === 232 ) {
 
 				// delete subscriber leid as it's apparently wrong
-				delete_user_meta( $user_id, $this->meta_key );
+				delete_user_meta( $user->ID, $this->meta_key );
 
 				// re-subscribe user
-				return $this->subscribe_user( $user_id );
+				return $this->subscribe_user( $user->ID );
 			}
 
 			// other errors
 			$this->error = $api->get_error_message();
 
 			if( $this->log ) {
-				$this->log->error( sprintf( 'User Sync > Error updating user %d. %s', $user_id, $this->error ) );
+				$this->log->error( sprintf( 'User Sync > Error updating user %d. %s', $user->ID, $this->error ) );
 			}
 
 			return false;
