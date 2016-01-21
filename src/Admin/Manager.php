@@ -2,7 +2,6 @@
 
 namespace MC4WP\Sync\Admin;
 
-use MC4WP\Sync\Log;
 use MC4WP\Sync\Plugin;
 use MC4WP\Sync\ListSynchronizer;
 use MC4WP_MailChimp;
@@ -23,17 +22,18 @@ class Manager {
 	/**
 	 * @var ListSynchronizer
 	 */
-	protected $list_synchronizer;
+	protected $synchronizer;
 
 	/**
 	 * Constructor
+	 *
 	 * @param array $options
-	 * @param ListSynchronizer $list_synchronizer
+	 * @param ListSynchronizer $synchronizer
 	 */
-	public function __construct( array $options, $list_synchronizer ) {
+	public function __construct( array $options, $synchronizer ) {
 		$this->options = $options;
-		$this->plugin_slug = basename( Plugin::DIR ) . '/mailchimp-sync.php';
-		$this->list_synchronizer = $list_synchronizer;
+		$this->plugin_slug = plugin_basename( Plugin::FILE );
+		$this->synchronizer = $synchronizer;
 	}
 
 	/**
@@ -69,31 +69,10 @@ class Manager {
 		add_action( 'show_user_profile', array( $this, 'add_user_actions' ) );
 		add_action( 'edit_user_profile', array( $this, 'add_user_actions' ) );
 
-		// listen for wphs requests, user is authorized by now
+		add_action( 'admin_enqueue_scripts', array( $this, 'load_assets' ) );
+
+		// listen for requests, user is authorized by now
 		$this->listen();
-
-		// run upgrade routine
-		$this->upgrade_routine();
-
-		add_filter( 'admin_enqueue_scripts', array( $this, 'load_assets' ) );
-	}
-
-	/**
-	 * Upgrade routine, only runs when needed
-	 */
-	private function upgrade_routine() {
-
-		$db_version = get_option( 'mailchimp_sync_version', 0 );
-
-		// only run if db version is lower than actual code version
-		if ( ! version_compare( $db_version, Plugin::VERSION, '<' ) ) {
-			return false;
-		}
-
-		// nothing here yet..
-
-		update_option( 'mailchimp_sync_version', Plugin::VERSION );
-		return true;
 	}
 
 	/**
@@ -112,7 +91,7 @@ class Manager {
 		switch( $action ) {
 			case 'sync-user':
 				$user_id = intval( $_GET['user_id'] );
-				$success = $this->list_synchronizer->update_subscriber( $user_id );
+				$success = $this->synchronizer->subscribe_user( $user_id );
 				break;
 		}
 
@@ -143,15 +122,16 @@ class Manager {
 	}
 
 	/**
-	 *
+	 * Show status on User Profile page
 	 */
 	public function add_user_actions( WP_User $user ) {
-
-		if( ! $this->list_synchronizer instanceof ListSynchronizer ) {
+		
+		// do nothing if plugin isn't enabled
+		if( ! $this->synchronizer instanceof ListSynchronizer ) {
 			return;
 		}
 
-		$is_subscribed = $this->list_synchronizer->get_user_subscriber_uid( $user );
+		$is_subscribed = ! empty( $this->synchronizer->get_user_subscriber_uid( $user->ID ) );
 		$sync_url = add_query_arg(
 			array(
 				'mc4wp-sync-action' => 'sync-user',
