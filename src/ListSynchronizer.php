@@ -159,11 +159,7 @@ class ListSynchronizer {
 		// Only subscribe user if it has a valid email address
 		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			$this->error = 'Invalid email.';
-
-			if( $this->log ) {
-				$this->log->warning( sprintf( 'User Sync > %s is an invalid email address.', $user->user_email ) );
-			}
-
+			$this->log->warning( sprintf( 'User Sync > %s is an invalid email address.', $user->user_email ) );
 			return false;
 		}
 
@@ -183,10 +179,7 @@ class ListSynchronizer {
 		if( ! $success ) {
 			// store error message returned by API
 			$this->error = $api->get_error_message();
-
-			if( $this->log ) {
-				$this->log->error( sprintf( 'User Sync > Error subscribing user %d: %s', $user_id, $this->error ) );
-			}
+			$this->log->error( sprintf( 'User Sync > Error subscribing user %d: %s', $user_id, $this->error ) );
 
 			return false;
 		}
@@ -199,10 +192,8 @@ class ListSynchronizer {
 		// store meta field with subscriber uid
 		update_user_meta( $user_id, $this->meta_key, $subscriber_uid );
 
-		if( $this->log ) {
-			$this->log->info( sprintf( 'User Sync > Successfully subscribed user %d', $user->ID ) );
-		}
-
+		$this->log->info( sprintf( 'User Sync > Successfully subscribed user %d', $user->ID ) );
+		
 		return true;
 	}
 
@@ -232,20 +223,14 @@ class ListSynchronizer {
 
 		// Error?
 		if( ! $success ) {
-
-			if( $this->log ) {
-				$this->log->error( sprintf( 'User Sync > Error unsubscribing user %d: %s', $user_id, $api->get_error_message() ) );
-			}
-
+			$this->log->error( sprintf( 'User Sync > Error unsubscribing user %d: %s', $user_id, $api->get_error_message() ) );
 			return false;
 		}
 
 		// Success!
 		delete_user_meta( $user_id, $this->meta_key );
 
-		if( $this->log ) {
-			$this->log->info( sprintf( 'User Sync > Successfully unsubscribed user %d', $user_id ) );
-		}
+		$this->log->info( sprintf( 'User Sync > Successfully unsubscribed user %d', $user_id ) );
 
 		return true;
 	}
@@ -285,18 +270,13 @@ class ListSynchronizer {
 			// other errors
 			$this->error = $api->get_error_message();
 
-			if( $this->log ) {
-				$this->log->error( sprintf( 'User Sync > Error updating user %d. %s', $user->ID, $this->error ) );
-			}
+			$this->log->error( sprintf( 'User Sync > Error updating user %d. %s', $user->ID, $this->error ) );
 
 			return false;
 		}
 
 		// Success!
-
-		if( $this->log ) {
-			$this->log->info( sprintf( 'User Sync > Successfully updated user %d', $user->ID ) );
-		}
+		$this->log->info( sprintf( 'User Sync > Successfully updated user %d', $user->ID ) );
 
 		return true;
 	}
@@ -354,19 +334,12 @@ class ListSynchronizer {
 	}
 
 	/**
-	 * Returns an instance of the Debug Log or null (when running MailChimp for WP 3.0.x)
+	 * Returns an instance of the Debug Log
 	 *
 	 * @return \MC4WP_Debug_Log
 	 */
 	private function get_log() {
-
-		try {
-			$log = mc4wp( 'log' );
-		} catch( Exception $e ) {
-			$log = null;
-		}
-
-		return $log;
+		return mc4wp( 'log' );
 	}
 
 	/**
