@@ -193,7 +193,7 @@ class ListSynchronizer {
 		update_user_meta( $user_id, $this->meta_key, $subscriber_uid );
 
 		$this->log->info( sprintf( 'User Sync > Successfully subscribed user %d', $user->ID ) );
-		
+
 		return true;
 	}
 
@@ -247,8 +247,6 @@ class ListSynchronizer {
 
 		$merge_vars = $this->extract_merge_vars_from_user( $user );
 		$merge_vars['new-email'] = $user->user_email;
-
-		// TODO: Check if anything changed? If it's just login date, do nothing.
 
 		// update subscriber in mailchimp
 		$api = $this->get_api();
