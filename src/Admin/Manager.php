@@ -112,14 +112,9 @@ class Manager {
 				$user_id = intval( $_GET['user_id'] );
 				$success = $this->list_synchronizer->update_subscriber( $user_id );
 				break;
-
-			case 'clear-log':
-				$log = new Log();
-				$log->clear();
-				break;
 		}
 
-		// todo: show visual feedback
+		// redirect back
 		wp_safe_redirect( remove_query_arg( 'mc4wp-sync-action' ) );
 		exit;
 	}
@@ -233,7 +228,6 @@ class Manager {
 	public function show_settings_page() {
 
 		$lists = $this->get_mailchimp_lists();
-		$log = new Log( WP_DEBUG );
 
 		if( $this->options['list'] !== '' ) {
 			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
