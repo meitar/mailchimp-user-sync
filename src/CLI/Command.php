@@ -43,31 +43,27 @@ class Command extends WP_CLI_Command {
 	 */
 	public function synchronize_all( $args, $assoc_args ) {
 
-		global $wpdb;
-
 		$wizard = new Wizard( $this->options['list'],  $this->options );
 		$user_role = ( isset( $assoc_args['role'] ) ) ? $assoc_args['role'] : '';
 
 		// start by counting all users
-		$user_count = $wizard->get_user_count( $user_role );
-		WP_CLI::line( "Found $user_count users." );
+		$users = $wizard->get_users( $user_role );
+		$count = count( $users );
 
-		// query users in batches of 50
-		$processed = 0;
-		while( $processed < $user_count ) {
+		WP_CLI::line( "$count users found." );
 
-			$batch = $wizard->get_users( $user_role, $processed );
+		// show progress bar
+		$notify = \WP_CLI\Utils\make_progress_bar( __( 'Working', 'mailchim-sync'), $count );
+		$user_ids = wp_list_pluck( $users, 'ID' );
 
-			if( $batch ) {
-				$user_ids = wp_list_pluck( $batch, 'ID' );
-				$wizard->subscribe_users( $user_ids );
-				$processed += count( $batch );
-			}
-
-
+		foreach( $user_ids as $user_id ) {
+			$wizard->subscribe_user( $user_id );
+			$notify->tick();
 		}
 
-		WP_CLI::line( "Synced $processed users." );
+		$notify->finish();
+
+		WP_CLI::success( "Done!" );
 	}
 
 	/**

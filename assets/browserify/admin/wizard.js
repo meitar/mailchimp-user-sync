@@ -103,17 +103,17 @@ var Wizard = (function() {
 			return false;
 		}
 
-		// Get first user
+		// Get next user
 		var user = batch().shift();
 
 		// Add line to log
-		log.addLine("Synchronising <strong>user #" + user.id() + " " + user.username() + "</strong> (Email: <strong>" + user.email() + "</strong>)." );
+		log.addLine("Updating <strong> #" + user.id() + " " + user.username() + " &lt;" + user.email() + "&gt;</strong>" );
 
 		// Perform subscribe request
 		var data = {
 			action: "mcs_wizard",
 			mcs_action: "subscribe_users",
-			user_ids: [ user.id() ]
+			user_id: user.id()
 		};
 
 		m.request({
@@ -124,12 +124,11 @@ var Wizard = (function() {
 
 
 			if( data.success ) {
-				log.addTextToLastLine( "Success!" );
-
+				log.addLine( "Success!" );
 			}
 
 			if( data.error ) {
-				log.addTextToLastLine( "Error: " + data.error );
+				log.addLine( "Error: " + data.error );
 			}
 
 			usersProcessed++;

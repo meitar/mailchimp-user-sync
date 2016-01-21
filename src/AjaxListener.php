@@ -82,22 +82,18 @@ class AjaxListener {
 	}
 
 	/**
-	 * Subscribes the provided user ID's
+	 * Subscribes the provided user ID
 	 * Returns the updates progress
 	 */
 	protected function subscribe_users() {
 
-		// make sure `user_ids` is an array
-		$user_ids = $_REQUEST['user_ids'];
-		if( ! is_array( $user_ids ) ) {
-			$user_ids = sanitize_text_field( $user_ids );
-			$user_ids = explode( ',', $user_ids );
-		}
+		$user_id = (int) $_REQUEST['user_id'];
 
-		$result = $this->wizard->subscribe_users( $user_ids );
+		$result = $this->wizard->subscribe_user( $user_id );
 
 		if( $result ) {
 			$this->respond( array( 'success' => true ) );
+			exit;
 		}
 
 		// send response

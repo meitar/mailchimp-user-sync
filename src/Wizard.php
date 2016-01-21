@@ -77,14 +77,12 @@ class Wizard {
 						'key' => $this->sync->meta_key,
 						'compare' => 'NOT EXISTS'
 					),
-					array( 
+					array(
 						'key' => $this->sync->meta_key,
 						'compare' => 'EXISTS'
 					)
 				),
 				'role' => $role,
-				'offset' => $offset,
-				'limit' => $limit,
 				'fields' => array( 'ID', 'user_login', 'user_email' ),
 				'orderby' => 'meta_value'
 			)
@@ -96,16 +94,13 @@ class Wizard {
 	/**
 	 * Subscribes the provided user ID's
 	 *
-	 * @param array $user_ids
+	 * @param int $user_id
 	 * @return bool
 	 */
-	public function subscribe_users( array $user_ids ) {
+	public function subscribe_user( $user_id ) {
 
 		// loop through user ID's
-		$result = false;
-		foreach( $user_ids as $user_id ) {
-			$result = $this->sync->subscribe_user( $user_id );
-		}
+		$result = $this->sync->subscribe_user( $user_id );
 
 		if( $result ) {
 			return true;

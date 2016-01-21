@@ -46,7 +46,7 @@ var Log = function() {
 					("0" + item.time.getMinutes()).slice(-2) + ":" +
 					("0" + item.time.getSeconds()).slice(-2);
 
-				return m("p", [
+				return m("div", [
 					m('span.time', timeString),
 					m.trust(item.text )
 				] )
