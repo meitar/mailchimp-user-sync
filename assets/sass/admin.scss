@@ -33,14 +33,16 @@
 	}
 
 	.log {
-
-		background: #111;
+		font-family: monaco, monospace, courier, 'courier new', 'Bitstream Vera Sans Mono';
+		background: #262626;
 		color: white;
 		margin: 20px 0;
-		height: 150px;
+		height: 200px;
 		overflow-y: scroll;
-		border: 1px solid #999;
+		border: 1px solid #ccc;
 		padding: 5px 20px;
+		font-size: 13px;
+		line-height: 140%;
 
 		.time {
 			color: #999;
@@ -50,11 +52,6 @@
 
 		strong {
 			color: #2ea2cc;
-		}
-
-		p {
-			font-size: 12px !important;
-			margin: 0 0 2px 0;
 		}
 	}
 
