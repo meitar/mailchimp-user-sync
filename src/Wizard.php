@@ -90,7 +90,6 @@ class Wizard {
 			)
 		);
 
-
 		return $user_query->get_results();
 	}
 
@@ -105,7 +104,7 @@ class Wizard {
 		// loop through user ID's
 		$result = false;
 		foreach( $user_ids as $user_id ) {
-			$result = $this->sync->update_subscriber( $user_id );
+			$result = $this->sync->subscribe_user( $user_id );
 		}
 
 		if( $result ) {

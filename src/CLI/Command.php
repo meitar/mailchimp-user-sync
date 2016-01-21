@@ -6,7 +6,7 @@ use MC4WP\Sync\Wizard;
 use WP_CLI, WP_CLI_Command;
 use MC4WP\Sync\ListSynchronizer;
 
-class SyncCommand extends WP_CLI_Command {
+class Command extends WP_CLI_Command {
 
 	/**
 	 * @var array
@@ -35,7 +35,7 @@ class SyncCommand extends WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp sync --role=administrator
+	 *     wp mailchimp-sync sync-all --role=administrator
 	 *
 	 * @synopsis [--role=<role>]
 	 *
@@ -59,15 +59,15 @@ class SyncCommand extends WP_CLI_Command {
 			$batch = $wizard->get_users( $user_role, $processed );
 
 			if( $batch ) {
-				$wizard->subscribe_users( $batch );
+				$user_ids = wp_list_pluck( $batch, 'ID' );
+				$wizard->subscribe_users( $user_ids );
 				$processed += count( $batch );
 			}
 
 
 		}
 
-		WP_CLI::line("Synced $processed users.");
-
+		WP_CLI::line( "Synced $processed users." );
 	}
 
 	/**
@@ -83,7 +83,7 @@ class SyncCommand extends WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp sync-user 5
+	 *     wp mailchimp-sync sync-user 5
 	 *
 	 * @synopsis <user_id>
 	 *

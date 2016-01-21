@@ -12,6 +12,11 @@ require dirname( __FILE__ ) . '/vendor/autoload.php';
 
 // instantiate plugin
 $plugin = new Plugin();
+
+// expose plugin in a global. YUCK!
+$GLOBALS['mailchimp_sync'] = $plugin;
+
+// default to null object
 $list_synchronizer = null;
 
 // if a list was selected, initialise the ListSynchronizer class
@@ -47,6 +52,5 @@ if( ! is_admin() ) {
 }
 
 if( defined( 'WP_CLI' ) && WP_CLI ) {
-	$commands = new CommandProvider();
-	$commands->register();
+	WP_CLI::add_command( 'mailchimp-sync', 'MC4WP\\Sync\\CLI\\Command' );
 }
