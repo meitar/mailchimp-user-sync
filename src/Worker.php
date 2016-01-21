@@ -35,7 +35,6 @@ class Worker {
 		$queue = $this->queue;
 		$synchronizer = $this->synchronizer;
 
-		// TODO: Prevent duplicate jobs
 		add_action( 'user_register', function( $user_id ) use( $queue ) {
 			$queue->put( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
 		});
