@@ -2,6 +2,8 @@
 
 namespace MC4WP\Sync;
 
+use Exception;
+use MC4WP_API;
 use WP_User;
 
 class ListSynchronizer {
@@ -65,8 +67,8 @@ class ListSynchronizer {
 			$this->settings = array_merge( $this->settings, $settings );
 		}
 
-		$this->log = new Log( WP_DEBUG );
 		$this->tools = new Tools();
+		$this->log = $this->get_log();
 	}
 
 	/**
@@ -127,7 +129,12 @@ class ListSynchronizer {
 			$sync = false;
 		}
 
-		// allow plugins to set their own criteria
+		/**
+		 * Filters whether a user should be synchronized with MailChimp or not.
+		 *
+		 * @param boolean $sync
+		 * @param WP_User $user
+		 */
 		return (bool) apply_filters( 'mailchimp_sync_should_sync_user', $sync, $user );
 	}
 
@@ -153,30 +160,44 @@ class ListSynchronizer {
 		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			$this->error = 'Invalid email.';
 
+			if( $this->log ) {
+				$this->log->warning( sprintf( 'User Sync > %s is an invalid email address.', $user->user_email ) );
+			}
+
 			return false;
 		}
 
+		$api = $this->get_api();
 		$merge_vars = $this->extract_merge_vars_from_user( $user );
 
 		// subscribe the user
-		$api = mc4wp_get_api();
 		$success = $api->subscribe( $this->list_id, $user->user_email, $merge_vars, $this->settings['email_type'], $this->settings['double_optin'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
 
-		if( $success ) {
+		// Error?
+		if( ! $success ) {
+			// store error message returned by API
+			$this->error = $api->get_error_message();
 
-			// get subscriber uid
-			$subscriber_uid = $api->get_last_response()->leid;
+			if( $this->log ) {
+				$this->log->error( sprintf( 'User Sync > Error subscribing user %d: %s', $user_id, $this->error ) );
+			}
 
-			// store meta field with subscriber uid
-			update_user_meta( $user_id, $this->meta_key, $subscriber_uid );
-			return true;
+			return false;
 		}
 
-		// store error message returned by API
-		$this->error = $api->get_error_message();
-		$this->log->write_line( sprintf( 'Could not subscribe user %d. MailChimp returned the following error: %s', $user_id, $this->error ) );
+		// Success!
 
-		return false;
+		// get subscriber uid
+		$subscriber_uid = $api->get_last_response()->leid;
+
+		// store meta field with subscriber uid
+		update_user_meta( $user_id, $this->meta_key, $subscriber_uid );
+
+		if( $this->log ) {
+			$this->log->info( sprintf( 'User Sync > Successfully subscribed user %d', $user->ID ) );
+		}
+
+		return true;
 	}
 
 	/**
@@ -191,21 +212,33 @@ class ListSynchronizer {
 		$user = $this->get_user( $user_id );
 		$subscriber_uid = $this->get_user_subscriber_uid( $user );
 
-		if( $subscriber_uid ) {
-
-			// unsubscribe user email from the selected list
-			$api = mc4wp_get_api();
-			$success = $api->unsubscribe( $this->list_id, array( 'leid' => $subscriber_uid ), $this->settings['send_goodbye'], $this->settings['send_notification'], $this->settings['delete_member'] );
-
-			if( $success ) {
-				// delete user meta
-				delete_user_meta( $user_id, $this->meta_key );
-				return true;
-			}
-
+		// user isn't subscribed, simply return true then..
+		if( empty( $subscriber_uid ) ) {
+			return true;
 		}
 
-		return false;
+		// unsubscribe user email from the selected list
+		$api = $this->get_api();
+		$success = $api->unsubscribe( $this->list_id, array( 'leid' => $subscriber_uid ), $this->settings['send_goodbye'], $this->settings['send_notification'], $this->settings['delete_member'] );
+
+		// Error?
+		if( ! $success ) {
+
+			if( $this->log ) {
+				$this->log->error( sprintf( 'User Sync > Error unsubscribing user %d: %s', $user->ID, $api->get_error_message() ) );
+			}
+
+			return false;
+		}
+
+		// Success!
+		delete_user_meta( $user_id, $this->meta_key );
+
+		if( $this->log ) {
+			$this->log->info( sprintf( 'User Sync > Successfully unsubscribed user %d', $user->ID ) );
+		}
+
+		return true;
 	}
 
 	/**
@@ -237,34 +270,56 @@ class ListSynchronizer {
 		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			$this->error = 'Invalid email.';
 
+			if( $this->log ) {
+				$this->log->warning( sprintf( 'User Sync > %s is an invalid email address.', $user->user_email ) );
+			}
+
 			return false;
 		}
 
 		$merge_vars = $this->extract_merge_vars_from_user( $user );
 		$merge_vars['new-email'] = $user->user_email;
 
+		// TODO: Check if anything changed? If it's just login date, do nothing.
+
 		// update subscriber in mailchimp
-		$api = mc4wp_get_api();
+		$api = $this->get_api();
 		$success = $api->update_subscriber( $this->list_id, array( 'leid' => $subscriber_uid ), $merge_vars, $this->settings['email_type'], $this->settings['replace_interests'] );
 
-		// TODO: Remove check for `get_error_code`, available since MailChimp for WP Lite 2.2.8 and MailChimp for WP Pro 2.6.3. Update dependency check in that case.
+		// Error?
 		if( ! $success ) {
 
-			// subscriber leid did not match anything in the list, remove it and re-subscribe.
-			if( ! method_exists( $api, 'get_error_code' ) || $api->get_error_code() === 232 ) {
+			// subscriber leid did not match anything in the list
+			if( $api->get_error_code() === 232 ) {
+
+				// delete subscriber leid as it's apparently wrong
 				delete_user_meta( $user_id, $this->meta_key );
+
+				// re-subscribe user
 				return $this->subscribe_user( $user_id );
 			}
 
+			// other errors
 			$this->error = $api->get_error_message();
-			$this->log->write_line( sprintf( 'Could not update user %d. MailChimp returned the following error: %s', $user_id, $this->error ) );
+
+			if( $this->log ) {
+				$this->log->error( sprintf( 'User Sync > Error updating user %d. %s', $user_id, $this->error ) );
+			}
+
+			return false;
 		}
 
-		return $success;
+		// Success!
+
+		if( $this->log ) {
+			$this->log->info( sprintf( 'User Sync > Successfully updated user %d', $user->ID ) );
+		}
+
+		return true;
 	}
 
 	/**
-	 * @param \WP_User $user
+	 * @param WP_User $user
 	 *
 	 * @return array
 	 */
@@ -304,11 +359,33 @@ class ListSynchronizer {
 		 * @param array $data The data that is sent.
 		 * @param WP_User $user The user which is synchronized
 		 */
-		$data = apply_filters( 'mailchimp_sync_user_data', $data, $user );
+		$data = (array) apply_filters( 'mailchimp_sync_user_data', $data, $user );
 
 		return $data;
 	}
 
+	/**
+	 * Returns an instance of the Debug Log or null (when running MailChimp for WP 3.0.x)
+	 *
+	 * @return \MC4WP_Debug_Log
+	 */
+	private function get_log() {
+
+		try {
+			$log = mc4wp( 'log' );
+		} catch( Exception $e ) {
+			$log = null;
+		}
+
+		return $log;
+	}
+
+	/**
+	 * @return MC4WP_API
+	 */
+	private function get_api() {
+		return mc4wp( 'api' );
+	}
 
 }
 
