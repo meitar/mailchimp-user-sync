@@ -1,19 +1,24 @@
 <?php
 
-// Check for old MailChimp for WordPress Pro or 3.0+
-if( defined( 'MC4WP_VERSION' ) && version_compare( MC4WP_VERSION, '2.7', '>=' ) ) {
-	return true;
-}
-
-// check for free plugin v2.x
-if( defined( 'MC4WP_LITE_VERSION' ) && version_compare( MC4WP_LITE_VERSION, '2.3', '>=' ) ) {
+// Check for MailChimp for WordPress v3.1+ (because of use of Queue class)
+if( defined( 'MC4WP_VERSION' ) && version_compare( MC4WP_VERSION, '3.1', '>=' ) ) {
 	return true;
 }
 
 add_action( 'admin_notices', function() {
+
+	// only show to user with caps
+	if( ! current_user_can( 'install_plugins' ) ) {
+		return;
+	}
+
+	add_thickbox();
+	$url = network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=mailchimp-for-wp&TB_iframe=true&width=600&height=550' );
+
+
 	?>
-	<div class="updated">
-		<p><?php printf( __( 'Please install <a href="%s">%s</a> in order to use %s.', 'mailchimp-sync' ), 'https://wordpress.org/plugins/mailchimp-for-wp/', 'MailChimp for WordPress', 'MailChimp Sync' ); ?></p>
+	<div class="notice notice-warning is-dismissible">
+		<p><?php printf( __( 'Please install or update <a href="%s" class="thickbox">%s</a> in order to use %s.', 'mailchimp-sync' ), $url, '<strong>MailChimp for WordPress</strong> (version 3.1 or higher)', 'MailChimp User Sync' ); ?></p>
 	</div>
 <?php
 } );
