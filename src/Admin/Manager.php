@@ -98,6 +98,8 @@ class Manager {
 
 	/**
 	 * Listen for stuff..
+	 *
+	 * TODO: Use _mc4wp_action from v3.0+
 	 */
 	private function listen() {
 
