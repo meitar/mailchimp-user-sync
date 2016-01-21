@@ -6,6 +6,9 @@ namespace MC4WP\Sync;
  * Class Log
  *
  * @package MC4WP\Sync
+ *
+ * @deprecated 1.4
+ * @use \MC4WP_Debug_Log
  */
 class Log {
 
