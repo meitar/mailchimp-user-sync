@@ -30,6 +30,15 @@ defined( 'ABSPATH' ) or exit;
 
 				<table class="form-table">
 
+					<tr>
+						<th scope="row"><?php _e( 'Enabled?', 'mailchimp-sync' ); ?></th>
+						<td class="nowrap">
+							<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="1" <?php checked( $this->options['enabled'], 1 ); ?> /> <?php _e( 'Yes' ); ?></label> &nbsp;
+							<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="0" <?php checked( $this->options['enabled'], 0 ); ?> /> <?php _e( 'No' ); ?></label>
+							<p  class="help"><?php _e( 'Select "yes" if you want the plugin to "listen" to all changes in your WordPress user base and auto-sync them with the selected MailChimp list.', 'mailchimp-sync' ); ?></p>
+						</td>
+					</tr>
+
 					<tr valign="top">
 						<th scope="row"><?php _e( 'Sync users with this list', 'mailchimp-sync' ); ?></th>
 						<td>
@@ -136,15 +145,6 @@ defined( 'ABSPATH' ) or exit;
 								<p><input type="button" class="button add-row" value="&plus; <?php esc_attr_e( 'Add line', 'mailchimp-sync' ); ?>" style="margin-left:0; "/></p>
 
 							<?php } ?>
-						</td>
-					</tr>
-
-					<tr>
-						<th scope="row"><?php _e( 'Enabled?', 'mailchimp-sync' ); ?></th>
-						<td class="nowrap">
-							<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="1" <?php checked( $this->options['enabled'], 1 ); ?> /> <?php _e( 'Yes' ); ?></label>
-							<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="0" <?php checked( $this->options['enabled'], 0 ); ?> /> <?php _e( 'No' ); ?></label>
-							<p  class="help"><?php _e( 'Select "yes" if you want the plugin to "listen" to all changes in your WordPress user base and auto-sync them with the selected MailChimp list.', 'mailchimp-sync' ); ?></p>
 						</td>
 					</tr>
 
