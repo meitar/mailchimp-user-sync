@@ -144,14 +144,15 @@ class ListSynchronizer {
 			return false;
 		}
 
-		// Only subscribe user if it has a valid email address
-		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
-			$this->error = 'Invalid email.';
+		// if role is set, make sure user has that role
+		if( ! $this->should_sync_user( $user ) ) {
 			return false;
 		}
 
-		// if role is set, make sure user has that role
-		if( ! $this->should_sync_user( $user ) ) {
+		// Only subscribe user if it has a valid email address
+		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+			$this->error = 'Invalid email.';
+
 			return false;
 		}
 
@@ -227,14 +228,15 @@ class ListSynchronizer {
 			return $this->subscribe_user( $user_id );
 		}
 
-		// check email address
-		 if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
-			$this->error = 'Invalid email.';
+		// check if user should be synced
+		if( ! $this->should_sync_user( $user ) ) {
 			return false;
 		}
 
-		// check if user should be synced
-		if( ! $this->should_sync_user( $user ) ) {
+		// check email address
+		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
+			$this->error = 'Invalid email.';
+
 			return false;
 		}
 
