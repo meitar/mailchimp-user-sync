@@ -15,10 +15,9 @@ add_action( 'admin_notices', function() {
 	add_thickbox();
 	$url = network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=mailchimp-for-wp&TB_iframe=true&width=600&height=550' );
 
-
 	?>
 	<div class="notice notice-warning is-dismissible">
-		<p><?php printf( __( 'Please install or update <a href="%s" class="thickbox">%s</a> in order to use %s.', 'mailchimp-sync' ), $url, '<strong>MailChimp for WordPress</strong> (version 3.1 or higher)', 'MailChimp User Sync' ); ?></p>
+		<p><?php printf( __( 'Please install or update <a href="%s" class="thickbox">%s</a> %s in order to use %s.', 'mailchimp-sync' ), $url, '<strong>MailChimp for WordPress</strong>', '(version 3.1 or higher)', 'MailChimp User Sync' ); ?></p>
 	</div>
 <?php
 } );
