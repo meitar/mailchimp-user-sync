@@ -35,13 +35,13 @@ class Command extends WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp mailchimp-sync sync-all --role=administrator
+	 *     wp mailchimp-sync all --role=administrator
 	 *
 	 * @synopsis [--role=<role>]
 	 *
-	 * @subcommand sync-all
+	 * @subcommand all
 	 */
-	public function synchronize_all( $args, $assoc_args ) {
+	public function all( $args, $assoc_args ) {
 
 		$wizard = new Wizard( $this->options['list'],  $this->options );
 		$user_role = ( isset( $assoc_args['role'] ) ) ? $assoc_args['role'] : '';
@@ -79,18 +79,18 @@ class Command extends WP_CLI_Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp mailchimp-sync sync-user 5
+	 *     wp mailchimp-sync user 5
 	 *
 	 * @synopsis <user_id>
 	 *
-	 * @subcommand sync-user
+	 * @subcommand user
 	 */
-	public function synchronize_user( $args, $assoc_args ) {
+	public function user( $args, $assoc_args ) {
 
 		$user_id = absint( $args[0] );
 
 		$wizard = new Wizard(  $this->options['list'],  $this->options );
-		$result = $wizard->subscribe_users( array( $user_id ) );
+		$result = $wizard->subscribe_user( $user_id );
 
 		if( $result ) {
 			WP_CLI::line( "User successfully synced!" );
@@ -98,5 +98,21 @@ class Command extends WP_CLI_Command {
 			WP_CLI::error( "Error while syncing user #" . $user_id );
 		}
 
+	}
+
+	/**
+	 * @deprecated 1.4
+	 * @subcommand sync-user
+	 */
+	public function sync_user( $args, $assoc_args ) {
+		$this->user( $args, $assoc_args );
+	}
+
+	/**
+	 * @deprecated 1.4
+	 * @subcommand sync-all
+	 */
+	public function sync_all( $args, $assoc_args ) {
+		$this->all( $args, $assoc_args );
 	}
 }
