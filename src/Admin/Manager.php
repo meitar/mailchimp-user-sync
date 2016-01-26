@@ -131,7 +131,8 @@ class Manager {
 			return;
 		}
 
-		$is_subscribed = ! empty( $this->synchronizer->get_user_subscriber_uid( $user->ID ) );
+		$subscriber_uid = $this->synchronizer->get_user_subscriber_uid( $user->ID );
+		$is_subscribed = ! empty( $subscriber_uid );
 		$sync_url = add_query_arg(
 			array(
 				'mc4wp-sync-action' => 'sync-user',
