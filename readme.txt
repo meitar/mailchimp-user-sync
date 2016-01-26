@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.4
-Stable tag: 1.3.3
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,30 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 
 == Changelog ==
 
+This update requires you to update [MailChimp for WordPress](https://wordpress.org/plugins/mailchimp-for-wp/) to version 3.1 first.
+
+**Fixes**
+
+- Deleted users were no longer unsubscribed in some cases.
+
+**Improvements**
+
+- Use new Queue class from MailChimp for WordPress 3.1 for improved background processing.
+- [Use new debug log for easier debugging](https://mc4wp.com/kb/how-to-enable-log-debugging/).
+- Add HTTP status codes to Webhook listener.
+- Miscellaneous code improvements
+
+**Changes**
+
+- WP CLI commands are now named `wp mailchimp-sync all` and `wp mailchimp-sync user <user_id>` (backwards compatible)
+
+**Additions**
+
+- WP CLI command `wp mailchimp-sync all` is now showing a progress bar
+
+
+#### 1.3.3 - January 14, 2016
+
 **Fixes**
 
 - Fatal error on settings page on lower PHP versions because of missing space between `<?php` and translation call. This gets Forced Sync to work again.
@@ -143,7 +167,6 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 - Better mobile responsiveness for settings pages.
 - Use Browserify to handle script dependencies.
 - Improved compatibility with [MailChimp for WordPress v3.0](https://mc4wp.com/blog/the-big-three-o-release/)
-- Deleted users were no longer unsubscribed in some cases.
 
 #### 1.3.1 - November 13, 2015
 
