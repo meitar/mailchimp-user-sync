@@ -125,7 +125,7 @@ class Manager {
 	 * Show status on User Profile page
 	 */
 	public function add_user_actions( WP_User $user ) {
-		
+
 		// do nothing if plugin isn't enabled
 		if( ! $this->synchronizer instanceof ListSynchronizer ) {
 			return;
