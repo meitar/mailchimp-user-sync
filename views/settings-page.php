@@ -5,6 +5,8 @@ use MC4WP\Sync\Plugin;
 
 defined( 'ABSPATH' ) or exit;
 
+
+/** @var StatusIndicator $status_indicator */
 ?>
 <div class="wrap" id="mc4wp-admin">
 
@@ -196,6 +198,10 @@ defined( 'ABSPATH' ) or exit;
 				</table>
 
 			<?php } ?>
+
+			<div class="notice inline notice-info">
+				<p><?php printf( __( 'Need some help debugging? Take a look at the <a href="%s">debug log</a>.', 'mailchimp-sync' ), admin_url( 'admin.php?page=mailchimp-for-wp-other' ) ); ?></p>
+			</div>
 
 		<!-- / Main Content -->
 		</div>
