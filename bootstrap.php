@@ -41,9 +41,12 @@ if( ! empty( $plugin->options['list'] ) && $plugin->options['enabled'] ) {
 
 // Load area-specific code
 if( ! is_admin() ) {
-	// TODO: make this optional
-	$webhook_listener = new Webhook\Listener( $plugin->options );
-	$webhook_listener->add_hooks();
+
+	if( $list_synchronizer instanceof ListSynchronizer ) {
+		$webhook_listener = new Webhook\Listener( $list_synchronizer->meta_key, $plugin->options['field_mappers'] );
+		$webhook_listener->add_hooks();
+	}
+
 } elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 	$ajax = new AjaxListener( $plugin->options );
 	$ajax->add_hooks();

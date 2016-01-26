@@ -16,13 +16,13 @@ class UserRepository {
 	/**
 	 * @var string
 	 */
-	protected $mailchimp_list_id = '';
+	private $meta_key = '';
 
 	/**
-	 * @param $mailchimp_list_id
+	 * @param string $meta_key
 	 */
-	public function __construct( $mailchimp_list_id = '' ) {
-		$this->mailchimp_list_id = $mailchimp_list_id;
+	public function __construct( $meta_key ) {
+		$this->meta_key = $meta_key;
 	}
 
 	/**
@@ -33,7 +33,7 @@ class UserRepository {
 	public function get_user_by_mailchimp_id( $id ) {
 		return $this->get_first_user(
 			array(
-				'meta_key'     => $this->synchronizer->meta_key,
+				'meta_key'     => $this->meta_key,
 				'meta_value'   => $id,
 				'limit' => 1
 			)
@@ -74,21 +74,6 @@ class UserRepository {
 		}
 
 		return $users[0];
-	}
-
-	/**
-	 * @param $value
-	 *
-	 * @return ListSynchronizer|null
-	 */
-	public function __get( $value ) {
-		switch( $value ) {
-			case 'synchronizer':
-				return  new ListSynchronizer( $this->mailchimp_list_id );
-				break;
-		}
-
-		return null;
 	}
 
 }

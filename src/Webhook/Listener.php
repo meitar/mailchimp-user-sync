@@ -18,9 +18,14 @@ use WP_User;
 class Listener {
 
 	/**
+	 * @var string
+	 */
+	private $user_meta_key;
+
+	/**
 	 * @var array
 	 */
-	public $options;
+	private $field_mappers;
 
 	/**
 	 * @var string
@@ -28,10 +33,12 @@ class Listener {
 	public $url = '/mc4wp-sync-api/webhook-listener';
 
 	/**
-	 * @param $options
+	 * @param string $user_meta_key
+	 * @param array $field_mappers
 	 */
-	public function __construct( $options ) {
-		$this->options = $options;
+	public function __construct( $user_meta_key, $field_mappers = array() ) {
+		$this->user_meta_key = $user_meta_key;
+		$this->field_mappers = $field_mappers;
 	}
 
 	/**
@@ -69,14 +76,23 @@ class Listener {
 
 		// check if data & type was given
 		if( empty( $_REQUEST['data'] ) || empty( $_REQUEST['type'] ) ) {
+			status_header( 400 );
 			return false;
 		}
 
 		$data = stripslashes_deep( $_REQUEST['data'] );
-		$type = $_REQUEST['type'];
+		$type = (string) $_REQUEST['type'];
+
+		// check for a "web_id" key
+		if( empty( $data['web_id'] ) ) {
+			status_header( 400 );
+			return false;
+		}
+
+		$users = new UserRepository( $this->user_meta_key );
 
 		// find WP user by List_ID + MailChimp ID
-		$user = $this->user_repository->get_user_by_mailchimp_id( $data['web_id'] );
+		$user = $users->get_user_by_mailchimp_id( $data['web_id'] );
 
 		// filter user
 		$user = apply_filters( 'mailchimp_sync_webhook_user', $user, $data );
@@ -86,6 +102,8 @@ class Listener {
 			// fire event when no user is found
 			do_action( 'mailchimp_sync_webhook_no_user', $data );
 			echo 'No corresponding user found for this subscriber.';
+
+			status_header( 404 );
 
 			// exit early
 			return false;
@@ -106,7 +124,7 @@ class Listener {
 
 		// update WP user with data (use reversed field map)
 		// loop through mapping rules
-		foreach( $this->options['field_mappers'] as $rule ) {
+		foreach( $this->field_mappers as $rule ) {
 
 			// is this field present in the request data? do not use empty here
 			if( isset( $data['merges'][ $rule['mailchimp_field'] ] ) ) {
@@ -133,22 +151,6 @@ class Listener {
 		do_action( 'mailchimp_sync_webhook_' . $type, $data, $user );
 
 		echo 'OK';
-	}
-
-	/**
-	 * @param $var
-	 *
-	 * @return UserRepository|null
-	 */
-	public function __get( $var ) {
-
-		switch( $var ) {
-			case 'user_repository':
-				return new UserRepository( $this->options['list'] );
-			break;
-		}
-
-		return null;
 	}
 
 }
