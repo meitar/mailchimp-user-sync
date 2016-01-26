@@ -107,9 +107,9 @@ add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
 Yes, you can. The plugin registers two [WP CLI](http://wp-cli.org/) commands.
 
 `
-wp mailchimp-sync sync-all 							# synchronize all users
-wp mailchimp-sync sync-all --role=administrator 	# synchronize all users with "administrator" role
-wp mailchimp-sync sync-user $user_id	 			# synchronize the user specified by the given ID
+wp mailchimp-sync all 							# synchronize all users
+wp mailchimp-sync all --role=administrator 	# synchronize all users with "administrator" role
+wp mailchimp-sync user $user_id	 			# synchronize the user specified by the given ID
 `
 
 This is especially useful for synchronising a huge amount of users.
