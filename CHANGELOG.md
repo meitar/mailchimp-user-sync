@@ -1,3 +1,5 @@
+= Changelog =
+
 #### 1.4 - January 26, 2016
 
 This update requires you to update [MailChimp for WordPress](https://wordpress.org/plugins/mailchimp-for-wp/) to version 3.1 first.
