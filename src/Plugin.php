@@ -33,15 +33,8 @@ final class Plugin {
 	public $options = array();
 
 	/**
-	 * @var ListSynchronizer
+	 * Plugin constructor.
 	 */
-	public $list_synchronizer;
-
-	/**
-	 * @var Webhook\Listener;
-	 */
-	public $webhooks;
-
 	public function __construct() {
 		$this->options = $this->load_options();
 	}
@@ -53,7 +46,7 @@ final class Plugin {
 
 		$options = (array) get_option( self::OPTION_NAME, array() );
 
-		$defaults = array(
+		static $defaults = array(
 			'list' => '',
 			'double_optin' => 0,
 			'send_welcome' => 0,
