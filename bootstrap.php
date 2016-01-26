@@ -2,7 +2,6 @@
 
 namespace MC4WP\Sync;
 
-use MC4WP\Sync\CLI\CommandProvider;
 use MC4WP_Queue as Queue;
 use WP_CLI;
 
