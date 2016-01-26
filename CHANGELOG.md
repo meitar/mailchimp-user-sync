@@ -1,3 +1,27 @@
+#### 1.4 - January 26, 2016
+
+This update requires you to update [MailChimp for WordPress](https://wordpress.org/plugins/mailchimp-for-wp/) to version 3.1 first.
+
+**Fixes**
+
+- Deleted users were no longer unsubscribed in some cases.
+
+**Improvements**
+
+- Use new Queue class from MailChimp for WordPress 3.1 for improved background processing.
+- [Use new debug log for easier debugging](https://mc4wp.com/kb/how-to-enable-log-debugging/).
+- Add HTTP status codes to Webhook listener.
+- Miscellaneous code improvements
+
+**Changes**
+
+- WP CLI commands are now named `wp mailchimp-sync all` and `wp mailchimp-sync user <user_id>` (backwards compatible)
+
+**Additions**
+
+- WP CLI command `wp mailchimp-sync all` is now showing a progress bar
+
+
 #### 1.3.3 - January 14, 2016
 
 **Fixes**
@@ -18,7 +42,6 @@
 - Better mobile responsiveness for settings pages.
 - Use Browserify to handle script dependencies.
 - Improved compatibility with [MailChimp for WordPress v3.0](https://mc4wp.com/blog/the-big-three-o-release/)
-- Deleted users were no longer unsubscribed in some cases.
 
 #### 1.3.1 - November 13, 2015
 
