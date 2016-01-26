@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) or exit;
 				<table class="form-table">
 
 					<tr>
-						<th scope="row"><?php _e( 'Enabled?', 'mailchimp-sync' ); ?></th>
+						<th scope="row"><?php _e( 'Enable auto-sync', 'mailchimp-sync' ); ?></th>
 						<td class="nowrap">
 							<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="1" <?php checked( $this->options['enabled'], 1 ); ?> /> <?php _e( 'Yes' ); ?></label> &nbsp;
 							<label><input type="radio" name="<?php echo $this->name_attr( 'enabled' ); ?>" value="0" <?php checked( $this->options['enabled'], 0 ); ?> /> <?php _e( 'No' ); ?></label>
