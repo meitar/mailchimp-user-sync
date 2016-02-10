@@ -1,5 +1,15 @@
 = Changelog =
 
+#### 1.4.1 - February 10, 2016
+
+**Fixes**
+
+- Webhook verification not working when setting up webhook in MailChimp.
+
+**Improvements**
+
+- Remove JS sourcemaps from admin scripts.
+
 #### 1.4 - January 26, 2016
 
 This update requires you to update [MailChimp for WordPress](https://wordpress.org/plugins/mailchimp-for-wp/) to version 3.1 first.
