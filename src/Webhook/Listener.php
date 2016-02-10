@@ -69,21 +69,23 @@ class Listener {
 
 	/**
 	 * Handle the request
+	 *
+	 * @return boolean
 	 */
 	public function handle() {
 
 		define( 'MC4WP_SYNC_DOING_WEBHOOK', true );
 
-		// check if data & type was given
+		// no parameters = MailChimp webhook validator
 		if( empty( $_REQUEST['data'] ) || empty( $_REQUEST['type'] ) ) {
-			status_header( 400 );
-			return false;
+			status_header( 200 );
+			return true;
 		}
 
 		$data = stripslashes_deep( $_REQUEST['data'] );
 		$type = (string) $_REQUEST['type'];
 
-		// check for a "web_id" key
+		// parameters but incorrect: throw error status
 		if( empty( $data['web_id'] ) ) {
 			status_header( 400 );
 			return false;
@@ -98,7 +100,6 @@ class Listener {
 		$user = apply_filters( 'mailchimp_sync_webhook_user', $user, $data );
 
 		if( ! $user instanceof WP_User ) {
-
 			// fire event when no user is found
 			do_action( 'mailchimp_sync_webhook_no_user', $data );
 			echo 'No corresponding user found for this subscriber.';
