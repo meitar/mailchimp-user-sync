@@ -4,6 +4,7 @@ namespace MC4WP\Sync\Webhook;
 
 use MC4WP\Sync\UserRepository;
 use WP_User;
+use MC4WP_Debug_Log;
 
 /**
  * Class Listener
@@ -74,6 +75,7 @@ class Listener {
 	 */
 	public function handle() {
 
+		$log = $this->get_log();
 		define( 'MC4WP_SYNC_DOING_WEBHOOK', true );
 
 		// no parameters = MailChimp webhook validator
@@ -110,17 +112,21 @@ class Listener {
 			return false;
 		}
 
+		$updated = false;
+
 		// if user was supplied by filter, it might not have a sync key.
 		// add it, just in case.
 		// @todo: DRY meta key prefix
 		$sync_key = 'mailchimp_sync_' . $data['list_id'];
 		if( empty( $user->{$sync_key} ) ) {
 			update_user_meta( $user->ID, $sync_key, $data['web_id'] );
+			$updated = true;
 		}
 
 		// update user email if it's given, valid and different
 		if( ! empty( $data['email'] ) && is_email( $data['email'] ) && $data['email'] !== $user->user_email ) {
 			update_user_meta( $user->ID, 'user_email', $data['email'] );
+			$updated = true;
 		}
 
 		// update WP user with data (use reversed field map)
@@ -140,9 +146,14 @@ class Listener {
 				// @todo Default user properties can be combined into single `wp_update_user` call for performance improvement
 				if( $user->{$rule['user_field']} !== $value ) {
 					update_user_meta( $user->ID, $rule['user_field'], $value );
+					$updated = true;
 				}
 			}
 
+		}
+
+		if( $updated ) {
+			$log->info( sprintf( "Webhook: Updated user #%d", $user->ID ) );
 		}
 
 		// fire event to allow custom actions (like deleting the user)
@@ -152,6 +163,13 @@ class Listener {
 		do_action( 'mailchimp_sync_webhook_' . $type, $data, $user );
 
 		echo 'OK';
+	}
+
+	/**
+	 * @return MC4WP_Debug_Log
+	 */
+	private function get_log() {
+		return mc4wp('log');
 	}
 
 }
