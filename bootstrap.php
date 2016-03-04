@@ -36,9 +36,15 @@ if( ! empty( $plugin->options['list'] ) ) {
 		$worker = new Worker( $queue, $list_synchronizer );
 		$worker->add_hooks();
 
-		if( defined( 'DOING_CRON' ) && DOING_CRON ) {
+		// Perform work whenever this action is run
+		add_action( 'mailchimp_user_sync_run', array( $worker, 'work' ) );
+
+		// Perform work whenever we're in a cron request
+		$is_cron_request = defined( 'DOING_CRON' ) && DOING_CRON;
+		if( $is_cron_request ) {
 			add_action( 'init', array( $worker, 'work' ) );
 		}
+
 	}
 }
 

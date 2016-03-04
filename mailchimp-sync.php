@@ -62,6 +62,30 @@ if( version_compare( PHP_VERSION, '5.3', '<' ) ) {
 	require_once dirname( __FILE__ ) . '/php-backwards-compatibility.php';
 } else {
 	add_action( 'plugins_loaded', '__load_mailchimp_sync', 30 );
+	register_activation_hook( __FILE__, 'mc4wp_sync_setup_schedule');
+	register_deactivation_hook( __FILE__, 'mc4wp_sync_clear_schedule' );
+}
+
+/**
+ * Sets up the schedule to run MailChimp User Sync hourly
+ *
+ * @hooked plugin activation
+ */
+function mc4wp_sync_setup_schedule() {
+	if( wp_next_scheduled( 'mailchimp_user_sync_run' ) ) {
+		return;
+	}
+
+	wp_schedule_event( time(), 'hourly', 'mailchimp_user_sync_run' );
+}
+
+/**
+ * Clears the schedule to run MailChimp User Sync every hour
+ *
+ * @hooked plugin deactivation
+ */
+function mc4wp_sync_clear_schedule() {
+	wp_clear_scheduled_hook( 'mailchimp_user_sync_run' );
 }
 
 
