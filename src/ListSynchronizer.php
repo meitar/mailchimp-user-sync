@@ -256,7 +256,7 @@ class ListSynchronizer {
 		if( ! $success ) {
 
 			// subscriber leid did not match anything in the list
-			if( $api->get_error_code() === 232 ) {
+			if( in_array( $api->get_error_code(), array( 215, 232 ) ) ) {
 
 				// delete subscriber leid as it's apparently wrong
 				delete_user_meta( $user->ID, $this->meta_key );
