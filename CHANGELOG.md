@@ -1,5 +1,19 @@
 = Changelog =
 
+
+#### 1.4.2 - March 14, 2016
+
+**Fixes**
+
+- Re-run subscribe method if email isn't found on MailChimp list (because of an invalid email, for example)
+
+**Improvements**
+
+- Setup schedule to run sync process at least once an hour, to prevent long delays.
+- Strip `EMAIL` from available field map fields to prevent invalid configurations.
+- Webhook updating a user will now write to [the debug log](https://mc4wp.com/kb/how-to-enable-log-debugging/).
+
+
 #### 1.4.1 - February 10, 2016
 
 **Fixes**
