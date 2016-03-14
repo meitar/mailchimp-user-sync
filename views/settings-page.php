@@ -128,7 +128,7 @@ defined( 'ABSPATH' ) or exit;
 
 									<select name="<?php echo $this->name_attr( '[field_mappers]['.$index.'][mailchimp_field]' ); ?>" class="mailchimp-field">
 										<option disabled <?php selected( $rule['mailchimp_field'], '' ); ?>><?php esc_html_e( 'MailChimp field', 'mailchimp-sync' ); ?></option>
-										<?php foreach( $selected_list->merge_vars as $field ) { ?>
+										<?php foreach( $available_mailchimp_fields as $field ) { ?>
 											<option value="<?php echo esc_attr( $field->tag ); ?>" <?php selected( $field->tag, $rule['mailchimp_field'] ); ?>>
 												<?php echo strip_tags( $field->name ); ?>
 											</option>

@@ -215,7 +215,12 @@ class Manager {
 		if( $this->options['list'] !== '' ) {
 			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
 			$status_indicator->check();
-			$selected_list = isset( $lists[ $this->options['list'] ] ) ? $lists[ $this->options['list'] ] : null;
+
+			if( isset( $lists[ $this->options['list'] ] ) )  {
+				$selected_list = $lists[ $this->options['list'] ];
+				$available_mailchimp_fields = array_diff_key( $selected_list->merge_vars, array( 'EMAIL' ) );
+			}
+
 		}
 
 		$this->options['field_mappers'] = array_values( $this->options['field_mappers'] );
