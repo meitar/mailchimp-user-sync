@@ -3,7 +3,7 @@
 Plugin Name: MailChimp User Sync
 Plugin URI: https://mc4wp.com/#utm_source=wp-plugin&utm_medium=mailchimp-sync&utm_campaign=plugins-page
 Description: Synchronize your WordPress Users with a MailChimp list.
-Version: 1.4.1
+Version: 1.4.2
 Author: ibericode
 Author URI: https://ibericode.com/
 Text Domain: mailchimp-sync
@@ -45,7 +45,7 @@ function __load_mailchimp_sync() {
 
 	define( 'MAILCHIMP_SYNC_FILE', __FILE__ );
 	define( 'MAILCHIMP_SYNC_DIR', __DIR__ );
-	define( 'MAILCHIMP_SYNC_VERSION', '1.4.1' );
+	define( 'MAILCHIMP_SYNC_VERSION', '1.4.2' );
 
 	// Test whether dependencies were met
 	$ready = include dirname( __FILE__ )  .'/dependencies.php';
@@ -55,6 +55,8 @@ function __load_mailchimp_sync() {
 
 	// Load PHP 5.3+ bootstrapper
 	include dirname( __FILE__ ) . '/bootstrap.php';
+
+
 }
 
 // start with PHP, which should be at least v5.3

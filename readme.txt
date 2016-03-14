@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,20 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+
+#### 1.4.2 - March 14, 2016
+
+**Fixes**
+
+- Re-run subscribe method if email isn't found on MailChimp list (because of an invalid email, for example)
+
+**Improvements**
+
+- Setup schedule to run sync process at least once an hour, to prevent long delays.
+- Strip `EMAIL` from available field map fields to prevent invalid configurations.
+- Webhook updating a user will now write to [the debug log](https://mc4wp.com/kb/how-to-enable-log-debugging/).
+
 
 #### 1.4.1 - February 10, 2016
 
