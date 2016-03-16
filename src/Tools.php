@@ -21,39 +21,44 @@ class Tools {
 
 	/**
 	 * @param WP_User $user
-	 * @param string $name
+	 * @param string $field_name
 	 *
-	 * @return string|bool
+	 * @return string
 	 */
-	public function get_user_field( WP_User $user, $name) {
+	public function get_user_field( WP_User $user, $field_name) {
 
 		$magic_fields = array( 'role' );
 
-		if( in_array( $name, $magic_fields ) ) {
-			return $this->get_user_magic_field( $user, $name );
+		if( in_array( $field_name, $magic_fields ) ) {
+			return $this->get_user_magic_field( $user, $field_name );
 		}
+
+		// default to empty string
+		$value = '';
 
 		// does user have this property?
-		if( $user->has_prop( $name ) ) {
-			// get value and check if it's usable
-			$value = $user->get( $name );
-			if( ! is_scalar( $value ) || strlen( $value ) === 0 ) {
-				return false;
-			}
+		if( $user->has_prop( $field_name ) ) {
 
-			return $value;
+			// get value
+			$value = $user->get( $field_name );
+
+			// convert array to comma-separated string
+			if( is_array( $value ) ) {
+				$value = join( ', ', $value );
+			}
 		}
 
-		$value = false;
+		// revert back to string if value is not a scalar type
+		$value = is_scalar( $value ) ? $value : '';
 
 		/**
 		 * Filters the field value that is returned for unknown fields
 		 *
 		 * @param bool $value
-		 * @param string $name
+		 * @param string $field_name
 		 * @param WP_User $user
 		 */
-		return apply_filters( 'mailchimp_sync_get_user_field', $value, $name, $user );
+		return apply_filters( 'mailchimp_sync_get_user_field', $value, $field_name, $user );
 	}
 
 	/**
