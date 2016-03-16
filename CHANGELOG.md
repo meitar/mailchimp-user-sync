@@ -1,5 +1,5 @@
-= Changelog =
-
+Changelog
+===========
 
 #### 1.4.2 - March 14, 2016
 

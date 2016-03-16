@@ -308,6 +308,7 @@ class ListSynchronizer {
 
 				// get field value
 				$value = $this->tools->get_user_field( $user, $rule['user_field'] );
+
 				if( is_string( $value ) ) {
 
 					// If target index does not exist yet, just add.
@@ -319,7 +320,7 @@ class ListSynchronizer {
 				}
 			}
 		}
-
+		
 		/**
 		 * Filters the merge vars which are sent to MailChimp
 		 *
