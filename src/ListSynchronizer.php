@@ -139,6 +139,19 @@ class ListSynchronizer {
 	}
 
 	/**
+	 * Handle
+	 */
+	public function handle_user( $user_id ) {
+
+		$user = $this->get_user( $user_id );
+		if( ! $user ) {
+			return false;
+		}
+
+		return $this->should_sync_user( $user ) ? $this->subscribe_user( $user->ID ) : $this->unsubscribe_user( $user->ID );
+	}
+
+	/**
 	 * Subscribes a user to the selected MailChimp list, stores a meta field with the subscriber uid
 	 *
 	 * @param int $user_id
@@ -320,7 +333,7 @@ class ListSynchronizer {
 				}
 			}
 		}
-		
+
 		/**
 		 * Filters the merge vars which are sent to MailChimp
 		 *
