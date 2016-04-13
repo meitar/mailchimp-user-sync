@@ -1,6 +1,13 @@
 Changelog
 ===========
 
+#### 1.4.3 - April 13, 2016
+
+**Improvements**
+
+- When user switches role or no longer matches custom conditions (using the `mailchimp_sync_should_sync_user` filter) he will now be unsubscribed from the selected MailChimp list.
+- User fields which are an array of values are now automatically converted to a comma-separated string before they are sent to MailChimp.
+
 #### 1.4.2 - March 14, 2016
 
 **Fixes**
