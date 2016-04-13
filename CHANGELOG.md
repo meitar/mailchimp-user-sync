@@ -210,7 +210,7 @@ For more detailed usage info on the introduced features, have a look at the [Mai
 
 **Fixes**
 
-- Force Sync got stuck on users without a valid email address. ([#10](https://github.com/ibericode/mailchimp-sync/issues/10), thanks [girandovoy](https://github.com/girandovoy))
+- Force Sync got stuck on users without a valid email address. ([#10](https://github.com/ibericode/mailchimp-user-sync/issues/10), thanks [girandovoy](https://github.com/girandovoy))
 - JSON response was malformed when any plugin threw a PHP notice
 
 **Improvements**
