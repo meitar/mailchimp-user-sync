@@ -100,6 +100,9 @@ class Manager {
 			case 'sync-user':
 				$user_id = intval( $_GET['user_id'] );
 				$success = $this->synchronizer->subscribe_user( $user_id );
+				if( $success ) {
+					$this->flash->add( 'success', 'Successfully subscribed user to MailChimp.' );
+				}
 				break;
 		}
 
