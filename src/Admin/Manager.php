@@ -324,6 +324,32 @@ class Manager {
 		return $text;
 	}
 
+	/**
+	 * Returns a HEX color from a percentage (red to green)
+	 *
+	 * @param        $value
+	 * @param int    $brightness
+	 * @param int    $max
+	 * @param int    $min
+	 * @param string $thirdColorHex
+	 *
+	 * @return string
+	 */
+	protected function percentage_to_color( $value, $brightness = 255, $max = 100, $min = 0, $thirdColorHex = '00') {
+		// Calculate first and second color (Inverse relationship)
+		$first = (1-($value/$max))*$brightness;
+		$second = ($value/$max)*$brightness;
+		// Find the influence of the middle color (yellow if 1st and 2nd are red and green)
+		$diff = abs($first-$second);
+		$influence = ($brightness-$diff)/2;
+		$first = intval($first + $influence);
+		$second = intval($second + $influence);
+		// Convert to HEX, format and return
+		$firstHex = str_pad(dechex($first),2,0,STR_PAD_LEFT);
+		$secondHex = str_pad(dechex($second),2,0,STR_PAD_LEFT);
+		return $firstHex . $secondHex . $thirdColorHex ;
+	}
+
 
 
 

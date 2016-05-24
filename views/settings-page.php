@@ -171,11 +171,9 @@ defined( 'ABSPATH' ) or exit;
 						</th>
 						<td>
 							<?php
-							if( $status_indicator->status ) {
-								echo '<span class="status positive">' . __( 'IN SYNC', 'mailchimp-sync' ) . '</span>';
-							} else {
-								echo '<span class="status negative">' . __( 'OUT OF SYNC', 'mailchimp-sync' ) . '</span>';
-							} ?>
+							$text = $status_indicator->status ?  __( 'IN SYNC', 'mailchimp-sync' ) : __( 'OUT OF SYNC', 'mailchimp-sync' );
+							echo sprintf( '<span class="status" style="background-color: #%s;">', $this->percentage_to_color( $status_indicator->progress, 200 ) ) . $text . '</span>';
+							?>
 						</td>
 					</tr>
 					<tr valign="top">
