@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'MC4WP\\Sync\\Admin\\FlashMessages' => $baseDir . '/src/Admin/FlashMessages.php',
     'MC4WP\\Sync\\Admin\\Manager' => $baseDir . '/src/Admin/Manager.php',
     'MC4WP\\Sync\\Admin\\StatusIndicator' => $baseDir . '/src/Admin/StatusIndicator.php',
     'MC4WP\\Sync\\AjaxListener' => $baseDir . '/src/AjaxListener.php',

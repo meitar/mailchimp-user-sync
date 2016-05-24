@@ -25,6 +25,11 @@ class Manager {
 	protected $synchronizer;
 
 	/**
+	 * @var FlashMessages
+	 */
+	private $flash;
+
+	/**
 	 * Constructor
 	 *
 	 * @param array $options
@@ -34,6 +39,7 @@ class Manager {
 		$this->options = $options;
 		$this->plugin_slug = plugin_basename( Plugin::FILE );
 		$this->synchronizer = $synchronizer;
+		$this->flash = new FlashMessages( 'mc4wp_sync_flash' );
 	}
 
 	/**
@@ -68,8 +74,10 @@ class Manager {
 		// only show this if user has settings cap
 		add_action( 'show_user_profile', array( $this, 'add_user_actions' ) );
 		add_action( 'edit_user_profile', array( $this, 'add_user_actions' ) );
+		add_action( 'admin_notices', array( $this, 'show_notices' ) );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_assets' ) );
+
 
 		// listen for requests, user is authorized by now
 		$this->listen();
@@ -98,6 +106,26 @@ class Manager {
 		// redirect back
 		wp_safe_redirect( remove_query_arg( 'mc4wp-sync-action' ) );
 		exit;
+	}
+
+	/**
+	 * Show notices from flash.
+	 */
+	public function show_notices() {
+
+		// show warnings
+		foreach( $this->flash->get('warning') as $message ) {
+			echo '<div class="notice notice-warning">';
+			echo '<p>' . $message . '</p>';
+			echo '</div>';
+		}
+
+		// show notices
+		foreach( $this->flash->get('success') as $message ) {
+			echo '<div class="notice notice-success">';
+			echo '<p>' . $message . '</p>';
+			echo '</div>';
+		}
 	}
 
 	/**
