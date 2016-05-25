@@ -215,7 +215,7 @@ var Wizard = (function() {
 				action: 'mcs_wizard',
 				mcs_action: 'get_users',
 				offset: usersProcessed,
-				limit: 1
+				limit: 100
 			},
 			type: User
 		}).then( function( users ) {
@@ -265,22 +265,19 @@ var Wizard = (function() {
 			method: "GET",
 			data: data,
 			url: ajaxurl
-		}).then(function( data ) {
+		}).then(function( response ) {
 
+			usersProcessed++;
 
-			if( data.success ) {
+			if( response.success ) {
 				log.addLine( "Success!" );
 			}
 
-			if( data.error ) {
-				log.addLine( "Error: " + data.error );
+			if( response.error ) {
+				log.addLine( "Error: " + response.error );
 			}
 
-			// update progress
-			usersProcessed++;
 			updateProgress();
-
-			// proceed
 			subscribeFromBatch();
 		}, function( error ) {
 			log.addLine( "Error: " + error );
