@@ -161,11 +161,13 @@ class ListSynchronizer {
 
 		$user = $this->get_user( $user_id );
 		if( ! $user ) {
+			$this->error = sprintf( 'Invalid user ID: %d', $user_id );
 			return false;
 		}
 
 		// if role is set, make sure user has that role
 		if( ! $this->should_sync_user( $user ) ) {
+			$this->error = sprintf( 'Skipping user %d', $user->ID );
 			return false;
 		}
 
