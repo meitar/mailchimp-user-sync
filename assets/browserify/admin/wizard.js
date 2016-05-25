@@ -73,7 +73,7 @@ var Wizard = (function() {
 				action: 'mcs_wizard',
 				mcs_action: 'get_users',
 				offset: usersProcessed,
-				limit: 1
+				limit: 100
 			},
 			type: User
 		}).then( function( users ) {
