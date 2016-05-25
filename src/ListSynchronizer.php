@@ -21,11 +21,6 @@ class ListSynchronizer {
 	/**
 	 * @var string
 	 */
-	private $user_role = '';
-
-	/**
-	 * @var string
-	 */
 	public $error = '';
 
 	/**
@@ -89,7 +84,7 @@ class ListSynchronizer {
 			return false;
 		}
 
-		return $this->users->should( $user, $this->user_role ) ? $this->subscribe_user( $user->ID ) : $this->unsubscribe_user( $user->ID );
+		return $this->users->should( $user ) ? $this->subscribe_user( $user->ID ) : $this->unsubscribe_user( $user->ID );
 	}
 
 	/**
@@ -108,7 +103,7 @@ class ListSynchronizer {
 		}
 
 		// if role is set, make sure user has that role
-		if( ! $this->users->should( $user, $this->user_role ) ) {
+		if( ! $this->users->should( $user ) ) {
 			$this->error = sprintf( 'Skipping user %d', $user->ID );
 			return false;
 		}
@@ -116,7 +111,7 @@ class ListSynchronizer {
 		// Only subscribe user if it has a valid email address
 		if( '' === $user->user_email || ! is_email( $user->user_email ) ) {
 			$this->error = 'Invalid email.';
-			$this->log->warning( sprintf( 'User Sync > %s is an invalid email address.', $user->user_email ) );
+			$this->log->warning( sprintf( 'User Sync > %s is an invalid email address', $user->user_email ) );
 			return false;
 		}
 
@@ -163,7 +158,7 @@ class ListSynchronizer {
 	 * @return bool
 	 */
 	public function unsubscribe_user( $user_id, $subscriber_uid = '' ) {
-
+		
 		// If $subscriber_uid parameter not given, fetch from user meta
 		if( empty( $subscriber_uid ) ) {
 			$subscriber_uid = $this->users->get_subscriber_uid( $user_id );
