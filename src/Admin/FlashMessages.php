@@ -62,7 +62,7 @@ class FlashMessages {
      * Clear all messages
      */
     public function clear() {
-        $this->stack = [];
+        $this->stack = array();
         $this->save();
     }
 
@@ -97,7 +97,7 @@ class FlashMessages {
     public function all() {
         $this->load();
         $messages = $this->stack;
-        $this->stack = [];
+        $this->stack = array();
         $this->save();
         return array_map( function( $m ) { return $m['message']; }, $messages );
     }
