@@ -1,6 +1,13 @@
 Changelog
 ===========
 
+#### 1.4.5 - May 25, 2016
+
+**Fixes**
+
+- Error on PHP 5.3. Square bracket array assignment is a PHP 5.4 feature.
+
+
 #### 1.4.4 - May 25, 2016
 
 **Fixes**
