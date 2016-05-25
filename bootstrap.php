@@ -36,7 +36,7 @@ if( ! empty( $plugin->options['list'] ) ) {
 		$queue = new Queue( 'mc4wp_sync_queue' );
 
 		// create a worker and have it work on "init" when doing CRON
-		$worker = new Worker( $queue, $list_synchronizer );
+		$worker = new Worker( $queue, $users, $list_synchronizer );
 		$worker->add_hooks();
 
 		// Perform work whenever this action is run

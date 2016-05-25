@@ -13,6 +13,11 @@ class Worker {
 	private $queue;
 
 	/**
+	 * @var Users
+	 */
+	private $users;
+
+	/**
 	 * @var ListSynchronizer
 	 */
 	private $synchronizer;
@@ -21,10 +26,12 @@ class Worker {
 	 * Worker constructor.
 	 *
 	 * @param Queue      $queue
+	 * @param Users 	$users
 	 * @param ListSynchronizer $synchronizer
 	 */
-	public function __construct( Queue $queue, ListSynchronizer $synchronizer ) {
+	public function __construct( Queue $queue, Users $users, ListSynchronizer $synchronizer ) {
 		$this->queue = $queue;
+		$this->users = $users;
 		$this->synchronizer = $synchronizer;
 	}
 
@@ -32,7 +39,7 @@ class Worker {
 	 * Add hooks
 	 */
 	public function add_hooks() {
-		$synchronizer = $this->synchronizer;
+		$users = $this->users;
 		$worker = $this;
 
 		add_action( 'user_register', function( $user_id ) use( $worker ) {
@@ -43,7 +50,7 @@ class Worker {
 			$worker->schedule( array( 'type' => 'handle', 'user_id' => $user_id ) );
 		});
 
-		add_action( 'updated_user_meta', function( $meta_id, $user_id, $meta_key  ) use( $worker, $synchronizer ) {
+		add_action( 'updated_user_meta', function( $meta_id, $user_id, $meta_key  ) use( $worker, $users ) {
 
 			/*
 			 * Don't act on our own actions or insignificant meta values
@@ -51,16 +58,16 @@ class Worker {
 			 * @see https://wordpress.org/plugins/user-last-login/
 			 * @see https://wordpress.org/plugins/wp-last-login/
 			 */
-			if( in_array( $meta_key, array( $synchronizer->meta_key, 'wp-last-login' ) ) ) {
+			if( in_array( $meta_key, array( $users->get_meta_key(), 'wp-last-login' ) ) ) {
 				return;
 			}
 
 			$worker->schedule( array( 'type' => 'handle', 'user_id' => $user_id ) );
 		}, 10, 3 );
 
-		add_action( 'delete_user', function( $user_id ) use( $worker, $synchronizer ) {
+		add_action( 'delete_user', function( $user_id ) use( $worker, $users ) {
 			// fetch meta value now, because user is about to be deleted
-			$subscriber_uid = get_user_meta( $user_id, $synchronizer->meta_key, true );
+			$subscriber_uid = $users->get_subscriber_uid( $user_id );
 			$worker->schedule( array( 'type' => 'unsubscribe', 'user_id' => $user_id, 'subscriber_uid' => $subscriber_uid ) );
 		});
 
