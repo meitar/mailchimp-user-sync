@@ -109,7 +109,7 @@ class Listener {
 			do_action( 'mailchimp_sync_webhook_no_user', $data );
 			echo 'No corresponding user found for this subscriber.';
 
-			status_header( 404 );
+			status_header( 200 );
 
 			// exit early
 			return false;
