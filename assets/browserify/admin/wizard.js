@@ -10,11 +10,16 @@ var Wizard = (function() {
 	var progress = m.prop( 0 );
 	var log = new Log();
 	var batch = m.prop([]);
+	var settingsForm, unsavedChanges = m.prop(false);
 
-	/**
-	 * Initialise
-	 */
-	function init() {}
+	function controller() {
+		settingsForm = document.getElementById('settings-form');
+
+		settingsForm.addEventListener('change', function() {
+			unsavedChanges(true);
+			m.redraw();
+		});
+	}
 
 	function askToStart() {
 		var sure = confirm( "Are you sure you want to start synchronising all of your users? This can take a while if you have many users, please don't close your browser window." );
@@ -45,7 +50,6 @@ var Wizard = (function() {
 	}
 
 	function fetchTotalUserCount() {
-
 		var deferred = m.deferred();
 
 		var data = { action : 'mcs_wizard', mcs_action: 'get_user_count' };
@@ -159,7 +163,8 @@ var Wizard = (function() {
 		// Wizard isn't running, show button to start it
 		if( ! started ) {
 			return m('p', [
-				m('input', { type: 'button', class: 'button', value: 'Synchronise All', onclick: askToStart } )
+				m('input', { type: 'button', class: 'button', value: 'Synchronise All', onclick: askToStart, disabled: unsavedChanges() } ),
+				unsavedChanges() ? m('span.help', ' — Please save your changes first.') : ''
 			]);
 		} else
 
@@ -178,10 +183,8 @@ var Wizard = (function() {
 		];
 	}
 
-	init();
-
 	return {
-		'controller': init,
+		'controller': controller,
 		'view': view
 	}
 })();

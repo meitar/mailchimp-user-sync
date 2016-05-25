@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) or exit;
 		<div class="main-content col col-4 col-sm-6">
 			<h1 class="page-title">MailChimp User Sync</h1>
 
-			<form method="post" action="<?php echo admin_url( 'options.php' ); ?>">
+			<form method="post" action="<?php echo admin_url( 'options.php' ); ?>" id="settings-form">
 
 				<?php settings_fields( Plugin::OPTION_NAME ); ?>
 
