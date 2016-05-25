@@ -102,6 +102,9 @@ class Listener {
 		$user = apply_filters( 'mailchimp_sync_webhook_user', $user, $data );
 
 		if( ! $user instanceof WP_User ) {
+			// log a warning
+			$log->info( sprintf( "Webhook: No user found for MailChimp ID: %s", $data['web_id'] ) );
+
 			// fire event when no user is found
 			do_action( 'mailchimp_sync_webhook_no_user', $data );
 			echo 'No corresponding user found for this subscriber.';
