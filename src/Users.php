@@ -80,18 +80,17 @@ class Users {
 	}
 
 	/**
-	 * @param string $id
+	 * @param string $mailchimp_id
 	 *
 	 * @return WP_User|null;
 	 */
-	public function get_user_by_mailchimp_id( $id ) {
-		return $this->get_first_user(
-			array(
-				'meta_key'     => $this->meta_key,
-				'meta_value'   => $id,
-				'limit' => 1
-			)
+	public function get_user_by_mailchimp_id( $mailchimp_id ) {
+		$args = array(
+			'meta_key'     => $this->meta_key,
+			'meta_value'   => $mailchimp_id,
 		);
+
+		return $this->get_first_user( $args );
 	}
 
 	/**
@@ -106,10 +105,11 @@ class Users {
 	 *
 	 * @return null|WP_User
 	 */
-	public function get_first_user( $args = array() ) {
-		$users = $this->get( array( 'limit' => 1 ) );
+	public function get_first_user( array $args = array() ) {
+		$args['number'] = 1;
+		$users = $this->get( $args );
 
-		if( ! is_array( $users ) || empty( $users ) ) {
+		if( empty( $users ) ) {
 			return null;
 		}
 
