@@ -26,6 +26,7 @@ class Users {
 
 	/**
 	 * @param string $meta_key
+	 * @param string $role
 	 */
 	public function __construct( $meta_key, $role = '' ) {
 		$this->meta_key = $meta_key;
@@ -210,5 +211,12 @@ class Users {
 	 */
 	public function delete_subscriber_uid( $user_id ) {
 		delete_user_meta( $user_id, $this->meta_key );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_meta_key() {
+		return $this->meta_key;
 	}
 }
