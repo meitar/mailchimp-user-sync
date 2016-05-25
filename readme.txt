@@ -3,8 +3,8 @@ Contributors: Ibericode, DvanKooten, hchouhan, lapzor
 Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=donate-link
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
-Tested up to: 4.5
-Stable tag: 1.4.3
+Tested up to: 4.5.2
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,11 +16,12 @@ Synchronize your WordPress Users with a MailChimp list.
 
 Synchronize your registered WordPress users with a MailChimp list of your choice.
 
-> To use MailChimp User Sync, please install either the free or the premium version of the [MailChimp for WordPress plugin](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info).
+> To use MailChimp User Sync, please install either the free or premium version of the [MailChimp for WordPress plugin](https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=info).
 
 = MailChimp User Sync, at a glance.. =
 
-MailChimp User Sync will watch for changes in your WordPress user base and automatically synchronize any changes with a selected MailChimp list.
+MailChimp User Sync will monitor your WordPress user base and automatically synchronize any changes with a selected MailChimp list. This allows you to keep a MailChimp list of subscribers
+that is an exact mirror of your WordPress user base.
 
 - Automatically subscribe new users to your MailChimp list.
 - Sync all profile changes with MailChimp, even when a user's email address changes.
@@ -124,6 +125,22 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+
+#### 1.4.4 - May 25, 2016
+
+**Fixes**
+
+- Only add MailChimp status to user profile when user matches criteria.
+- CLI command now defaults to role selected on settings page when no role argument given.
+
+**Improvements**
+
+- Show success notice when manually subscribing or updating a user.
+- Show "skipped" message when wizard attempts to synchronize a user that is excluded by the `mailchimp_sync_should_sync_user` filter.
+- Show notice that numbers are off when using `mailchimp_sync_should_sync_user` filter.
+- Various UX improvements to settings page & manual synchronization wizard.
+- Various performance improvements.
 
 
 #### 1.4.3 - April 13, 2016
