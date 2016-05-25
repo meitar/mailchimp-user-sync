@@ -10,7 +10,6 @@ var Wizard = (function() {
 	var progress = m.prop( 0 );
 	var log = new Log();
 	var batch = m.prop([]);
-	var roleSelect = document.getElementById('role-select');
 
 	/**
 	 * Initialise
@@ -49,7 +48,7 @@ var Wizard = (function() {
 
 		var deferred = m.deferred();
 
-		var data = { action : 'mcs_wizard', mcs_action: 'get_user_count', role: roleSelect.value };
+		var data = { action : 'mcs_wizard', mcs_action: 'get_user_count' };
 		m.request({ method: "GET", url: ajaxurl, data: data }).then(function(data) {
 			log.addLine("Found " + data + " users.");
 			userCount = data;
@@ -69,8 +68,7 @@ var Wizard = (function() {
 			data: {
 				action: 'mcs_wizard',
 				mcs_action: 'get_users',
-				offset: usersProcessed,
-				role: roleSelect.value
+				offset: usersProcessed
 			},
 			type: User
 		}).then( function( users ) {
