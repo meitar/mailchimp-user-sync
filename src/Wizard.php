@@ -101,13 +101,9 @@ class Wizard {
 
 		// loop through user ID's
 		$result = $this->sync->subscribe_user( $user_id );
-
-		if( $result ) {
-			return true;
-		}
-
 		$this->error = $this->sync->error;
-		return false;
+
+		return !!$result;
 	}
 
 	/**
