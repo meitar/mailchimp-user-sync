@@ -121,7 +121,7 @@ class ListSynchronizer {
 	 * @return bool
 	 */
 	public function should_sync_user( WP_User $user ) {
-
+		
 		$sync = true;
 
 		// if role is set, make sure user has that role

@@ -26,7 +26,6 @@ defined( 'ABSPATH' ) or exit;
 
 				<?php settings_fields( Plugin::OPTION_NAME ); ?>
 
-
 				<h2><?php _e( 'Settings' ); ?></h2>
 				<?php settings_errors(); ?>
 

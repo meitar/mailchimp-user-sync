@@ -48,22 +48,22 @@ if( ! empty( $plugin->options['list'] ) ) {
 	}
 }
 
-if( ! is_admin() ) {
 
-	// public section
-	if( $list_synchronizer instanceof ListSynchronizer ) {
-		$webhook_listener = new Webhook\Listener( $list_synchronizer->meta_key, $plugin->options['field_mappers'] );
-		$webhook_listener->add_hooks();
-	}
+// Webhook
+if( ! is_admin() && $list_synchronizer instanceof ListSynchronizer ) {
+	$webhook_listener = new Webhook\Listener( $list_synchronizer->meta_key, $plugin->options['field_mappers'] );
+	$webhook_listener->add_hooks();
+}
 
-} elseif( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-
-	// ajax listeners
-	$ajax = new AjaxListener( $plugin->options );
+// Ajax
+if( defined( 'DOING_AJAX' ) && DOING_AJAX  && $list_synchronizer instanceof ListSynchronizer) {
+	$users = new Users( $list_synchronizer->meta_key );
+	$ajax = new AjaxListener( $list_synchronizer, $users  );
 	$ajax->add_hooks();
-} else {
+}
 
-	// admin screens
+// Admin
+if( is_admin() ) {
 	$admin = new Admin\Manager( $plugin->options, $list_synchronizer );
 	$admin->add_hooks();
 }

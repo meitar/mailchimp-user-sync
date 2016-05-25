@@ -2,7 +2,7 @@
 
 namespace MC4WP\Sync\CLI;
 
-use MC4WP\Sync\Wizard;
+use MC4WP\Sync\Users;
 use WP_CLI, WP_CLI_Command;
 use MC4WP\Sync\ListSynchronizer;
 
@@ -18,6 +18,9 @@ class Command extends WP_CLI_Command {
 	 */
 	public function __construct() {
 		$this->options = $GLOBALS['mailchimp_sync']->options;
+
+		$this->users = new Users( 'mailchimp_sync_' . $this->options['list'] );
+		$this->synchronizer = new ListSynchronizer( $this->options['list'], '', $this->options );
 
 		parent::__construct();
 	}
@@ -43,11 +46,10 @@ class Command extends WP_CLI_Command {
 	 */
 	public function all( $args, $assoc_args ) {
 
-		$wizard = new Wizard( $this->options['list'],  $this->options );
 		$user_role = ( isset( $assoc_args['role'] ) ) ? $assoc_args['role'] : '';
 
 		// start by counting all users
-		$users = $wizard->get_users( $user_role );
+		$users = $this->users->get( $user_role );
 		$count = count( $users );
 
 		WP_CLI::line( "$count users found." );
@@ -57,7 +59,7 @@ class Command extends WP_CLI_Command {
 		$user_ids = wp_list_pluck( $users, 'ID' );
 
 		foreach( $user_ids as $user_id ) {
-			$wizard->subscribe_user( $user_id );
+			$this->synchronizer->subscribe_user( $user_id );
 			$notify->tick();
 		}
 
@@ -89,8 +91,7 @@ class Command extends WP_CLI_Command {
 
 		$user_id = absint( $args[0] );
 
-		$wizard = new Wizard(  $this->options['list'],  $this->options );
-		$result = $wizard->subscribe_user( $user_id );
+		$result = $this->synchronizer->subscribe_user( $user_id );
 
 		if( $result ) {
 			WP_CLI::line( "User successfully synced!" );

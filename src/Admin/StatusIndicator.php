@@ -2,7 +2,7 @@
 
 namespace MC4WP\Sync\Admin;
 
-use MC4WP\Sync\Wizard;
+use MC4WP\Sync\Users;
 
 class StatusIndicator {
 
@@ -43,41 +43,17 @@ class StatusIndicator {
 	public function __construct( $list_id, $user_role = '' ) {
 		$this->list_id   = $list_id;
 		$this->user_role = $user_role;
-		$this->wizard = new Wizard( $list_id );
+		$this->users = new Users( 'mailchimp_sync_' . $list_id );
 	}
 
 	/**
 	 *
 	 */
 	public function check() {
-		$this->user_count = $this->wizard->get_user_count( $this->user_role );
-		$this->subscriber_count = $this->get_subscriber_count();
+		$this->user_count = $this->users->count( $this->user_role );
+		$this->subscriber_count = $this->users->count_subscribers( $this->user_role );
 		$this->status = ( $this->user_count === $this->subscriber_count );
 		$this->progress = ( $this->user_count > 0 ) ? ceil( $this->subscriber_count / $this->user_count * 100 ) : 0;
-	}
-
-
-	/**
-	 * @return int
-	 */
-	public function get_subscriber_count() {
-		global $wpdb;
-
-		$sql = "SELECT COUNT(u.ID) FROM $wpdb->users u INNER JOIN $wpdb->usermeta um1 ON um1.user_id = u.ID";
-
-		if( '' !== $this->user_role ) {
-			$sql .= " AND um1.meta_key = %s";
-			$sql .= " INNER JOIN $wpdb->usermeta um2 ON um2.user_id = um1.user_id WHERE um2.meta_key = %s AND um2.meta_value LIKE %s";
-
-			$query = $wpdb->prepare( $sql, 'mailchimp_sync_' . $this->list_id, $wpdb->prefix . 'capabilities', '%%' . $this->user_role . '%%' );
-		} else {
-			$sql .= " WHERE um1.meta_key = %s";
-			$query = $wpdb->prepare( $sql, 'mailchimp_sync_' . $this->list_id );
-		}
-
-		// now get number of users with meta key
-		$subscriber_count = $wpdb->get_var( $query );
-		return (int) $subscriber_count;
 	}
 
 

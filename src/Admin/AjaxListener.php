@@ -5,31 +5,25 @@ namespace MC4WP\Sync;
 class AjaxListener {
 
 	/**
-	 * @var array
+	 * @var ListSynchronizer
 	 */
-	protected $options;
+	protected $synchronizer;
 
 	/**
-	 * @var array
+	 * @var Users
 	 */
-	protected $allowed_actions = array(
-		'get_users',
-		'subscribe_users',
-		'get_user_count'
-	);
-
-	/**
-	 * @var Wizard
-	 */
-	protected $wizard;
+	protected $users;
+	
 
 	/**
 	 * Constructor
-	 * @param array $options
+	 *
+	 * @param ListSynchronizer $synchronizer
+	 * @param Users $users
 	 */
-	public function __construct( array $options ) {
-		$this->options = $options;
-		$this->wizard = new Wizard( $this->options['list'], $this->options );
+	public function __construct( ListSynchronizer $synchronizer, Users $users  ) {
+		$this->synchronizer = $synchronizer;
+		$this->users = $users;
 	}
 
 	/**
@@ -45,6 +39,12 @@ class AjaxListener {
 	 */
 	public function route() {
 
+		static $allowed_actions = array(
+			'get_users',
+			'subscribe_users',
+			'get_user_count'
+		);
+
 		// make sure user is allowed to make the AJAX call
 		if( ! current_user_can( 'manage_options' )
 		    || ! isset( $_REQUEST['mcs_action'] ) ) {
@@ -52,7 +52,7 @@ class AjaxListener {
 		}
 
 		// check if method exists and is allowed
-		if( in_array( $_REQUEST['mcs_action'], $this->allowed_actions ) ) {
+		if( in_array( $_REQUEST['mcs_action'], $allowed_actions ) ) {
 			$this->{$_REQUEST['mcs_action']}();
 			exit;
 		}
@@ -65,7 +65,9 @@ class AjaxListener {
 	 */
 	protected function get_user_count() {
 		$role = ( isset( $_REQUEST['role'] ) ) ? $_REQUEST['role'] : '';
-		$this->respond( $this->wizard->get_user_count( $role ) );
+
+		$count = $this->users->count( $role );
+		$this->respond( $count );
 	}
 
 	/**
@@ -75,7 +77,9 @@ class AjaxListener {
 
 		$offset = ( isset( $_REQUEST['offset'] ) ? absint( $_REQUEST['offset'] ) : 0 );
 		$role = ( isset( $_REQUEST['role'] ) ) ? $_REQUEST['role'] : '';
-		$users = $this->wizard->get_users( $role, $offset );
+
+		// get users
+		$users = $this->users->get( $role, $offset );
 
 		// send response
 		$this->respond( $users );
@@ -89,7 +93,7 @@ class AjaxListener {
 
 		$user_id = (int) $_REQUEST['user_id'];
 
-		$result = $this->wizard->subscribe_user( $user_id );
+		$result = $this->synchronizer->subscribe_user( $user_id );
 
 		if( $result ) {
 			$this->respond( array( 'success' => true ) );
@@ -100,7 +104,7 @@ class AjaxListener {
 		$this->respond(
 			array(
 				'success' => $result,
-				'error' =>  $this->wizard->get_error()
+				'error' =>  $this->synchronizer->error,
 			)
 		);
 	}
