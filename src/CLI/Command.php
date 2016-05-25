@@ -19,8 +19,8 @@ class Command extends WP_CLI_Command {
 	public function __construct() {
 		$this->options = $GLOBALS['mailchimp_sync']->options;
 
-		$this->users = new Users( 'mailchimp_sync_' . $this->options['list'] );
-		$this->synchronizer = new ListSynchronizer( $this->options['list'], '', $this->options );
+		$this->users = new Users( 'mailchimp_sync_' . $this->options['list'], $this->options['role'] );
+		$this->synchronizer = new ListSynchronizer( $this->options['list'], $this->users, $this->options );
 
 		parent::__construct();
 	}
@@ -46,10 +46,17 @@ class Command extends WP_CLI_Command {
 	 */
 	public function all( $args, $assoc_args ) {
 
-		$user_role = ( isset( $assoc_args['role'] ) ) ? $assoc_args['role'] : '';
+		$user_query_args = array();
+
+		// allow overriding user role with --role
+		// by default, the stored setting will be used.
+		$user_role = ( isset( $assoc_args['role'] ) ) ? $assoc_args['role'] : null;
+		if( ! is_null( $user_role ) ) {
+			$user_query_args['role'] = $user_role;
+		}
 
 		// start by counting all users
-		$users = $this->users->get( $user_role );
+		$users = $this->users->get( $user_query_args );
 		$count = count( $users );
 
 		WP_CLI::line( "$count users found." );
@@ -94,9 +101,9 @@ class Command extends WP_CLI_Command {
 		$result = $this->synchronizer->subscribe_user( $user_id );
 
 		if( $result ) {
-			WP_CLI::line( "User successfully synced!" );
+			WP_CLI::line( sprintf( "User %d successfully synced!", $user_id ) );
 		} else {
-			WP_CLI::error( "Error while syncing user #" . $user_id );
+			WP_CLI::error( $this->synchronizer->error );
 		}
 
 	}
