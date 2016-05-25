@@ -159,7 +159,15 @@ defined( 'ABSPATH' ) or exit;
 
 				<br style="margin: 40px 0;" />
 
-				<h2><?php _e( 'Status', 'mailchimp-for-wp' ); ?></h2>
+				<h2>
+					<?php
+
+					_e( 'Status', 'mailchimp-for-wp' );
+
+					$text = $status_indicator->subscriber_count . '/' . $status_indicator->user_count;
+					echo sprintf( '<span class="status" style="background-color: %s;">', '#' . $this->percentage_to_color( $status_indicator->progress, 200 ) ) . $text . '</span>';
+					?>
+				</h2>
 
 				<?php if( $this->options['enabled'] ) { ?>
 					<p><?php _e( 'Right now, the plugin is listening to changes in your users and will automatically keep your userbase synced with the selected MailChimp list.', 'mailchimp-sync' ); ?></p>
@@ -167,19 +175,11 @@ defined( 'ABSPATH' ) or exit;
 					<p><?php _e( 'The plugin is currently not listening to any changes in your users.', 'mailchimp-sync' ); ?></p>
 				<?php } ?>
 
-				<table class="form-table">
-					<tr valign="top">
-						<th scope="row" style="min-width: 250px;">
-							<?php _e( 'Status', 'mailchimp-sync' ); ?>
-						</th>
-						<td>
-							<?php
-							$text = $status_indicator->subscriber_count . '/' . $status_indicator->user_count;
-							echo sprintf( '<span class="status" style="background-color: #%s;">', $this->percentage_to_color( $status_indicator->progress, 200 ) ) . $text . '</span>';
-							?>
-						</td>
-					</tr>
-				</table>
+				<?php if( has_filter( 'mailchimp_sync_should_sync_user' ) ) {
+					echo '<div class="notice inline notice-warning">';
+					echo '<p>' . sprintf( __( "It seems that you're using the %s filter, which means that the numbers shown here will be a little off.", 'mailchimp-sync' ), '<code>mailchimp_sync_should_sync_user</code>' ) . '</p>';
+					echo '</div>';
+				} ?>
 
 				<div class="notice inline notice-info">
 					<p><?php printf( __( 'Need some help debugging? Take a look at the <a href="%s">debug log</a>.', 'mailchimp-sync' ), admin_url( 'admin.php?page=mailchimp-for-wp-other' ) ); ?></p>
