@@ -3,6 +3,7 @@
 namespace MC4WP\Sync\Webhook;
 
 use MC4WP\Sync\UserRepository;
+use MC4WP\Sync\Users;
 use WP_User;
 use MC4WP_Debug_Log;
 
@@ -14,14 +15,13 @@ use MC4WP_Debug_Log;
  * Once triggered, it will look for the corresponding WP user and update it using the field map defined in the settings of the Sync plugin.
  *
  * @package MC4WP\Sync\Webhook
- * @property UserRepository $user_repository
  */
 class Listener {
 
 	/**
-	 * @var string
+	 * @var Users
 	 */
-	private $user_meta_key;
+	private $users;
 
 	/**
 	 * @var array
@@ -34,11 +34,11 @@ class Listener {
 	public $url = '/mc4wp-sync-api/webhook-listener';
 
 	/**
-	 * @param string $user_meta_key
+	 * @param Users $users
 	 * @param array $field_mappers
 	 */
-	public function __construct( $user_meta_key, $field_mappers = array() ) {
-		$this->user_meta_key = $user_meta_key;
+	public function __construct( Users $users, $field_mappers = array() ) {
+		$this->users = $users;
 		$this->field_mappers = $field_mappers;
 	}
 
@@ -93,10 +93,8 @@ class Listener {
 			return false;
 		}
 
-		$users = new UserRepository( $this->user_meta_key );
-
 		// find WP user by List_ID + MailChimp ID
-		$user = $users->get_user_by_mailchimp_id( $data['web_id'] );
+		$user = $this->users->get_user_by_mailchimp_id( $data['web_id'] );
 
 		/**
 		 * Filters the user that is found by the webhook request
@@ -122,12 +120,11 @@ class Listener {
 
 		$updated = false;
 
-		// if user was supplied by filter, it might not have a sync key.
-		// add it, just in case.
-		// @todo: DRY meta key prefix
-		$sync_key = 'mailchimp_sync_' . $data['list_id'];
-		if( empty( $user->{$sync_key} ) ) {
-			update_user_meta( $user->ID, $sync_key, $data['web_id'] );
+		// If user was supplied by filter, it might not have a sync key.
+		// Add it, just in case.
+		$user_subscriber_uid = $this->users->get_subscriber_uid( $user->ID );
+		if( empty( $user_subscriber_uid ) ) {
+			$this->users->set_subscriber_uid( $user->ID, $data['web_id'] );
 			$updated = true;
 		}
 

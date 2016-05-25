@@ -4,6 +4,7 @@ namespace MC4WP\Sync\Admin;
 
 use MC4WP\Sync\Plugin;
 use MC4WP\Sync\ListSynchronizer;
+use MC4WP\Sync\Users;
 use MC4WP_MailChimp;
 use WP_User;
 
@@ -25,6 +26,11 @@ class Manager {
 	protected $synchronizer;
 
 	/**
+	 * @var Users
+	 */
+	protected $users;
+
+	/**
 	 * @var FlashMessages
 	 */
 	private $flash;
@@ -35,10 +41,11 @@ class Manager {
 	 * @param array $options
 	 * @param ListSynchronizer $synchronizer
 	 */
-	public function __construct( array $options, $synchronizer ) {
+	public function __construct( array $options, $synchronizer, $users ) {
 		$this->options = $options;
 		$this->plugin_slug = plugin_basename( Plugin::FILE );
 		$this->synchronizer = $synchronizer;
+		$this->users = $users;
 		$this->flash = new FlashMessages( 'mc4wp_sync_flash' );
 	}
 
@@ -134,9 +141,9 @@ class Manager {
 	/**
 	 * Register menu pages
 	 *
-	 * @param $items
+	 * @param array $items
 	 *
-	 * @return
+	 * @return array
 	 */
 	public function add_menu_items( $items ) {
 
@@ -158,11 +165,16 @@ class Manager {
 	public function add_user_actions( WP_User $user ) {
 
 		// do nothing if plugin isn't enabled
-		if( ! $this->synchronizer instanceof ListSynchronizer ) {
+		if( ! $this->users instanceof Users ) {
 			return;
 		}
 
-		$subscriber_uid = $this->synchronizer->get_user_subscriber_uid( $user->ID );
+		// only show if this user matches role criteria
+		if( ! $this->users->should( $user ) ) {
+			return;
+		}
+
+		$subscriber_uid = $this->users->get_subscriber_uid( $user->ID );
 		$is_subscribed = ! empty( $subscriber_uid );
 		$sync_url = add_query_arg(
 			array(
@@ -244,7 +256,7 @@ class Manager {
 		$lists = $this->get_mailchimp_lists();
 
 		if( $this->options['list'] !== '' ) {
-			$status_indicator = new StatusIndicator( $this->options['list'], $this->options['role'] );
+			$status_indicator = new StatusIndicator( $this->users );
 			$status_indicator->check();
 
 			if( isset( $lists[ $this->options['list'] ] ) )  {

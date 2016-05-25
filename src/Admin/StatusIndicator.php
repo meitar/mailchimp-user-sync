@@ -7,11 +7,6 @@ use MC4WP\Sync\Users;
 class StatusIndicator {
 
 	/**
-	 * @var string $list_id The ID of the list to check against
-	 */
-	private $list_id;
-
-	/**
 	 * @var bool Boolean indicating whether all users are subscribed to the selected list
 	 */
 	public $status = false;
@@ -32,26 +27,24 @@ class StatusIndicator {
 	public $subscriber_count = 0;
 
 	/**
-	 * @var string
+	 * @var Users
 	 */
-	public $user_role = '';
+	protected $users;
 
 	/**
-	 * @param        $list_id
-	 * @param string $user_role
+	 * @param Users $users
 	 */
-	public function __construct( $list_id, $user_role = '' ) {
-		$this->list_id   = $list_id;
-		$this->user_role = $user_role;
-		$this->users = new Users( 'mailchimp_sync_' . $list_id );
+	public function __construct( Users $users ) {
+		$this->users = $users;
 	}
 
 	/**
-	 *
+	 * Runs calculations.
 	 */
 	public function check() {
-		$this->user_count = $this->users->count( $this->user_role );
-		$this->subscriber_count = $this->users->count_subscribers( $this->user_role );
+		$this->user_count = $this->users->count();
+		$this->subscriber_count = $this->users->count_subscribers();
+
 		$this->status = ( $this->user_count === $this->subscriber_count );
 		$this->progress = ( $this->user_count > 0 ) ? ceil( $this->subscriber_count / $this->user_count * 100 ) : 0;
 	}

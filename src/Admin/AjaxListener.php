@@ -66,7 +66,7 @@ class AjaxListener {
 	protected function get_user_count() {
 		$role = ( isset( $_REQUEST['role'] ) ) ? $_REQUEST['role'] : '';
 
-		$count = $this->users->count( $role );
+		$count = $this->users->count();
 		$this->respond( $count );
 	}
 
@@ -74,12 +74,10 @@ class AjaxListener {
 	 * Responds with an array of all user ID's
 	 */
 	protected function get_users() {
-
 		$offset = ( isset( $_REQUEST['offset'] ) ? absint( $_REQUEST['offset'] ) : 0 );
-		$role = ( isset( $_REQUEST['role'] ) ) ? $_REQUEST['role'] : '';
 
 		// get users
-		$users = $this->users->get( $role, $offset );
+		$users = $this->users->get();
 
 		// send response
 		$this->respond( $users );

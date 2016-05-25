@@ -18,12 +18,15 @@ $GLOBALS['mailchimp_sync'] = $plugin;
 
 // default to null object
 $list_synchronizer = null;
+$users = null;
 
 // if a list was selected, initialise the ListSynchronizer class
 if( ! empty( $plugin->options['list'] ) ) {
 
 	// instantiate synchronizer
-	$list_synchronizer = new ListSynchronizer( $plugin->options['list'], $plugin->options['role'], $plugin->options );
+	$role =  $plugin->options['role'];
+	$users = new Users( 'mailchimp_sync_' . $plugin->options['list'], $role );
+	$list_synchronizer = new ListSynchronizer( $plugin->options['list'], $users, $plugin->options );
 	$list_synchronizer->add_hooks();
 
 	// if auto-syncing is enabled, setup queue and worker
@@ -50,21 +53,22 @@ if( ! empty( $plugin->options['list'] ) ) {
 
 
 // Webhook
-if( ! is_admin() && $list_synchronizer instanceof ListSynchronizer ) {
-	$webhook_listener = new Webhook\Listener( $list_synchronizer->meta_key, $plugin->options['field_mappers'] );
+if( ! is_admin() && $users instanceof Users ) {
+	$webhook_listener = new Webhook\Listener( $users, $plugin->options['field_mappers'] );
 	$webhook_listener->add_hooks();
 }
 
 // Ajax
-if( defined( 'DOING_AJAX' ) && DOING_AJAX  && $list_synchronizer instanceof ListSynchronizer) {
-	$users = new Users( $list_synchronizer->meta_key );
+if( defined( 'DOING_AJAX' ) && DOING_AJAX
+	&& $list_synchronizer instanceof ListSynchronizer
+	&& $users instanceof Users ) {
 	$ajax = new AjaxListener( $list_synchronizer, $users  );
 	$ajax->add_hooks();
 }
 
 // Admin
 if( is_admin() ) {
-	$admin = new Admin\Manager( $plugin->options, $list_synchronizer );
+	$admin = new Admin\Manager( $plugin->options, $list_synchronizer, $users );
 	$admin->add_hooks();
 }
 
