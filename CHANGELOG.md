@@ -1,6 +1,22 @@
 Changelog
 ===========
 
+#### 1.4.4 - May 25, 2016
+
+**Fixes**
+
+- Only add MailChimp status to user profile when user matches criteria.
+- CLI command now defaults to role selected on settings page when no role argument given.
+
+**Improvements**
+
+- Show success notice when manually subscribing or updating a user.
+- Show "skipped" message when wizard attempts to synchronize a user that is excluded by the `mailchimp_sync_should_sync_user` filter.
+- Show notice that numbers are off when using `mailchimp_sync_should_sync_user` filter.
+- Various UX improvements to settings page & manual synchronization wizard.
+- Various performance improvements.
+
+
 #### 1.4.3 - April 13, 2016
 
 **Improvements**
