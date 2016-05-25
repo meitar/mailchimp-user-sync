@@ -259,7 +259,7 @@ class Manager {
 		// add empty field so we can add more rules
 		$this->options['field_mappers'][] = array( 'user_field' => '', 'mailchimp_field' => '' );
 
-		require Plugin::DIR . '/views/settings-page.php';
+		require __DIR__  . '/views/settings-page.php';
 	}
 
 	/**

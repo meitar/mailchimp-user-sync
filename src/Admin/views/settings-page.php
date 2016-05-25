@@ -156,6 +156,9 @@ defined( 'ABSPATH' ) or exit;
 			</form>
 
 			<?php if( '' !== $this->options['list'] ) { ?>
+
+				<br style="margin: 40px 0;" />
+
 				<h2><?php _e( 'Status', 'mailchimp-for-wp' ); ?></h2>
 
 				<?php if( $this->options['enabled'] ) { ?>
@@ -171,35 +174,30 @@ defined( 'ABSPATH' ) or exit;
 						</th>
 						<td>
 							<?php
-							$text = $status_indicator->status ?  __( 'IN SYNC', 'mailchimp-sync' ) : __( 'OUT OF SYNC', 'mailchimp-sync' );
+							$text = $status_indicator->subscriber_count . '/' . $status_indicator->user_count;
 							echo sprintf( '<span class="status" style="background-color: #%s;">', $this->percentage_to_color( $status_indicator->progress, 200 ) ) . $text . '</span>';
 							?>
 						</td>
 					</tr>
-					<tr valign="top">
-						<th scope="row">
-							<?php _e( 'Subscribed Users / Total Users', 'mailchimp-sync' ); ?>
-						</th>
-						<td>
-							<?php echo $status_indicator->subscriber_count . '/' . $status_indicator->user_count; ?>
-						</td>
-					</tr>
-					<tr valign="top">
-						<th scope="row">
-							<?php _e( 'Force Synchronisation', 'mailchimp-sync' ) ; ?>
-						</th>
-						<td id="wizard">
-							<?php _e( 'Please enable JavaScript to use the Synchronisation Wizard.', 'mailchimp-sync' ); ?>
-						</td>
-					</tr>
-
 				</table>
+
+				<div class="notice inline notice-info">
+					<p><?php printf( __( 'Need some help debugging? Take a look at the <a href="%s">debug log</a>.', 'mailchimp-sync' ), admin_url( 'admin.php?page=mailchimp-for-wp-other' ) ); ?></p>
+				</div>
+
+				<hr style="margin: 40px 0;" />
+
+				<h2><?php _e( 'Manual Synchronization', 'mailchimp-sync' ); ?></h2>
+
+				<p><?php _e( 'Clicking the following button will perform a manual re-sync of all users matching the given role criteria.', 'mailchimp-sync' ); ?></p>
+
+				<div id="wizard">
+					<?php _e( 'Please enable JavaScript to use the Synchronisation Wizard.', 'mailchimp-sync' ); ?>
+				</div>
 
 			<?php } ?>
 
-			<div class="notice inline notice-info">
-				<p><?php printf( __( 'Need some help debugging? Take a look at the <a href="%s">debug log</a>.', 'mailchimp-sync' ), admin_url( 'admin.php?page=mailchimp-for-wp-other' ) ); ?></p>
-			</div>
+			<br style="margin: 40px 0;" />
 
 		<!-- / Main Content -->
 		</div>
