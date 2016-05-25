@@ -72,7 +72,8 @@ var Wizard = (function() {
 			data: {
 				action: 'mcs_wizard',
 				mcs_action: 'get_users',
-				offset: usersProcessed
+				offset: usersProcessed,
+				limit: 1
 			},
 			type: User
 		}).then( function( users ) {
@@ -90,19 +91,19 @@ var Wizard = (function() {
 	function subscribeFromBatch() {
 
 		if( ! running || done ) {
-			return false;
+			return;
 		}
 
-		// bail if no users left
+		// do we have users left in this batch>
 		if( batch().length === 0 ) {
 
-			if( usersProcessed >= userCount ) {
-				return false;
-			} else {
-				prepareBatch().then(subscribeFromBatch);
+			// no? so are we ready?
+			if( usersProcessed < userCount ) {
+				prepareBatch()
+					.then(subscribeFromBatch);
 			}
 
-			return false;
+			return;
 		}
 
 		// Get next user
@@ -122,23 +123,23 @@ var Wizard = (function() {
 			method: "GET",
 			data: data,
 			url: ajaxurl
-		}).then(function( data ) {
+		}).then(function( response ) {
 
+			usersProcessed++;
 
-			if( data.success ) {
+			if( response.success ) {
 				log.addLine( "Success!" );
 			}
 
-			if( data.error ) {
-				log.addLine( "Error: " + data.error );
+			if( response.error ) {
+				log.addLine( "Error: " + response.error );
 			}
 
-			usersProcessed++;
 			updateProgress();
-
+			subscribeFromBatch();
 		}, function( error ) {
 			log.addLine( "Error: " + error );
-		}).then(subscribeFromBatch, subscribeFromBatch);
+		});
 	}
 
 	function updateProgress() {
