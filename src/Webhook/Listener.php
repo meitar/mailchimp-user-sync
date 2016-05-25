@@ -98,7 +98,12 @@ class Listener {
 		// find WP user by List_ID + MailChimp ID
 		$user = $users->get_user_by_mailchimp_id( $data['web_id'] );
 
-		// filter user
+		/**
+		 * Filters the user that is found by the webhook request
+		 *
+		 * @param WP_User|null $user
+		 * @param array $data
+		 */
 		$user = apply_filters( 'mailchimp_sync_webhook_user', $user, $data );
 
 		if( ! $user instanceof WP_User ) {
@@ -159,10 +164,24 @@ class Listener {
 			$log->info( sprintf( "Webhook: Updated user #%d", $user->ID ) );
 		}
 
-		// fire event to allow custom actions (like deleting the user)
+		/**
+		 * Fire an event to allow custom actions, like deleting the user if this is an unsubscribe ping.
+		 *
+		 * @param array $data
+		 * @param WP_User $user
+		 */
 		do_action( 'mailchimp_sync_webhook', $data, $user );
 
-		// fire type specific event. Example: mailchimp_sync_webhook_unsubscribe
+		/**
+		 * Fire type specific event.
+		 *
+		 * The dynamic portion of the hook, $type, regers to the webhook event type.
+		 *
+		 * Example: mailchimp_sync_webhook_unsubscribe
+		 *
+		 * @param array $data
+		 * @param WP_User $user
+		 */
 		do_action( 'mailchimp_sync_webhook_' . $type, $data, $user );
 
 		echo 'OK';
