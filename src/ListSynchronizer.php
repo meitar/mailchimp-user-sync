@@ -22,10 +22,6 @@ class ListSynchronizer {
 	 * @var string
 	 */
 	private $user_role = '';
-	/**
-	 * @var string
-	 */
-	public $meta_key = 'mailchimp_sync';
 
 	/**
 	 * @var string
@@ -51,16 +47,13 @@ class ListSynchronizer {
 	 * Constructor
 	 *
 	 * @param string $list_id
-	 * @param string $user_role
+	 * @param Users $users
 	 * @param array  $settings
 	 */
-	public function __construct( $list_id, $user_role = '', array $settings = null ) {
+	public function __construct( $list_id, Users $users, array $settings = array() ) {
 
 		$this->list_id = $list_id;
-		$this->user_role = $user_role;
-
-		// generate meta key name
-		$this->meta_key = $this->meta_key . '_' . $this->list_id;
+		$this->users = $users;
 
 		// if settings were passed, merge those with the defaults
 		if( $settings ) {
@@ -81,74 +74,22 @@ class ListSynchronizer {
 		add_action( self::EVENT_PREFIX . 'update_subscriber', array( $this, 'subscribe_user' ) );
 		add_action( self::EVENT_PREFIX . 'unsubscribe_user', array( $this, 'unsubscribe_user' ) );
 	}
-
-	/**
-	 * @param mixed $user A user ID or a WP_User object
-	 *
-	 * @return bool|WP_User
-	 */
-	protected function get_user( $user ) {
-
-		if( ! is_object( $user ) ) {
-			$user = get_user_by( 'id', $user );
-		}
-
-		if( ! $user instanceof WP_User ) {
-			$this->error = 'Invalid user ID.';
-			return false;
-		}
-
-		return $user;
-	}
-
-	/**
-	 * @param int $user_id
-	 *
-	 * @return string
-	 */
-	public function get_user_subscriber_uid( $user_id ) {
-		$subscriber_uid = get_user_meta( $user_id, $this->meta_key, true );
-
-		if( is_string( $subscriber_uid ) ) {
-			return $subscriber_uid;
-		}
-
-		return '';
-	}
-
-	/**
-	 * @param WP_User $user
-	 * @return bool
-	 */
-	public function should_sync_user( WP_User $user ) {
-		
-		$sync = true;
-
-		// if role is set, make sure user has that role
-		if( '' !== $this->user_role && ! in_array( $this->user_role, $user->roles ) ) {
-			$sync = false;
-		}
-
-		/**
-		 * Filters whether a user should be synchronized with MailChimp or not.
-		 *
-		 * @param boolean $sync
-		 * @param WP_User $user
-		 */
-		return (bool) apply_filters( 'mailchimp_sync_should_sync_user', $sync, $user );
-	}
-
+	
 	/**
 	 * Handle
+	 *
+	 * @param int $user_id
+	 * @return boolean
 	 */
 	public function handle_user( $user_id ) {
 
-		$user = $this->get_user( $user_id );
-		if( ! $user ) {
+		try {
+			$user = $this->users->user( $user_id );
+		} catch( Exception $e ) {
 			return false;
 		}
 
-		return $this->should_sync_user( $user ) ? $this->subscribe_user( $user->ID ) : $this->unsubscribe_user( $user->ID );
+		return $this->users->should( $user, $this->user_role ) ? $this->subscribe_user( $user->ID ) : $this->unsubscribe_user( $user->ID );
 	}
 
 	/**
@@ -159,14 +100,15 @@ class ListSynchronizer {
 	 */
 	public function subscribe_user( $user_id ) {
 
-		$user = $this->get_user( $user_id );
-		if( ! $user ) {
-			$this->error = sprintf( 'Invalid user ID: %d', $user_id );
+		try {
+			$user = $this->users->user( $user_id );
+		} catch( Exception $e ) {
+			$this->error = $e->getMessage();
 			return false;
 		}
 
 		// if role is set, make sure user has that role
-		if( ! $this->should_sync_user( $user ) ) {
+		if( ! $this->users->should( $user, $this->user_role ) ) {
 			$this->error = sprintf( 'Skipping user %d', $user->ID );
 			return false;
 		}
@@ -179,7 +121,7 @@ class ListSynchronizer {
 		}
 
 		// If this user has a subscriber_uid, try to update the user in MailChimp.
-		$subscriber_uid = $this->get_user_subscriber_uid( $user->ID );
+		$subscriber_uid = $this->users->get_subscriber_uid( $user_id );
 		if( ! empty( $subscriber_uid ) ) {
 			return $this->update_subscriber( $subscriber_uid, $user );
 		}
@@ -205,7 +147,7 @@ class ListSynchronizer {
 		$subscriber_uid = $api->get_last_response()->leid;
 
 		// store meta field with subscriber uid
-		update_user_meta( $user_id, $this->meta_key, $subscriber_uid );
+		$this->users->set_subscriber_uid( $user_id, $subscriber_uid );
 
 		$this->log->info( sprintf( 'User Sync > Successfully subscribed user %d', $user->ID ) );
 
@@ -224,7 +166,7 @@ class ListSynchronizer {
 
 		// If $subscriber_uid parameter not given, fetch from user meta
 		if( empty( $subscriber_uid ) ) {
-			$subscriber_uid = $this->get_user_subscriber_uid( $user_id );
+			$subscriber_uid = $this->users->get_subscriber_uid( $user_id );
 		}
 
 		// By now, we should have a subscriber uid. If not, user is not subscribed. Means we're free from work!
@@ -243,7 +185,7 @@ class ListSynchronizer {
 		}
 
 		// Success!
-		delete_user_meta( $user_id, $this->meta_key );
+		$this->users->delete_subscriber_uid( $user_id );
 
 		$this->log->info( sprintf( 'User Sync > Successfully unsubscribed user %d', $user_id ) );
 
@@ -274,7 +216,7 @@ class ListSynchronizer {
 			if( in_array( $api->get_error_code(), array( 215, 232 ) ) ) {
 
 				// delete subscriber leid as it's apparently wrong
-				delete_user_meta( $user->ID, $this->meta_key );
+				$this->users->delete_subscriber_uid( $user->ID );
 
 				// re-subscribe user
 				return $this->subscribe_user( $user->ID );
