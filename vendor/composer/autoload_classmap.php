@@ -14,6 +14,8 @@ return array(
     'MC4WP\\Sync\\ListSynchronizer' => $baseDir . '/src/ListSynchronizer.php',
     'MC4WP\\Sync\\Plugin' => $baseDir . '/src/Plugin.php',
     'MC4WP\\Sync\\Tools' => $baseDir . '/src/Tools.php',
+    'MC4WP\\Sync\\UserSubscriber' => $baseDir . '/src/UserSubscriber.php',
+    'MC4WP\\Sync\\UserSubscriberAPIv2' => $baseDir . '/src/UserSubscriberAPIv2.php',
     'MC4WP\\Sync\\Users' => $baseDir . '/src/Users.php',
     'MC4WP\\Sync\\Webhook\\Listener' => $baseDir . '/src/Webhook/Listener.php',
     'MC4WP\\Sync\\Worker' => $baseDir . '/src/Worker.php',

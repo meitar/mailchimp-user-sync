@@ -25,7 +25,8 @@ if( ! empty( $plugin->options['list'] ) ) {
 
 	// instantiate synchronizer
 	$role =  $plugin->options['role'];
-	$users = new Users( 'mailchimp_sync_' . $plugin->options['list'], $role );
+	$field_map = $plugin->options['field_mappers'];
+	$users = new Users( 'mailchimp_sync_' . $plugin->options['list'], $role, $field_map );
 	$list_synchronizer = new ListSynchronizer( $plugin->options['list'], $users, $plugin->options );
 	$list_synchronizer->add_hooks();
 

@@ -25,12 +25,26 @@ class Users {
 	private $role = '';
 
 	/**
+	 * @var array
+	 */
+	private $field_map = array();
+
+	/**
+	 * @var Tools
+	 */
+	private $tools;
+
+	/**
 	 * @param string $meta_key
 	 * @param string $role
+	 * @param array $field_map
 	 */
-	public function __construct( $meta_key, $role = '' ) {
+	public function __construct( $meta_key, $role = '', $field_map = array() ) {
 		$this->meta_key = $meta_key;
 		$this->role = $role;
+		$this->field_map = $field_map;
+
+		$this->tools = new Tools();
 	}
 
 	/**
@@ -218,5 +232,58 @@ class Users {
 	 */
 	public function get_meta_key() {
 		return $this->meta_key;
+	}
+
+	/**
+	 * @param WP_User $user
+	 *
+	 * @return array
+	 */
+	public function get_user_merge_vars( WP_User $user ) {
+
+		$data = array();
+
+		if( ! empty( $user->first_name ) ) {
+			$data['FNAME'] = $user->first_name;
+		}
+
+		if( ! empty( $user->last_name ) ) {
+			$data['LNAME'] = $user->last_name;
+		}
+
+		if( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
+			$data['NAME'] = sprintf( '%s %s', $user->first_name, $user->last_name );
+		}
+
+		// Do we have mapping rules for user fields to mailchimp fields?
+		if( ! empty( $this->field_map ) ) {
+
+			// loop through mapping rules
+			foreach( $this->field_map as $rule ) {
+
+				// get field value
+				$value = $this->tools->get_user_field( $user, $rule['user_field'] );
+
+				if( is_string( $value ) ) {
+
+					// If target index does not exist yet, just add.
+					// Otherwise, only overwrite if value not empty
+					if( ! isset( $data[ $rule['mailchimp_field'] ] ) || ! empty( $value ) ) {
+						$data[ $rule['mailchimp_field'] ] = $value;
+					}
+
+				}
+			}
+		}
+
+		/**
+		 * Filters the merge vars which are sent to MailChimp
+		 *
+		 * @param array $data The data that is sent.
+		 * @param WP_User $user The user which is synchronized
+		 */
+		$data = (array) apply_filters( 'mailchimp_sync_user_data', $data, $user );
+
+		return $data;
 	}
 }

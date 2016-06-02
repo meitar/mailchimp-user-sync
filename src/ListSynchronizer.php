@@ -4,6 +4,8 @@ namespace MC4WP\Sync;
 
 use Exception;
 use MC4WP_API;
+use MC4WP_MailChimp;
+use MC4WP_MailChimp_Subscriber_Data;
 use WP_User;
 
 class ListSynchronizer {
@@ -55,7 +57,6 @@ class ListSynchronizer {
 			$this->settings = array_merge( $this->settings, $settings );
 		}
 
-		$this->tools = new Tools();
 		$this->log = $this->get_log();
 	}
 
@@ -115,36 +116,18 @@ class ListSynchronizer {
 			return false;
 		}
 
-		// If this user has a subscriber_uid, try to update the user in MailChimp.
-		$subscriber_uid = $this->users->get_subscriber_uid( $user_id );
-		if( ! empty( $subscriber_uid ) ) {
-			return $this->update_subscriber( $subscriber_uid, $user );
-		}
-
-		$api = $this->get_api();
-		$merge_vars = $this->extract_merge_vars_from_user( $user );
-
-		// subscribe the user
-		$success = $api->subscribe( $this->list_id, $user->user_email, $merge_vars, $this->settings['email_type'], $this->settings['double_optin'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
+		$user_subscriber = $this->get_user_subscriber();
+		$success = $user_subscriber->subscribe( $user->ID, $this->settings['double_optin'], $this->settings['email_type'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
 
 		// Error?
 		if( ! $success ) {
-			// store error message returned by API
-			$this->error = $api->get_error_message();
-			$this->log->error( sprintf( 'User Sync > Error subscribing user %d: %s', $user_id, $this->error ) );
-
+			$this->error = $user_subscriber->error_message;
+			$this->log->error( sprintf( 'User Sync > Error subscribing or updating user %d: %s', $user_id, $this->error ) );
 			return false;
 		}
 
 		// Success!
-
-		// get subscriber uid
-		$subscriber_uid = $api->get_last_response()->leid;
-
-		// store meta field with subscriber uid
-		$this->users->set_subscriber_uid( $user_id, $subscriber_uid );
-
-		$this->log->info( sprintf( 'User Sync > Successfully subscribed user %d', $user->ID ) );
+		$this->log->info( sprintf( 'User Sync > Successfully subscribed or updated user %d', $user->ID ) );
 
 		return true;
 	}
@@ -153,135 +136,36 @@ class ListSynchronizer {
 	 * Delete the subscriber uid from the MailChimp list
 	 *
 	 * @param int $user_id
-	 * @param string $subscriber_uid (optional)
+	 * @param string $subscriber_uid_or_email (optional)
 	 *
 	 * @return bool
 	 */
-	public function unsubscribe_user( $user_id, $subscriber_uid = '' ) {
-		
-		// If $subscriber_uid parameter not given, fetch from user meta
-		if( empty( $subscriber_uid ) ) {
-			$subscriber_uid = $this->users->get_subscriber_uid( $user_id );
-		}
-
-		// By now, we should have a subscriber uid. If not, user is not subscribed. Means we're free from work!
-		if( empty( $subscriber_uid ) ) {
-			return true;
-		}
-
-		// unsubscribe user email from the selected list
-		$api = $this->get_api();
-		$success = $api->unsubscribe( $this->list_id, array( 'leid' => $subscriber_uid ), $this->settings['send_goodbye'], $this->settings['send_notification'], $this->settings['delete_member'] );
+	public function unsubscribe_user( $user_id, $subscriber_uid_or_email = '' ) {
+		$user_subscriber = $this->get_user_subscriber();
+		$success = $user_subscriber->unsubscribe( $user_id, $subscriber_uid_or_email, $this->settings['send_goodbye'], $this->settings['send_notification'], $this->settings['delete_member'] );
 
 		// Error?
 		if( ! $success ) {
-			$this->log->error( sprintf( 'User Sync > Error unsubscribing user %d: %s', $user_id, $api->get_error_message() ) );
+			$this->error = $user_subscriber->error_message;
+			$this->log->error( sprintf( 'User Sync > Error unsubscribing user %d: %s', $user_id, $this->error ) );
 			return false;
 		}
-
-		// Success!
-		$this->users->delete_subscriber_uid( $user_id );
 
 		$this->log->info( sprintf( 'User Sync > Successfully unsubscribed user %d', $user_id ) );
-
 		return true;
 	}
 
 	/**
-	 * Update a subscriber with new user data
 	 *
-	 * @param string $subscriber_uid
-	 * @param WP_User $user
 	 *
-	 * @return bool
+	 * @return UserSubscriber|UserSubscriberAPIv2
 	 */
-	private function update_subscriber( $subscriber_uid, WP_User $user ) {
-
-		$merge_vars = $this->extract_merge_vars_from_user( $user );
-		$merge_vars['new-email'] = $user->user_email;
-
-		// update subscriber in mailchimp
-		$api = $this->get_api();
-		$success = $api->update_subscriber( $this->list_id, array( 'leid' => $subscriber_uid ), $merge_vars, $this->settings['email_type'], $this->settings['replace_interests'] );
-
-		// Error?
-		if( ! $success ) {
-
-			// subscriber leid did not match anything in the list
-			if( in_array( $api->get_error_code(), array( 215, 232 ) ) ) {
-
-				// delete subscriber leid as it's apparently wrong
-				$this->users->delete_subscriber_uid( $user->ID );
-
-				// re-subscribe user
-				return $this->subscribe_user( $user->ID );
-			}
-
-			// other errors
-			$this->error = $api->get_error_message();
-
-			$this->log->error( sprintf( 'User Sync > Error updating user %d. %s', $user->ID, $this->error ) );
-
-			return false;
+	private function get_user_subscriber() {
+		if( ! class_exists( 'MC4WP_API_v3' ) ) {
+			return new UserSubscriberAPIv2( $this->users, $this->list_id );
 		}
 
-		// Success!
-		$this->log->info( sprintf( 'User Sync > Successfully updated user %d', $user->ID ) );
-
-		return true;
-	}
-
-	/**
-	 * @param WP_User $user
-	 *
-	 * @return array
-	 */
-	protected function extract_merge_vars_from_user( WP_User $user ) {
-
-		$data = array();
-
-		if( ! empty( $user->first_name ) ) {
-			$data['FNAME'] = $user->first_name;
-		}
-
-		if( ! empty( $user->last_name ) ) {
-			$data['LNAME'] = $user->last_name;
-		}
-
-		if( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
-			$data['NAME'] = sprintf( '%s %s', $user->first_name, $user->last_name );
-		}
-
-		// Do we have mapping rules for user fields to mailchimp fields?
-		if( ! empty( $this->settings['field_mappers'] ) ) {
-
-			// loop through mapping rules
-			foreach( $this->settings['field_mappers'] as $rule ) {
-
-				// get field value
-				$value = $this->tools->get_user_field( $user, $rule['user_field'] );
-
-				if( is_string( $value ) ) {
-
-					// If target index does not exist yet, just add.
-					// Otherwise, only overwrite if value not empty
-					if( ! isset( $data[ $rule['mailchimp_field'] ] ) || ! empty( $value ) ) {
-						$data[ $rule['mailchimp_field'] ] = $value;
-					}
-
-				}
-			}
-		}
-
-		/**
-		 * Filters the merge vars which are sent to MailChimp
-		 *
-		 * @param array $data The data that is sent.
-		 * @param WP_User $user The user which is synchronized
-		 */
-		$data = (array) apply_filters( 'mailchimp_sync_user_data', $data, $user );
-
-		return $data;
+		return new UserSubscriber( $this->users, $this->list_id );
 	}
 
 	/**
@@ -293,13 +177,7 @@ class ListSynchronizer {
 		return mc4wp( 'log' );
 	}
 
-	/**
-	 * @return MC4WP_API
-	 */
-	private function get_api() {
-		return mc4wp( 'api' );
-	}
-
+	
 }
 
 

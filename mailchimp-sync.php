@@ -27,12 +27,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
+
 // Prevent direct file access
 if ( ! defined( 'ABSPATH' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
 	exit;
 }
+
+
 
 /**
  * Load the MailChimp Sync plugin
@@ -89,7 +93,6 @@ function mc4wp_sync_setup_schedule() {
 function mc4wp_sync_clear_schedule() {
 	wp_clear_scheduled_hook( 'mailchimp_user_sync_run' );
 }
-
 
 
 

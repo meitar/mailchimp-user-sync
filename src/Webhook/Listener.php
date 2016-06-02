@@ -133,6 +133,7 @@ class Listener {
 			update_user_meta( $user->ID, 'user_email', $data['email'] );
 			$updated = true;
 		}
+				
 
 		// update WP user with data (use reversed field map)
 		// loop through mapping rules
@@ -146,7 +147,7 @@ class Listener {
 				if( ! is_scalar( $value ) ) {
 					continue;
 				}
-
+				
 				// update user property if it changed
 				// @todo Default user properties can be combined into single `wp_update_user` call for performance improvement
 				if( $user->{$rule['user_field']} !== $value ) {
@@ -192,3 +193,4 @@ class Listener {
 	}
 
 }
+
