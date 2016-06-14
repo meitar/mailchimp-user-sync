@@ -48,32 +48,14 @@ class Users {
 	}
 
 	/**
-	 * @param array $additional_args
+	 * @param array $args
 	 *
 	 * @return array
 	 */
-	public function get( $additional_args = array() ) {
-		$args = array(
-			'meta_query' => array(
-				'relation' => 'OR',
-				array(
-					'key' => $this->meta_key,
-					'compare' => 'NOT EXISTS'
-				),
-				array(
-					'key' => $this->meta_key,
-					'compare' => 'EXISTS'
-				)
-			),
-			'fields' => array( 'ID', 'user_login', 'user_email' ),
-			'orderby' => 'meta_value'
-		);
-
+	public function get( $args = array() ) {
 		if( ! empty( $this->role ) ) {
 			$args['role'] = $this->role;
 		}
-
-		$args = array_replace_recursive( $args, $additional_args );
 
 		$user_query = new WP_User_Query( $args );
 
