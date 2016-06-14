@@ -76,7 +76,7 @@ class AjaxListener {
 		$limit = ( isset( $_REQUEST['limit'] ) ? intval( $_REQUEST['limit'] ) : 0 );
 
 		// get users
-		$users = $this->users->get( array( 'offset' => $offset, 'number' => $limit ));
+		$users = $this->users->get( array( 'fields' => array( 'ID', 'user_login', 'user_email' ), 'offset' => $offset, 'number' => $limit ));
 
 		// send response
 		$this->respond( $users );
