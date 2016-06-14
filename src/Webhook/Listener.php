@@ -80,6 +80,7 @@ class Listener {
 
 		// no parameters = MailChimp webhook validator
 		if( empty( $_REQUEST['data'] ) || empty( $_REQUEST['type'] ) ) {
+			echo "Listening..";
 			status_header( 200 );
 			return true;
 		}
