@@ -201,14 +201,14 @@ defined( 'ABSPATH' ) or exit;
 
 				<table class="form-table">
 					<tr valign="top">
-						<th><label><?php _e( 'Secret Key', 'mailchimp-sync' ); ?></label></th>
+						<th><label for="webhook-secret-key-input"><?php _e( 'Secret Key', 'mailchimp-sync' ); ?></label></th>
 						<td>
-							<input type="text" id="webhook-secret-key-input" pattern="[a-zA-Z0-9]*" name="mailchimp_sync[webhook][secret_key]" value="<?php echo esc_attr( $this->options['webhook']['secret_key'] ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Your secret key..', 'mailchimp-sync' ); ?>" />
-							<input id="webhook-generate-button" class="button" type="button" value="<?php esc_attr_e( 'Generate', 'mailchimp-sync' ); ?>" />
+							<input type="text" id="webhook-secret-key-input" pattern="[a-zA-Z0-9_]*" name="mailchimp_sync[webhook][secret_key]" value="<?php echo esc_attr( $this->options['webhook']['secret_key'] ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Your secret key..', 'mailchimp-sync' ); ?>" />
+							<input id="webhook-generate-button" class="button" type="button" value="<?php esc_attr_e( 'Generate Key', 'mailchimp-sync' ); ?>" />
 						</td>
 					</tr>
 					<tr valign="top">
-						<th><label><?php _e( 'Webhook URL', 'mailchimp-sync' ); ?></label></th>
+						<th><label for="webhook-url-input"><?php _e( 'Webhook URL', 'mailchimp-sync' ); ?></label></th>
 						<td><input class="widefat" id="webhook-url-input" data-url-format="<?php echo site_url( '/mc4wp-sync-api/webhook-listener?%s' ); ?>" readonly value="<?php echo esc_attr( site_url( sprintf( '/mc4wp-sync-api/webhook-listener?%s', $this->options['webhook']['secret_key'] ) ) ); ?>" onfocus="this.select()" /></td>
 					</tr>
 				</table>

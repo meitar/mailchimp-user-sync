@@ -22,18 +22,36 @@ var secretKeyInput = document.getElementById('webhook-secret-key-input');
 var webhookUrlInput = document.getElementById('webhook-url-input');
 var button = document.getElementById('webhook-generate-button');
 
-function updateWebhookUrlSecret() {
+/**
+ * Generate a random alphanumeric string of the specified length
+ *
+ * @param {int} length
+ *
+ * @returns {string}
+ */
+function randomString(length) {
+	var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+	var result = '';
+	for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+	return result;
+}
+
+// update the webhook url field with the value from the secret key field
+function updateWebhookUrl() {
 	var sanitized = secretKeyInput.value.replace(/\W+/g, "");
 	if( sanitized != secretKeyInput.value ) { secretKeyInput.value = sanitized; }
 	var format = webhookUrlInput.getAttribute('data-url-format');
 	webhookUrlInput.value = format.replace('%s', secretKeyInput.value );
 }
 
-$(secretKeyInput).keyup(updateWebhookUrlSecret);
-$(button).click(function() {
-	secretKeyInput.value = Math.random().toString(36).substring(7);
-	updateWebhookUrlSecret();
-});
+// set the secret key field to a random string of 20 chars
+function setRandomSecret() {
+	secretKeyInput.value = randomString(20);
+	updateWebhookUrl();
+}
+
+$(secretKeyInput).keyup(updateWebhookUrl);
+$(button).click(setRandomSecret);
 },{"./admin/field-mapper.js":2,"./admin/wizard.js":5,"mithril":6}],2:[function(require,module,exports){
 var FieldMapper = function( $context ) {
 
