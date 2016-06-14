@@ -14,6 +14,26 @@ if( wizardContainer ) {
 
 // init fieldmapper
 new FieldMapper($('.mc4wp-sync-field-map'));
+
+
+
+// update webhook url as secret key changes
+var secretKeyInput = document.getElementById('webhook-secret-key-input');
+var webhookUrlInput = document.getElementById('webhook-url-input');
+var button = document.getElementById('webhook-generate-button');
+
+function updateWebhookUrlSecret() {
+	var sanitized = secretKeyInput.value.replace(/\W+/g, "");
+	if( sanitized != secretKeyInput.value ) { secretKeyInput.value = sanitized; }
+	var format = webhookUrlInput.getAttribute('data-url-format');
+	webhookUrlInput.value = format.replace('%s', secretKeyInput.value );
+}
+
+$(secretKeyInput).keyup(updateWebhookUrlSecret);
+$(button).click(function() {
+	secretKeyInput.value = Math.random().toString(36).substring(7);
+	updateWebhookUrlSecret();
+});
 },{"./admin/field-mapper.js":2,"./admin/wizard.js":5,"mithril":6}],2:[function(require,module,exports){
 var FieldMapper = function( $context ) {
 

@@ -152,11 +152,11 @@ defined( 'ABSPATH' ) or exit;
 				</table>
 
 				<?php submit_button(); ?>
-			</form>
+
 
 			<?php if( '' !== $this->options['list'] ) { ?>
 
-				<br style="margin: 40px 0;" />
+				<hr style="margin: 50px 0;" />
 
 				<h2>
 					<?php
@@ -184,7 +184,7 @@ defined( 'ABSPATH' ) or exit;
 					<p><?php printf( __( 'Need some help debugging? Take a look at the <a href="%s">debug log</a>.', 'mailchimp-sync' ), admin_url( 'admin.php?page=mailchimp-for-wp-other' ) ); ?></p>
 				</div>
 
-				<hr style="margin: 40px 0;" />
+				<hr style="margin: 50px 0;" />
 
 				<h2><?php _e( 'Manual Synchronization', 'mailchimp-sync' ); ?></h2>
 
@@ -194,7 +194,30 @@ defined( 'ABSPATH' ) or exit;
 					<?php _e( 'Please enable JavaScript to use the Synchronisation Wizard.', 'mailchimp-sync' ); ?>
 				</div>
 
+				<hr style="margin: 50px 0;" />
+
+				<h2><?php _e( 'Webhook', 'mailchimp-sync' ); ?></h2>
+				<p>If you want to synchronize changes in your MailChimp list back to your WordPress database then you will have to <a href="https://mc4wp.com/kb/configure-webhook-for-2-way-synchronizing/">configure a webhook in your MailChimp account</a>.</p>
+
+				<table class="form-table">
+					<tr valign="top">
+						<th><label><?php _e( 'Secret Key', 'mailchimp-sync' ); ?></label></th>
+						<td>
+							<input type="text" id="webhook-secret-key-input" pattern="[a-zA-Z0-9]*" name="mailchimp_sync[webhook][secret_key]" value="<?php echo esc_attr( $this->options['webhook']['secret_key'] ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Your secret key..', 'mailchimp-sync' ); ?>" />
+							<input id="webhook-generate-button" class="button" type="button" value="<?php esc_attr_e( 'Generate', 'mailchimp-sync' ); ?>" />
+						</td>
+					</tr>
+					<tr valign="top">
+						<th><label><?php _e( 'Webhook URL', 'mailchimp-sync' ); ?></label></th>
+						<td><input class="widefat" id="webhook-url-input" data-url-format="<?php echo site_url( '/mc4wp-sync-api/webhook-listener?%s' ); ?>" readonly value="<?php echo esc_attr( site_url( sprintf( '/mc4wp-sync-api/webhook-listener?%s', $this->options['webhook']['secret_key'] ) ) ); ?>" onfocus="this.select()" /></td>
+					</tr>
+				</table>
+
+				<?php submit_button(); ?>
+
 			<?php } ?>
+
+			</form>
 
 			<br style="margin: 40px 0;" />
 

@@ -34,12 +34,18 @@ class Listener {
 	public $url = '/mc4wp-sync-api/webhook-listener';
 
 	/**
+	 * @var string
+	 */
+	protected $secret_key;
+
+	/**
 	 * @param Users $users
 	 * @param array $field_mappers
 	 */
-	public function __construct( Users $users, $field_mappers = array() ) {
+	public function __construct( Users $users, $field_mappers = array(), $secret_key = '' ) {
 		$this->users = $users;
 		$this->field_mappers = $field_mappers;
+		$this->secret_key = $secret_key;
 	}
 
 	/**
@@ -74,6 +80,12 @@ class Listener {
 	 * @return boolean
 	 */
 	public function handle() {
+
+		// check for secret key
+		if( ! empty( $this->secret_key ) && ! isset( $_GET[ $this->secret_key ] ) ) {
+			status_header( 403 );
+			return false;
+		}
 
 		$log = $this->get_log();
 		define( 'MC4WP_SYNC_DOING_WEBHOOK', true );
@@ -134,7 +146,6 @@ class Listener {
 			update_user_meta( $user->ID, 'user_email', $data['email'] );
 			$updated = true;
 		}
-				
 
 		// update WP user with data (use reversed field map)
 		// loop through mapping rules
@@ -148,7 +159,7 @@ class Listener {
 				if( ! is_scalar( $value ) ) {
 					continue;
 				}
-				
+
 				// update user property if it changed
 				// @todo Default user properties can be combined into single `wp_update_user` call for performance improvement
 				if( $user->{$rule['user_field']} !== $value ) {
@@ -194,4 +205,3 @@ class Listener {
 	}
 
 }
-

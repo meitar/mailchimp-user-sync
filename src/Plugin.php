@@ -53,6 +53,10 @@ final class Plugin {
 			'role' => '',
 			'enabled' => 1,
 			'field_mappers' => array(),
+			'webhook' => array(
+				'enabled' => 1,
+				'secret_key' => ''
+			)
 		);
 
 		$options = array_replace_recursive( $defaults, $options );

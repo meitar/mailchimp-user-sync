@@ -55,7 +55,7 @@ if( ! empty( $plugin->options['list'] ) ) {
 
 // Webhook
 if( ! is_admin() && $users instanceof Users ) {
-	$webhook_listener = new Webhook\Listener( $users, $plugin->options['field_mappers'] );
+	$webhook_listener = new Webhook\Listener( $users, $plugin->options['field_mappers'], $plugin->options['webhook']['secret_key'] );
 	$webhook_listener->add_hooks();
 }
 
