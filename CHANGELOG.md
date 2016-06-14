@@ -1,6 +1,19 @@
 Changelog
 ===========
 
+#### 1.4.6 - June 14, 2016
+
+**Fixes**
+
+- Webhook not updating user fields because it couldn't find an associated user.
+
+**Additions**
+
+- Added webhook settings to settings page.
+- Added "secret key" option to webhook, to further secure webhook endpoint.
+- Preparations for MailChimp API v3.
+
+
 #### 1.4.5 - May 25, 2016
 
 **Fixes**
