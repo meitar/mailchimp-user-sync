@@ -15,8 +15,6 @@ if( wizardContainer ) {
 // init fieldmapper
 new FieldMapper($('.mc4wp-sync-field-map'));
 
-
-
 // update webhook url as secret key changes
 var secretKeyInput = document.getElementById('webhook-secret-key-input');
 var webhookUrlInput = document.getElementById('webhook-url-input');
