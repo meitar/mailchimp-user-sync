@@ -71,7 +71,7 @@ class UserSubscriber {
         }
 
         // MailChimp API v3 no longer uses this leid, so update it to something non-empty
-        $this->users->set_subscriber_uid( $user_id, '1' );
+        $this->users->set_subscriber_uid( $user_id, $member->unique_email_id );
         return true;
     }
 
