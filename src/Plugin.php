@@ -55,7 +55,7 @@ final class Plugin {
 			'field_mappers' => array(),
 		);
 
-		$options = array_merge( $defaults, $options );
+		$options = array_replace_recursive( $defaults, $options );
 
 		/**
 		 * Filters MailChimp Sync options
