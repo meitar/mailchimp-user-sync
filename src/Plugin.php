@@ -60,6 +60,9 @@ final class Plugin {
 		);
 
 		$options = array_replace_recursive( $defaults, $options );
+		$options['enabled'] = (int) $options['enabled'];
+		$options['send_welcome'] = (int) $options['send_welcome'];
+		$options['double_optin'] = (int) $options['double_optin'];
 
 		/**
 		 * Filters MailChimp Sync options
