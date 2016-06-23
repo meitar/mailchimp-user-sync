@@ -124,7 +124,6 @@ var Wizard = (function() {
 			data: data,
 			url: ajaxurl
 		}).then(function( response ) {
-
 			usersProcessed++;
 
 			if( response.success ) {
@@ -138,6 +137,7 @@ var Wizard = (function() {
 			updateProgress();
 			subscribeFromBatch();
 		}, function( error ) {
+			usersProcessed++;
 			log.addLine( "Error: " + error );
 		});
 	}
