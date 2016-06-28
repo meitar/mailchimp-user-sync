@@ -67,13 +67,8 @@ class Users {
 	 * @return int
 	 */
 	public function count() {
-		$count = count_users();
-
-		if( ! empty( $role ) ) {
-			return isset( $count['avail_roles'][ $this->role  ] ) ? $count['avail_roles'][ $this->role ] : 0;
-		}
-
-		return $count['total_users'];
+		$result = $this->get( array( 'fields' => 'id', 'count_total' => false ) );
+		return count( $result );
 	}
 
 	/**
