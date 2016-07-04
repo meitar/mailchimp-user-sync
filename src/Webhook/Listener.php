@@ -89,9 +89,9 @@ class Listener {
 
 		$log = $this->get_log();
 		define( 'MC4WP_SYNC_DOING_WEBHOOK', true );
-
+		
 		// no parameters = MailChimp webhook validator
-		if( empty( $_REQUEST['data'] ) || empty( $_REQUEST['type'] ) ) {
+		if( empty( $_POST['data'] ) || empty( $_POST['type'] ) ) {
 			echo "Listening..";
 			status_header( 200 );
 			return true;
