@@ -147,7 +147,7 @@ defined( 'ABSPATH' ) or exit;
 								<p><input type="button" class="button add-row" value="&plus; <?php esc_attr_e( 'Add line', 'mailchimp-sync' ); ?>" style="margin-left:0; "/></p>
 
 								<p class="help">
-									<?php printf( __( '<strong>Advanced:</strong> This allows you to <a href="%s">synchronise %s with specific MailChimp fields</a>.', 'mailchimp-sync' ), 'https://mc4wp.com/kb/sync-custom-fields-to-your-mailchimp-list/#utm_source=wp-plugin&utm_medium=mailchimp-sync&utm_campaign=settings-page', '"user meta"' ); ?>
+									<?php printf( __( '<strong>Advanced:</strong> This allows you to <a href="%s">synchronise %s with specific MailChimp fields</a>.', 'mailchimp-sync' ), 'https://mc4wp.com/kb/syncing-custom-user-fields-mailchimp/#utm_source=wp-plugin&utm_medium=mailchimp-sync&utm_campaign=settings-page', '"user meta"' ); ?>
 								</p>
 
 							<?php } ?>
