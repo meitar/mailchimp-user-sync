@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.5.2
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,18 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+
+#### 1.4.7 - July 8, 2016
+
+**Fixes**
+
+- Incorrect user count resulting in lots of duplicate "Fetched 0 users" statements in Manual Synchronization wizard.
+
+**Improvements**
+
+- Various improvements to Manual Synchronization wizard, including more verbose feedback.
+- Add link to KB article for [synchronizing additional fields](https://mc4wp.com/kb/sync-custom-fields-to-your-mailchimp-list/).
 
 
 #### 1.4.6 - June 14, 2016
