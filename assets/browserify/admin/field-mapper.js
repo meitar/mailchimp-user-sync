@@ -1,4 +1,4 @@
-var FieldMapper = function( $context ) {
+function FieldMapper( $context ) {
 
 	var $ = window.jQuery;
 
@@ -46,6 +46,6 @@ var FieldMapper = function( $context ) {
 	$context.find('.mailchimp-field').change(setAvailableFields).trigger('change');
 	$context.find('.add-row').click(addRow);
 	$context.on('click', '.remove-row', removeRow);
-};
+}
 
 module.exports = FieldMapper;

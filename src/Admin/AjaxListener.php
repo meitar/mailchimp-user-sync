@@ -84,26 +84,27 @@ class AjaxListener {
 
 	/**
 	 * Subscribes the provided user ID
-	 * Returns the updates progress
 	 */
 	protected function subscribe_users() {
 
 		$user_id = (int) $_REQUEST['user_id'];
-
 		$result = $this->synchronizer->subscribe_user( $user_id );
 
-		if( $result ) {
-			$this->respond( array( 'success' => true ) );
-			exit;
+		if( ! $result ) {
+			$this->respond(
+				array(
+					'success' => 0,
+					'message' =>  $this->synchronizer->error,
+				)
+			);
 		}
 
-		// send response
-		$this->respond(
-			array(
-				'success' => $result,
-				'error' =>  $this->synchronizer->error,
-			)
+		$data = array(
+			'success' => 1,
+			'message' => sprintf( __( 'Updated user %d', 'mailchimp-sync' ), $user_id ),
 		);
+
+		$this->respond( $data );
 	}
 
 	/**
