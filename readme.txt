@@ -136,7 +136,7 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 **Improvements**
 
 - Various improvements to Manual Synchronization wizard, including more verbose feedback.
-- Add link to KB article for [synchronizing additional fields](https://mc4wp.com/kb/sync-custom-fields-to-your-mailchimp-list/).
+- Add link to KB article for [synchronizing additional fields](https://mc4wp.com/kb/syncing-custom-user-fields-mailchimp/).
 
 
 #### 1.4.6 - June 14, 2016
