@@ -110,6 +110,7 @@ defined( 'ABSPATH' ) or exit;
 					<tr valign="top">
 						<th scope="row">
 							<label><?php _e( 'Send Additional Fields', 'mailchimp-sync' ); ?></label>
+							<small style="display: block; font-weight: normal; margin: 6px 0;"><?php _e( 'optional', 'mailchimp-sync' ); ?></small>
 						</th>
 						<td class="mc4wp-sync-field-map">
 							<?php
@@ -144,6 +145,10 @@ defined( 'ABSPATH' ) or exit;
 								?>
 
 								<p><input type="button" class="button add-row" value="&plus; <?php esc_attr_e( 'Add line', 'mailchimp-sync' ); ?>" style="margin-left:0; "/></p>
+
+								<p class="help">
+									<?php printf( __( '<strong>Advanced:</strong> This allows you to <a href="%s">synchronise %s with specific MailChimp fields</a>.', 'mailchimp-sync' ), 'https://mc4wp.com/kb/sync-custom-fields-to-your-mailchimp-list/#utm_source=wp-plugin&utm_medium=mailchimp-sync&utm_campaign=settings-page', '"user meta"' ); ?>
+								</p>
 
 							<?php } ?>
 						</td>
