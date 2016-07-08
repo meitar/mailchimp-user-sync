@@ -133,8 +133,15 @@ class AjaxListener {
 	 * Send a JSON response
 	 *
 	 * @param $data
+	 * @return void
 	 */
 	private function respond( $data ) {
+
+		send_origin_headers();
+		@header( 'X-Content-Type-Options: nosniff' );
+		@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
+		send_nosniff_header();
+		nocache_headers();
 
 		// clear output, some plugins might have thrown errors by now.
 		if( ob_get_level() > 0 ) {
