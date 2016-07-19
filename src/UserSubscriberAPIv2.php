@@ -64,7 +64,8 @@ class UserSubscriberAPIv2 {
             return false;
         }
 
-        $subscriber_uid = $this->api->get_last_response()->leid;
+        $last_api_response = $this->api->get_last_response();
+        $subscriber_uid = $last_api_response->leid;
         $this->users->set_subscriber_uid( $user_id, $subscriber_uid );
 
         return true;
