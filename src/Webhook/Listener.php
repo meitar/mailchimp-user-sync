@@ -148,7 +148,13 @@ class Listener {
 
 		// update user email if it's given, valid and different
 		if( ! empty( $data['email'] ) && is_email( $data['email'] ) && $data['email'] !== $user->user_email ) {
-			update_user_meta( $user->ID, 'user_email', $data['email'] );
+			add_filter( 'send_email_change_email', '__return_false', 99 );
+			wp_update_user(
+				array(
+					'ID'         => $user->ID,
+					'user_email' => $data['email']
+				)
+			);
 			$updated = true;
 		}
 
