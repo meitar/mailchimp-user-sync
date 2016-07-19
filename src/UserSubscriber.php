@@ -3,7 +3,7 @@
 namespace MC4WP\Sync;
 
 use MC4WP_MailChimp;
-use MC4WP_MailChimp_Subscriber_Data;
+use MC4WP_MailChimp_Subscriber;
 
 class UserSubscriber {
 
@@ -54,15 +54,15 @@ class UserSubscriber {
         $user = $this->users->user( $user_id );
         $merge_vars = $this->users->get_user_merge_vars( $user );
 
-        $subscriber_data = new MC4WP_MailChimp_Subscriber_Data();
-        $subscriber_data->email_address = $user->user_email;
-        $subscriber_data->merge_fields = $merge_vars;
-        $subscriber_data->email_type = $email_type;
-        $subscriber_data->status = $double_optin ? 'pending' : 'subscribed';
+        $subscriber = new MC4WP_MailChimp_Subscriber();
+        $subscriber->email_address = $user->user_email;
+        $subscriber->merge_fields = $merge_vars;
+        $subscriber->email_type = $email_type;
+        $subscriber->status = $double_optin ? 'pending' : 'subscribed';
 
         // perform the call
         $update_existing = true;
-        $member = $this->mailchimp->list_subscribe( $this->list_id, $subscriber_data->email_address, $subscriber_data->to_array(), $update_existing, $replace_interests );
+        $member = $this->mailchimp->list_subscribe( $this->list_id, $subscriber->email_address, $subscriber->to_array(), $update_existing, $replace_interests );
         $success = is_object( $member ) && ! empty( $member->id );
 
         if( ! $success ) {
@@ -70,7 +70,7 @@ class UserSubscriber {
             return false;
         }
 
-        // MailChimp API v3 no longer uses this leid, so update it to something non-empty
+        // Store member ID
         $this->users->set_subscriber_uid( $user_id, $member->unique_email_id );
         return true;
     }

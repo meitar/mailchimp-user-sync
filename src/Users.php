@@ -85,6 +85,19 @@ class Users {
 		return $this->get_first_user( $args );
 	}
 
+//	/**
+//	 * @param string $email
+//	 * @return WP_User|null
+//	 */
+//	public function get_user_by_email( $email ) {
+//		$args = array(
+//			'search' => $email,
+//			'search_columns' => array( 'email' ),
+//		);
+//
+//		return $this->get_first_user( $args );
+//	}
+
 	/**
 	 * @return WP_User
 	 */

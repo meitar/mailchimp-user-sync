@@ -101,13 +101,18 @@ class Listener {
 		$type = (string) $_REQUEST['type'];
 
 		// parameters but incorrect: throw error status
-		if( empty( $data['web_id'] ) ) {
+		if( empty( $data['web_id'] ) && empty( $data['id'] ) ) {
 			status_header( 400 );
 			return false;
 		}
 
-		// find WP user by List_ID + MailChimp ID
-		$user = $this->users->get_user_by_mailchimp_id( $data['web_id'] );
+		// find WP user by List_ID + MailChimp unique email ID
+		$user = $this->users->get_user_by_mailchimp_id( $data['id'] );
+
+		// No user found? Try "web_id", which was used in API v2.
+		if( ! $user ) {
+			$user = $this->users->get_user_by_mailchimp_id( $data['web_id'] );
+		}
 
 		/**
 		 * Filters the user that is found by the webhook request
@@ -119,7 +124,7 @@ class Listener {
 
 		if( ! $user instanceof WP_User ) {
 			// log a warning
-			$log->info( sprintf( "Webhook: No user found for MailChimp ID: %s", $data['web_id'] ) );
+			$log->info( sprintf( "Webhook: No user found for MailChimp ID: %s", $data['id'] ) );
 
 			// fire event when no user is found
 			do_action( 'mailchimp_sync_webhook_no_user', $data );
@@ -133,11 +138,11 @@ class Listener {
 
 		$updated = false;
 
-		// If user was supplied by filter, it might not have a sync key.
-		// Add it, just in case.
+		// User might not have sync key (if supplied by filter) OR still use the old "web_id"
+		// Update it, just in case.
 		$user_subscriber_uid = $this->users->get_subscriber_uid( $user->ID );
-		if( empty( $user_subscriber_uid ) ) {
-			$this->users->set_subscriber_uid( $user->ID, $data['web_id'] );
+		if( empty( $user_subscriber_uid ) || $user_subscriber_uid !== $data['id'] ) {
+			$this->users->set_subscriber_uid( $user->ID, $data['id'] );
 			$updated = true;
 		}
 
