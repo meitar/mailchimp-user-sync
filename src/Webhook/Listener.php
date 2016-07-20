@@ -41,6 +41,7 @@ class Listener {
 	/**
 	 * @param Users $users
 	 * @param array $field_mappers
+	 * @param string $secret_key
 	 */
 	public function __construct( Users $users, $field_mappers = array(), $secret_key = '' ) {
 		$this->users = $users;
@@ -205,7 +206,9 @@ class Listener {
 		 */
 		do_action( 'mailchimp_sync_webhook_' . $type, $data, $user );
 
+		status_header(200);
 		echo 'OK';
+		return true;
 	}
 
 	/**
