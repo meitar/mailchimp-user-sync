@@ -4,6 +4,7 @@ namespace MC4WP\Sync;
 
 use MC4WP_MailChimp;
 use MC4WP_MailChimp_Subscriber;
+use WP_User;
 
 class UserSubscriber {
 
@@ -50,15 +51,22 @@ class UserSubscriber {
      *
      * @throws \Exception
      */
-    public function subscribe( $user_id, $double_optin = false, $email_type = 'html', $replace_interests = false, $send_welcome = false ) {
+    public function subscribe( $user_id, $double_optin = false, $email_type = 'html', $replace_interests = false, $send_welcome = null ) {
         $user = $this->users->user( $user_id );
-        $merge_vars = $this->users->get_user_merge_vars( $user );
 
         $subscriber = new MC4WP_MailChimp_Subscriber();
         $subscriber->email_address = $user->user_email;
-        $subscriber->merge_fields = $merge_vars;
+        $subscriber->merge_fields = $this->users->get_user_merge_fields( $user );
         $subscriber->email_type = $email_type;
         $subscriber->status = $double_optin ? 'pending' : 'subscribed';
+
+        /**
+         * Filter data that is sent to MailChimp
+         *
+         * @param MC4WP_MailChimp_Subscriber $subscriber
+         * @param WP_User $user
+         */
+        $subscriber = apply_filters( 'mailchimp_sync_subscriber_data', $subscriber, $user );
 
         // perform the call
         $update_existing = true;

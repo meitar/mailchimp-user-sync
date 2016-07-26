@@ -55,7 +55,7 @@ class UserSubscriberAPIv2 {
         }
 
         $user = $this->users->user( $user_id );
-        $merge_vars = $this->users->get_user_merge_vars( $user );
+        $merge_vars = $this->users->get_user_merge_fields( $user );
         $update_existing = true;
         $success = $this->api->subscribe( $this->list_id, $user->user_email, $merge_vars, $email_type, $double_optin, $update_existing, $replace_interests, $send_welcome );
 
