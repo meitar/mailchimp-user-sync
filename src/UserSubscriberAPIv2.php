@@ -82,7 +82,7 @@ class UserSubscriberAPIv2 {
      */
     public function update( $user_id, $email_type = 'html', $replace_interests = false ) {
         $user = $this->users->user( $user_id );
-        $merge_vars = $this->users->get_user_merge_vars( $user );
+        $merge_vars = $this->users->get_user_merge_fields( $user );
         $merge_vars['new-email'] = $user->user_email;
 
         $subscriber_uid = $this->users->get_subscriber_uid( $user->ID );
