@@ -7,8 +7,13 @@ use WP_CLI;
 
 defined( 'ABSPATH' ) or exit;
 
-// load autoloader
-require dirname( __FILE__ ) . '/vendor/autoload.php';
+// load autoloader (but only if not loaded already, for compat with sitewide autoloader)
+if( ! function_exists( '__mailchimp_sync_update_groupings_to_interests' ) ) {
+    require dirname( __FILE__ ) . '/vendor/autoload.php';
+}
+
+// load default filters
+require_once __DIR__ . '/src/default-filters.php';
 
 // instantiate plugin
 $plugin = new Plugin();
