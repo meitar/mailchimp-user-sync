@@ -75,6 +75,9 @@ defined( 'ABSPATH' ) or exit;
 						</td>
 					</tr>
 
+					<?php
+					// this option was removed in v4.0
+					if( version_compare( MC4WP_VERSION, '4.0', '<' ) ) { ?>
 					<?php $enabled = !$this->options['double_optin']; ?>
 					<tr id="mc4wp-send-welcome"  valign="top" <?php if(!$enabled) { ?>class="hidden"<?php } ?>>
 						<th scope="row"><?php _e( 'Send Welcome Email?', 'mailchimp-for-wp' ); ?></th>
@@ -89,6 +92,7 @@ defined( 'ABSPATH' ) or exit;
 							</p>
 						</td>
 					</tr>
+					<?php } ?>
 
 					<tr valign="top">
 						<th scope="row"><?php _e( 'Role to sync', 'mailchimp-sync' ); ?></th>
