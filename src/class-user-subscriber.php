@@ -99,18 +99,22 @@ class UserSubscriber {
     /**
      * @param int $user_id
      * @param string $email_address
-     * @param boolean $send_goodbye         (Unused)
-     * @param boolean $send_notification    (Unused)
-     * @param boolean $delete_member        (Unused)
+     * @param string $subscriber_uid        (optional)
+     * @param null $send_goodbye            (unused)
+     * @param null $send_notification       (unused)
+     * @param null $delete_member           (unused)
      *
      * @return bool
      */
-    public function unsubscribe( $user_id, $email_address = '', $send_goodbye = null, $send_notification = null, $delete_member = null ) {
+    public function unsubscribe( $user_id, $email_address, $subscriber_uid = null, $send_goodbye = null, $send_notification = null, $delete_member = null ) {
 
-        $is_subscribed = $this->users->get_subscriber_uid( $user_id );
+        // fetch subscriber_uid
+        if( is_null( $subscriber_uid ) ) {
+            $subscriber_uid = $this->users->get_subscriber_uid( $user_id );
+        }
 
-        // do nothing if we're not subscribed
-        if( empty( $is_subscribed ) ) {
+        // if user is not even subscribed, just bail.
+        if( empty( $subscriber_uid ) ) {
             return true;
         }
 

@@ -30,7 +30,7 @@ class ListSynchronizer {
 	 */
 	private $settings = array(
 		'double_optin' => 0,
-		'send_welcome' => 0,
+		'send_welcome' => 0,        // deprecated in mc4wp v4.x
 		'update_existing' => 1,
 		'replace_interests' => 0,
 		'email_type' => 'html',
@@ -85,7 +85,7 @@ class ListSynchronizer {
 			return false;
 		}
 
-		return $this->users->should( $user ) ? $this->subscribe_user( $user->ID ) : $this->unsubscribe_user( $user->ID );
+		return $this->users->should( $user ) ? $this->subscribe_user( $user->ID ) : $this->unsubscribe_user( $user->ID, $user->user_email );
 	}
 
 	/**
@@ -136,13 +136,15 @@ class ListSynchronizer {
 	 * Delete the subscriber uid from the MailChimp list
 	 *
 	 * @param int $user_id
-	 * @param string $subscriber_uid_or_email (optional)
-	 *
+	 * @param string $email_address
+     * @param string $subscriber_uid (optional)
+     *
 	 * @return bool
 	 */
-	public function unsubscribe_user( $user_id, $subscriber_uid_or_email = '' ) {
+	public function unsubscribe_user( $user_id, $email_address, $subscriber_uid = null ) {
+
 		$user_subscriber = $this->get_user_subscriber();
-		$success = $user_subscriber->unsubscribe( $user_id, $subscriber_uid_or_email, $this->settings['send_goodbye'], $this->settings['send_notification'], $this->settings['delete_member'] );
+		$success = $user_subscriber->unsubscribe( $user_id, $email_address, $subscriber_uid, $this->settings['send_goodbye'], $this->settings['send_notification'], $this->settings['delete_member'] );
 
 		// Error?
 		if( ! $success ) {

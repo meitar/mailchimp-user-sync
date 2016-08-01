@@ -114,6 +114,7 @@ class UserSubscriberAPIv2 {
 
     /**
      * @param int $user_id
+     * @param string $email_address
      * @param string $subscriber_uid
      * @param boolean $send_goodbye
      * @param boolean $send_notification
@@ -121,19 +122,19 @@ class UserSubscriberAPIv2 {
      *
      * @return bool
      */
-    public function unsubscribe( $user_id, $subscriber_uid = '', $send_goodbye = false, $send_notification = false, $delete_member = false ) {
+    public function unsubscribe( $user_id, $email_address, $subscriber_uid = null, $send_goodbye = false, $send_notification = false, $delete_member = false ) {
 
-        // If $subscriber_uid parameter not given, fetch from user meta
-        if( empty( $subscriber_uid ) ) {
+        // fetch subscriber_uid
+        if( is_null( $subscriber_uid ) ) {
             $subscriber_uid = $this->users->get_subscriber_uid( $user_id );
         }
 
-        // By now, we should have a subscriber uid. If not, user is not subscribed. Means we're free from work!
+        // if user is not even subscribed, just bail.
         if( empty( $subscriber_uid ) ) {
             return true;
         }
 
-        $success = $this->api->unsubscribe( $this->list_id, array( 'leid' => $subscriber_uid ), $send_goodbye, $send_notification, $delete_member );
+        $success = $this->api->unsubscribe( $this->list_id, $email_address, $send_goodbye, $send_notification, $delete_member );
         $this->error_message = $this->api->get_error_message();
 
         if( $success ) {

@@ -43,11 +43,17 @@ class Worker {
 		$worker = $this;
 
 		add_action( 'user_register', function( $user_id ) use( $worker ) {
-			$worker->schedule( array( 'type' => 'subscribe', 'user_id' => $user_id ) );
+			$worker->schedule( array(
+			    'type' => 'subscribe',
+                'user_id' => $user_id
+            ) );
 		});
 
 		add_action( 'profile_update', function( $user_id ) use( $worker ) {
-			$worker->schedule( array( 'type' => 'handle', 'user_id' => $user_id ) );
+			$worker->schedule( array(
+			    'type' => 'handle',
+                'user_id' => $user_id
+            ) );
 		});
 
 		add_action( 'updated_user_meta', function( $meta_id, $user_id, $meta_key  ) use( $worker, $users ) {
@@ -62,13 +68,25 @@ class Worker {
 				return;
 			}
 
-			$worker->schedule( array( 'type' => 'handle', 'user_id' => $user_id ) );
+			$worker->schedule( array(
+			    'type' => 'handle',
+                'user_id' => $user_id
+            ) );
 		}, 10, 3 );
 
 		add_action( 'delete_user', function( $user_id ) use( $worker, $users ) {
-			// fetch meta value now, because user is about to be deleted
-			$subscriber_uid = $users->get_subscriber_uid( $user_id );
-			$worker->schedule( array( 'type' => 'unsubscribe', 'user_id' => $user_id, 'subscriber_uid' => $subscriber_uid ) );
+
+            // fetch meta values now, because user is about to be deleted
+		    $user = $users->user( $user_id );
+            $email_address = $user->user_email;
+            $subscriber_uid = $users->get_subscriber_uid( $user_id );
+
+			$worker->schedule( array(
+			    'type' => 'unsubscribe',
+                'user_id' => $user_id,
+                'email_address' => $email_address,
+                'subscriber_uid' => $subscriber_uid,
+            ) );
 		});
 
 	}
