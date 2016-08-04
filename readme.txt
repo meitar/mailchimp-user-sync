@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.6
-Stable tag: 1.4.7
+Stable tag: 1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,14 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+
+#### 1.5 - August 4, 2016
+
+**Improvements**
+
+- Forward compatibility with upcoming [MailChimp for WordPress 4.0 release](https://mc4wp.com/kb/upgrading-to-4-0/).
+- Use correct WP function for updating user email address from webhook.
 
 
 #### 1.4.7 - July 8, 2016
