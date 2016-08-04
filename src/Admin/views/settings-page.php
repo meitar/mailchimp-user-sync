@@ -7,6 +7,7 @@ defined( 'ABSPATH' ) or exit;
 
 
 /** @var StatusIndicator $status_indicator */
+/** @var array $available_mailchimp_fields */
 ?>
 <div class="wrap" id="mc4wp-admin">
 
