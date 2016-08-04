@@ -1,3 +1,4 @@
+'use strict';
 
 var logger = require('./logger.js');
 var User = require('./user.js');

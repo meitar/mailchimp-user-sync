@@ -51,6 +51,8 @@ function setRandomSecret() {
 $(secretKeyInput).keyup(updateWebhookUrl);
 $(button).click(setRandomSecret);
 },{"./admin/field-mapper.js":2,"./admin/wizard.js":5,"mithril":6}],2:[function(require,module,exports){
+'use strict';
+
 function FieldMapper( $context ) {
 
 	var $ = window.jQuery;
@@ -153,6 +155,8 @@ module.exports = {
 	'render': render
 };
 },{}],4:[function(require,module,exports){
+'use strict';
+
 /**
  * User Model
  *
@@ -167,6 +171,7 @@ var User = function( data ) {
 
 module.exports = User;
 },{}],5:[function(require,module,exports){
+'use strict';
 
 var logger = require('./logger.js');
 var User = require('./user.js');

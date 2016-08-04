@@ -1,3 +1,5 @@
+'use strict';
+
 function FieldMapper( $context ) {
 
 	var $ = window.jQuery;
