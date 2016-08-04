@@ -1,6 +1,14 @@
 Changelog
 ===========
 
+#### 1.5 - August 4, 2016
+
+**Improvements**
+
+- Forward compatibility with upcoming [MailChimp for WordPress 4.0 release](https://mc4wp.com/kb/upgrading-to-4-0/).
+- Use correct WP function for updating user email address from webhook.
+
+
 #### 1.4.7 - July 8, 2016
 
 **Fixes**
