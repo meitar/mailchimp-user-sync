@@ -139,11 +139,14 @@ class Listener {
 
 		$updated = false;
 
-		// User might not have sync key (if supplied by filter) OR still use the old "web_id"
+		// User might not have sync key (if supplied by filter)
 		// Update it, just in case.
 		$user_subscriber_uid = $this->users->get_subscriber_uid( $user->ID );
-		if( empty( $user_subscriber_uid ) || $user_subscriber_uid !== $data['id'] ) {
-			$this->users->set_subscriber_uid( $user->ID, $data['id'] );
+		if( empty( $user_subscriber_uid ) ) {
+
+		    // since API v3, we use ueid instead of web_id.
+		    $v3 = class_exists( 'MC4WP_API_v3' );
+			$this->users->set_subscriber_uid( $user->ID, $v3 ? $data['id'] : $data['web_id'] );
 			$updated = true;
 		}
 
