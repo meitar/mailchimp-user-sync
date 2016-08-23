@@ -11,11 +11,6 @@ use WP_User;
 class ListSynchronizer {
 
 	/**
-	 * @const string
-	 */
-	const EVENT_PREFIX = 'mailchimp_sync_';
-
-	/**
 	 * @var string The List ID to sync with
 	 */
 	private $list_id;
@@ -66,9 +61,9 @@ class ListSynchronizer {
 	public function add_hooks() {
 		// custom actions for people to use if they want to call the class actions
 		// @todo If we ever allow multiple instances of this class, these actions need the list_id property
-		add_action( self::EVENT_PREFIX . 'subscribe_user', array( $this, 'subscribe_user' ) );
-		add_action( self::EVENT_PREFIX . 'update_subscriber', array( $this, 'subscribe_user' ) );
-		add_action( self::EVENT_PREFIX . 'unsubscribe_user', array( $this, 'unsubscribe_user' ) );
+		add_action( 'mailchimp_sync_subscribe_user', array( $this, 'subscribe_user' ) );
+		add_action( 'mailchimp_sync_update_subscriber', array( $this, 'subscribe_user' ) );
+		add_action( 'mailchimp_sync_unsubscribe_user', array( $this, 'unsubscribe_user' ), 10, 2 );
 	}
 	
 	/**
