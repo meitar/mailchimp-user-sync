@@ -254,14 +254,8 @@ class Users {
 				// get field value
 				$value = $this->tools->get_user_field( $user, $rule['user_field'] );
 
-				if( is_string( $value ) ) {
-
-					// If target index does not exist yet, just add.
-					// Otherwise, only overwrite if value not empty
-					if( ! isset( $merge_fields[ $rule['mailchimp_field'] ] ) || ! empty( $value ) ) {
-                        $merge_fields[ $rule['mailchimp_field'] ] = $value;
-					}
-
+				if( is_string( $value ) && ! empty( $value ) ) {
+                    $merge_fields[ $rule['mailchimp_field'] ] = $value;
 				}
 			}
 		}
