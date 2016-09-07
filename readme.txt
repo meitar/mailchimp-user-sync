@@ -4,7 +4,7 @@ Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-s
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
 Tested up to: 4.6
-Stable tag: 1.5
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,18 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+
+#### 1.5.1 - September 7, 2016
+
+**Fixes**
+
+- Don't delay other cron jobs when an error occurs.
+
+**Improvements**
+
+- Only send user fields to MailChimp when not empty, to prevent overriding existing data when webhook is not configured.
+- Ask for confirmation before changing webhook secret.
 
 
 #### 1.5 - August 4, 2016
