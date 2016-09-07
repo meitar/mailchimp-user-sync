@@ -48,10 +48,10 @@ if( ! empty( $plugin->options['list'] ) ) {
 		// Perform work whenever this action is run
 		add_action( 'mailchimp_user_sync_run', array( $worker, 'work' ) );
 
-		// Perform work whenever we're in a cron request
+		// Perform work whenever we're in a cron request (at shutdown)
 		$is_cron_request = defined( 'DOING_CRON' ) && DOING_CRON;
 		if( $is_cron_request ) {
-			add_action( 'init', array( $worker, 'work' ) );
+		    register_shutdown_function( array( $worker, 'work' ) );
 		}
 
 	}
