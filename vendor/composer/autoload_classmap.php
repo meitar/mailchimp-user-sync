@@ -6,10 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'MC4WP\\Sync\\Admin\\FlashMessages' => $baseDir . '/src/Admin/class-flash-messages.php',
-    'MC4WP\\Sync\\Admin\\Manager' => $baseDir . '/src/Admin/class-manager.php',
-    'MC4WP\\Sync\\Admin\\StatusIndicator' => $baseDir . '/src/Admin/class-status-indicator.php',
-    'MC4WP\\Sync\\AjaxListener' => $baseDir . '/src/Admin/class-ajax-listener.php',
+    'MC4WP\\Sync\\Admin\\FlashMessages' => $baseDir . '/src/admin/class-flash-messages.php',
+    'MC4WP\\Sync\\Admin\\Manager' => $baseDir . '/src/admin/class-manager.php',
+    'MC4WP\\Sync\\Admin\\StatusIndicator' => $baseDir . '/src/admin/class-status-indicator.php',
+    'MC4WP\\Sync\\AjaxListener' => $baseDir . '/src/admin/class-ajax-listener.php',
     'MC4WP\\Sync\\CLI\\Command' => $baseDir . '/src/cli/class-command.php',
     'MC4WP\\Sync\\ListSynchronizer' => $baseDir . '/src/class-list-syncer.php',
     'MC4WP\\Sync\\Plugin' => $baseDir . '/src/class-plugin.php',
