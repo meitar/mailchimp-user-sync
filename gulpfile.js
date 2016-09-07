@@ -9,7 +9,6 @@ var source = require('vinyl-source-stream');
 var browserify = require('browserify');
 var replace = require('gulp-replace');
 var merge = require('merge-stream');
-var streamify = require('gulp-streamify');
 var globby = require('globby');
 var buffer = require('vinyl-buffer');
 var through = require('through2');
@@ -59,7 +58,8 @@ gulp.task('browserify', function () {
 
 gulp.task('uglify', ['browserify'], function() {
 	return gulp.src(['./assets/js/*.js','!./assets/js/*.min.js'])
-		.pipe(streamify(uglify()))
+		.pipe(buffer())
+		.pipe(uglify())
 		.pipe(rename({extname: '.min.js'}))
 		.pipe(gulp.dest('./assets/js'));
 });
