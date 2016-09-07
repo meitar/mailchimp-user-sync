@@ -127,6 +127,7 @@ class AjaxListener {
 
 		// TODO: filter response
 
+
 		$this->respond( join( PHP_EOL, $values ) );
 	}
 
