@@ -213,7 +213,7 @@ defined( 'ABSPATH' ) or exit;
 					<tr valign="top">
 						<th><label for="webhook-secret-key-input"><?php _e( 'Secret Key', 'mailchimp-sync' ); ?></label></th>
 						<td>
-							<input type="text" id="webhook-secret-key-input" pattern="[a-zA-Z0-9_]*" name="mailchimp_sync[webhook][secret_key]" value="<?php echo esc_attr( $this->options['webhook']['secret_key'] ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Your secret key..', 'mailchimp-sync' ); ?>" />
+							<input type="text" id="webhook-secret-key-input" pattern="[a-zA-Z0-9_]*" name="mailchimp_sync[webhook][secret_key]" value="<?php echo esc_attr( $this->options['webhook']['secret_key'] ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'Your secret key..', 'mailchimp-sync' ); ?>" <?php if( ! empty( $this->options['webhook']['secret_key'] ) ) { echo 'readonly'; } ?> />
 							<input id="webhook-generate-button" class="button" type="button" value="<?php esc_attr_e( 'Generate Key', 'mailchimp-sync' ); ?>" />
 						</td>
 					</tr>

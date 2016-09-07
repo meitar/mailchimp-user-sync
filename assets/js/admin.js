@@ -43,7 +43,13 @@ function updateWebhookUrl() {
 }
 
 // set the secret key field to a random string of 20 chars
-function setRandomSecret() {
+function setRandomSecret(e) {
+	if( secretKeyInput.value ) {
+		var sure = confirm( "Are you sure you want to set a new webhook secret? You will have to update your webhook URL in MailChimp." );
+		if( ! sure ) {
+			return;
+		}
+	}
 	secretKeyInput.value = randomString(20);
 	updateWebhookUrl();
 }
