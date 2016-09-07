@@ -1,6 +1,18 @@
 Changelog
 ===========
 
+#### 1.5.1 - September 7, 2016
+
+**Fixes**
+
+- Don't delay other cron jobs when an error occurs.
+
+**Improvements**
+
+- Only send user fields to MailChimp when not empty, to prevent overriding existing data when webhook is not configured.
+- Ask for confirmation before changing webhook secret.
+
+
 #### 1.5 - August 4, 2016
 
 **Improvements**
