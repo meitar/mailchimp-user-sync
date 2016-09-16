@@ -90,7 +90,7 @@ class Listener {
 
 		$log = $this->get_log();
 		define( 'MC4WP_SYNC_DOING_WEBHOOK', true );
-		
+
 		// no parameters = MailChimp webhook validator
 		if( empty( $_POST['data'] ) || empty( $_POST['type'] ) ) {
 			echo "Listening..";
@@ -161,6 +161,9 @@ class Listener {
 			);
 			$updated = true;
 		}
+
+		// manipulate incoming data to match expected format.
+		$data = apply_filters( 'mailchimp_sync_webhook_data', $data, $user, $type );
 
 		// update WP user with data (use reversed field map)
 		// loop through mapping rules
