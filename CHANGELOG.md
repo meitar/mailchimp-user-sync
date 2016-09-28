@@ -1,6 +1,21 @@
 Changelog
 ===========
 
+#### 1.5.2 - September 28, 2016
+
+**Fixes**
+
+- Interest groups were always being replaced, instead of added to the existing subscriber's interest groups.
+
+**Improvements**
+
+- Always write to debug log when webhook receives request for user.
+
+**Additions**
+
+- Added `mailchimp_sync_webhook_data` filter to manipulate data received by webhook before it is processed.
+
+
 #### 1.5.1 - September 7, 2016
 
 **Fixes**
