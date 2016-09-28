@@ -3,8 +3,8 @@ Contributors: Ibericode, DvanKooten, hchouhan, lapzor
 Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-sync&utm_campaign=donate-link
 Tags: mailchimp,users,sync,mailchimp list,synchronize,zapier,woocommerce,mc4wp
 Requires at least: 3.8
-Tested up to: 4.6
-Stable tag: 1.5.1
+Tested up to: 4.6.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -125,6 +125,21 @@ Not by default, but you can enable this by [configuring a webhook in your MailCh
 2. Status overview
 
 == Changelog ==
+
+
+#### 1.5.2 - September 28, 2016
+
+**Fixes**
+
+- Interest groups were always being replaced, instead of added to the existing subscriber's interest groups.
+
+**Improvements**
+
+- Always write to debug log when webhook receives request for user.
+
+**Additions**
+
+- Added `mailchimp_sync_webhook_data` filter to manipulate data received by webhook before it is processed.
 
 
 #### 1.5.1 - September 7, 2016
