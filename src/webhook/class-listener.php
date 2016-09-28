@@ -101,6 +101,14 @@ class Listener {
 		$data = stripslashes_deep( $_REQUEST['data'] );
 		$type = (string) $_REQUEST['type'];
 
+        /**
+         * Filter webhook data that is received by MailChimp.
+         *
+         * @param array $data
+         * @param string $type
+         */
+        $data = apply_filters( 'mailchimp_sync_webhook_data', $data, $type );
+
 		// parameters but incorrect: throw error status
 		if( empty( $data['web_id'] ) && empty( $data['id'] ) ) {
 			status_header( 400 );
@@ -116,7 +124,7 @@ class Listener {
 		}
 
 		/**
-		 * Filters the user that is found by the webhook request
+		 * Filters the WordPress user that is found by the webhook request
 		 *
 		 * @param WP_User|null $user
 		 * @param array $data
@@ -161,9 +169,6 @@ class Listener {
 			);
 			$updated = true;
 		}
-
-		// manipulate incoming data to match expected format.
-		$data = apply_filters( 'mailchimp_sync_webhook_data', $data, $user, $type );
 
 		// update WP user with data (use reversed field map)
 		// loop through mapping rules
