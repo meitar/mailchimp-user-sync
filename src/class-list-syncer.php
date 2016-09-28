@@ -112,7 +112,7 @@ class ListSynchronizer {
 		}
 
 		$user_subscriber = $this->get_user_subscriber();
-		$success = $user_subscriber->subscribe( $user->ID, $this->settings['double_optin'], $this->settings['email_type'], $this->settings['update_existing'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
+		$success = $user_subscriber->subscribe( $user->ID, $this->settings['double_optin'], $this->settings['email_type'], $this->settings['replace_interests'], $this->settings['send_welcome'] );
 
 		// Error?
 		if( ! $success ) {
