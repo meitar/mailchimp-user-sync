@@ -145,6 +145,9 @@ class Listener {
 			return false;
 		}
 
+		// we have a user at this point
+        $log->info( sprintf( "Webhook: Request of type %s received for user #%d", $type, $user->ID ) );
+
 		$updated = false;
 
 		// User might not have sync key (if supplied by filter)
