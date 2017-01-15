@@ -98,6 +98,15 @@ class UserSubscriber {
 
     /**
      * @param int $user_id
+     * @param string $old_email
+     */
+    public function update_email( $user_id, $old_email ) {
+        $user = $this->users->user( $user_id );
+        $this->mailchimp->api->update_list_member( $this->list_id, $old_email, array( 'email_address' => $user->user_email ) );
+    }
+
+    /**
+     * @param int $user_id
      * @param string $email_address
      * @param string $subscriber_uid        (optional)
      * @param null $send_goodbye            (unused)

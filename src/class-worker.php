@@ -44,17 +44,21 @@ class Worker {
 
 		add_action( 'user_register', function( $user_id ) use( $worker ) {
 			$worker->schedule( array(
-			    'type' => 'subscribe',
-                'user_id' => $user_id
-            ) );
+				'type' => 'subscribe',
+				'user_id' => $user_id
+			) );
 		});
 
-		add_action( 'profile_update', function( $user_id ) use( $worker ) {
-			$worker->schedule( array(
-			    'type' => 'handle',
-                'user_id' => $user_id
-            ) );
-		});
+		add_action( 'profile_update', function( $user_id, $old_user_data ) use( $worker, $users ) {
+			$job_data = array(
+				'type' => 'update',
+				'user_id' => $user_id
+			);
+			if( $old_user_data->user_email !== $users->user( $user_id )->user_email ) {
+				$job_data['old_user_email'] = $old_user_data->user_email;
+			}
+			$worker->schedule( $job_data );
+		}, 10, 2);
 
 		add_action( 'updated_user_meta', function( $meta_id, $user_id, $meta_key  ) use( $worker, $users ) {
 
@@ -69,24 +73,24 @@ class Worker {
 			}
 
 			$worker->schedule( array(
-			    'type' => 'handle',
-                'user_id' => $user_id
-            ) );
+				'type' => 'handle',
+				'user_id' => $user_id
+			) );
 		}, 10, 3 );
 
 		add_action( 'delete_user', function( $user_id ) use( $worker, $users ) {
 
-            // fetch meta values now, because user is about to be deleted
-		    $user = $users->user( $user_id );
-            $email_address = $user->user_email;
-            $subscriber_uid = $users->get_subscriber_uid( $user_id );
+			// fetch meta values now, because user is about to be deleted
+			$user = $users->user( $user_id );
+			$email_address = $user->user_email;
+			$subscriber_uid = $users->get_subscriber_uid( $user_id );
 
 			$worker->schedule( array(
-			    'type' => 'unsubscribe',
-                'user_id' => $user_id,
-                'email_address' => $email_address,
-                'subscriber_uid' => $subscriber_uid,
-            ) );
+				'type' => 'unsubscribe',
+				'user_id' => $user_id,
+				'email_address' => $email_address,
+				'subscriber_uid' => $subscriber_uid,
+			) );
 		});
 
 	}

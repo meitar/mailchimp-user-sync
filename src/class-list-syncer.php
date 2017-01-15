@@ -67,6 +67,32 @@ class ListSynchronizer {
 	}
 	
 	/**
+	 * Handles updating a subscriber's email address for sync.
+	 *
+	 * @param int $user_id
+	 * @param null|string $old_email_address
+	 * @return boolean
+	 */
+	public function update_user ( $user_id, $old_email_address = null ) {
+
+		try {
+			$user = $this->users->user( $user_id );
+		} catch( Exception $e ) {
+			return false;
+		}
+
+		// Update the email address,
+		if ( null !== $old_email_address ) {
+			$user_subscriber = $this->get_user_subscriber();
+			$user_subscriber->update_email( $user->ID, $old_email_address );
+		}
+
+		// Then just fallback to what we used to do.
+		return $this->handle_user( $user_id );
+
+	}
+
+	/**
 	 * Handle
 	 *
 	 * @param int $user_id
