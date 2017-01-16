@@ -202,6 +202,18 @@ class Users {
 		return '';
 	}
 
+    /**
+     * @param int|WP_User $user_id
+     */
+    public function touch( $user_id ) {
+
+        if( $user_id instanceof WP_User ) {
+            $user_id = $user_id->ID;
+        }
+
+        update_user_meta( $user_id, 'mc4wp_sync_last_updated', date( 'c' ) );
+    }
+
 	/**
 	 * @param int $user_id
 	 * @param string $subscriber_uid

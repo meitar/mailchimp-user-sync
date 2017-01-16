@@ -78,8 +78,9 @@ class UserSubscriber {
             return false;
         }
 
-        // Store member ID
+        // Store member ID & last updated timestamp
         $this->users->set_subscriber_uid( $user_id, $member->unique_email_id );
+        $this->users->touch( $user_id );
         return true;
     }
 
