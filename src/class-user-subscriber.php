@@ -2,7 +2,7 @@
 
 namespace MC4WP\Sync;
 
-use MC4WP_MailChimp;
+use MC4WP_API_v3;
 use MC4WP_MailChimp_Subscriber;
 use WP_User;
 
@@ -14,9 +14,9 @@ class UserSubscriber {
     protected $users;
 
     /**
-     * @var MC4WP_MailChimp
+     * @var MC4WP_API_v3
      */
-    protected $mailchimp;
+    protected $api;
 
     /**
      * @var string
@@ -36,8 +36,32 @@ class UserSubscriber {
      */
     public function __construct( Users $users, $list_id ) {
         $this->users = $users;
-        $this->mailchimp = new MC4WP_MailChimp();
+        $this->api = mc4wp('api');
         $this->list_id = $list_id;
+    }
+
+    /**
+     * @param WP_User $user
+     * @param $double_optin
+     * @param $email_type
+     * @return MC4WP_MailChimp_Subscriber
+     */
+    private function transform( WP_User $user, $double_optin, $email_type ) {
+        $subscriber = new MC4WP_MailChimp_Subscriber();
+        $subscriber->email_address = $user->user_email;
+        $subscriber->merge_fields = $this->users->get_user_merge_fields( $user );
+        $subscriber->email_type = $email_type;
+        $subscriber->status = $double_optin ? 'pending' : 'subscribed';
+
+        /**
+         * Filter data that is sent to MailChimp
+         *
+         * @param MC4WP_MailChimp_Subscriber $subscriber
+         * @param WP_User $user
+         */
+        $subscriber = apply_filters( 'mailchimp_sync_subscriber_data', $subscriber, $user );
+
+        return $subscriber;
     }
 
     /**
@@ -53,30 +77,45 @@ class UserSubscriber {
      */
     public function subscribe( $user_id, $double_optin = false, $email_type = 'html', $replace_interests = false, $send_welcome = null ) {
         $user = $this->users->user( $user_id );
+        $subscriber = $this->transform( $user, $double_optin, $email_type );
 
-        $subscriber = new MC4WP_MailChimp_Subscriber();
-        $subscriber->email_address = $user->user_email;
-        $subscriber->merge_fields = $this->users->get_user_merge_fields( $user );
-        $subscriber->email_type = $email_type;
-        $subscriber->status = $double_optin ? 'pending' : 'subscribed';
-
-        /**
-         * Filter data that is sent to MailChimp
-         *
-         * @param MC4WP_MailChimp_Subscriber $subscriber
-         * @param WP_User $user
-         */
-        $subscriber = apply_filters( 'mailchimp_sync_subscriber_data', $subscriber, $user );
+        $args = $subscriber->to_array();
+        $args['interests'] = array();
+        $args['status_if_new'] = $args['status'];
+        unset( $args['status'] );
 
         // perform the call
-        $update_existing = true;
-        $member = $this->mailchimp->list_subscribe( $this->list_id, $subscriber->email_address, $subscriber->to_array(), $update_existing, $replace_interests );
-        $success = is_object( $member ) && ! empty( $member->id );
+        try {
+            $existing_member_data = $this->api->get_list_member( $this->list_id, $subscriber->email_address );
 
-        if( ! $success ) {
-            $this->error_message = $this->mailchimp->get_error_message();
+            if ($existing_member_data->status === 'subscribed') {
+                // this key only exists if list actually has interests
+                if (isset($existing_member_data->interests)) {
+                    $existing_interests = (array)$existing_member_data->interests;
+
+                    // if replace, assume all existing interests disabled
+                    if ($replace_interests) {
+                        $existing_interests = array_fill_keys(array_keys($existing_interests), false);
+                    }
+
+                    $args['interests'] = $args['interests'] + $existing_interests;
+                }
+            }
+        } catch( \MC4WP_API_Resource_Not_Found_Exception $e ) {
+            // OK: subscriber does not exist yet, but we're subscribing it later.
+        } catch( \MC4WP_API_Exception $e ) {
+            $this->error_message = $e->getMessage();
             return false;
         }
+
+        // add or update subscriber
+        try {
+            $member = $this->api->add_list_member( $this->list_id, $args );
+        } catch( \MC4WP_API_Exception $e ) {
+            $this->error_message = $e->getMessage();
+            return false;
+        }
+
 
         // Store member ID & last updated timestamp
         $this->users->set_subscriber_uid( $user_id, $member->unique_email_id );
@@ -119,13 +158,17 @@ class UserSubscriber {
             return true;
         }
 
-        $success = $this->mailchimp->list_unsubscribe( $this->list_id, $email_address );
-        $this->error_message = $this->mailchimp->get_error_message();
-
-        if( $success ) {
-            $this->users->delete_subscriber_uid( $user_id );
+        try {
+            $this->api->delete_list_member( $this->list_id, $email_address );
+        } catch( \MC4WP_API_Resource_Not_Found_Exception $e ) {
+            // OK, not subscribed in first place.
+        } catch( \MC4WP_API_Exception $e ) {
+            // Not OK.
+            $this->error_message = $e->getMessage();
+            return false;
         }
 
-        return $success;
+        $this->users->delete_subscriber_uid( $user_id );
+        return true;
     }
 }
