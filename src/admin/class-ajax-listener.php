@@ -88,7 +88,7 @@ class AjaxListener {
 	protected function subscribe_users() {
 
 		$user_id = (int) $_REQUEST['user_id'];
-		$result = $this->synchronizer->subscribe_user( $user_id );
+		$result = $this->synchronizer->handle_user( $user_id );
 
 		if( ! $result ) {
 			$this->respond(
