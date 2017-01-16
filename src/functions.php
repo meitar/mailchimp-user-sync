@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or exit;
  *
  * @return MC4WP_MailChimp_Subscriber
  */
-function __mailchimp_sync_update_groupings_to_interests( MC4WP_MailChimp_Subscriber $subscriber, WP_User $user ) {
+function _mailchimp_sync_update_groupings_to_interests( MC4WP_MailChimp_Subscriber $subscriber, WP_User $user ) {
 
     // run old filter
     $data = (array) apply_filters( 'mailchimp_sync_user_data', array(), $user );

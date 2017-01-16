@@ -8,7 +8,7 @@ use WP_CLI;
 defined( 'ABSPATH' ) or exit;
 
 // load autoloader (but only if not loaded already, for compat with sitewide autoloader)
-if( ! function_exists( '__mailchimp_sync_update_groupings_to_interests' ) ) {
+if( ! function_exists( '_mailchimp_sync_update_groupings_to_interests' ) ) {
     require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
