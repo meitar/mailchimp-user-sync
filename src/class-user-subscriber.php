@@ -142,7 +142,7 @@ class UserSubscriber {
      */
     public function update_email( $user_id, $old_email ) {
         $user = $this->users->user( $user_id );
-        $this->mailchimp->api->update_list_member( $this->list_id, $old_email, array( 'email_address' => $user->user_email ) );
+        $this->api->update_list_member( $this->list_id, $old_email, array( 'email_address' => $user->user_email ) );
     }
 
     /**
